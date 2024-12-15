@@ -38,8 +38,8 @@ app.use(bodyParser.json());
 const allowedOrigins = [
   'http://localhost:3000', // Frontend URL
   'http://127.0.0.1:3000', // Alternative
-  
-   'https://adeyebingo-fu1vfkoyf-girums-projects-c9befee2.vercel.app',
+  '167.235.140.218',
+ 
 ];
 
 app.use(cors({
@@ -444,7 +444,6 @@ app.post("/gameid",async(req,res)=>{
   }
 
 })
-
 
 server.listen(process.env.PORT||3001,()=>{
     console.log("port connected port 3001");
