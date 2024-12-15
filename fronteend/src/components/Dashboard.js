@@ -11,7 +11,7 @@ import Navbaradmin from './Navbaradmin';
 
 function Dashbord() {
 //const [message,setMessage]=setMessage('');
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL||"https://adeybingo-11.onrender.com";
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const location=useLocation();
 const [message, setMessage] = useState('');
   const [users, setUsers] = useState([]);

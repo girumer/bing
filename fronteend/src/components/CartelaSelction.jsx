@@ -6,7 +6,7 @@ import {useLocation, useNavigate} from 'react-router-dom';
 function CartelaSelction() {
     const location=useLocation();
     const history=useNavigate();
-    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL||"https://adeybingo-11.onrender.com";
+    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
    
     const options = [2,  4,  7,  10];
     localStorage.setItem('language',location.state.language);

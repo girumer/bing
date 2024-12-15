@@ -11,7 +11,7 @@ import { useEffect } from 'react';
 
 function Navbaradmin() {
     const token=localStorage.getItem('accesstoken');
-    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL||"https://adeybingo-10.onrender.com";
+    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
   const navRef = useRef();
 const location=useLocation();
 const history=useNavigate();

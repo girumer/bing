@@ -6,7 +6,8 @@ import axios from 'axios';
 import './Logins.css';
 import Cookies from "js-cookie";
 function Logins() {
-  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL||"https://adeybingo-11.onrender.com";
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+  console.log(BACKEND_URL);
     const navigate=useNavigate();
     const [isLoading, setIsLoading] = useState(false);
     const accessToken =localStorage.getItem('accesstoken');

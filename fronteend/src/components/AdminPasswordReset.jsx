@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 const AdminPasswordReset = () => {
   const location=useLocation();
     const navigate=useNavigate();
-  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL||"https://adeybingo-11.onrender.com";
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
   const [formData, setFormData] = useState({
     customerId: "",
     newPassword: "",

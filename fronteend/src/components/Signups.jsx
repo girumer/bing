@@ -8,7 +8,7 @@ import Cookies from "js-cookie";
 import { useLocation, useNavigate } from 'react-router-dom';
 function Signups() {
   axios.defaults.withCredentials=true;
-  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL||"https://adeybingo-11.onrender.com";
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const navigate=useNavigate();
 const [user,setUser]=useState(null);
 axios.defaults.withCredentials=true;

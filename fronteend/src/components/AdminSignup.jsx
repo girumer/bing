@@ -6,7 +6,7 @@ import axios from 'axios';
 import './Logins.css';
 import Cookies from "js-cookie";
 function AdminSignup() {
-  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL||"https://adeybingo-11.onrender.com";
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
     const navigate=useNavigate();
     const accessToken = Cookies.get('accesstoken');
     //const refreshToken = Cookies.get("refreshtoken");

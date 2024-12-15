@@ -19,7 +19,7 @@ const [username,setUser]=useState('');
   const navRef = useRef();
 const location=useLocation();
 const history=useNavigate();
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL||"https://adeybingo-11.onrender.com";
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
   
 useEffect(() => {
   const token = localStorage.getItem('accesstoken');

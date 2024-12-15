@@ -8,7 +8,7 @@ import _ from 'lodash';
 import Cookies from "js-cookie";
 const GameHistory = ({ playerId }) => {
   const location = useLocation();
-  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL||"https://adeybingo-11.onrender.com";
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
   const navigate=useNavigate();
   const [gameHistory, setGameHistory] = useState([]);
   const [loading, setLoading] = useState(true);

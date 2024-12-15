@@ -11,7 +11,7 @@ import Cookies from "js-cookie";
 function Mainmenu() {
     const location=useLocation();
     const history=useNavigate();
-    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL||"https://adeybingo-11.onrender.com";
+    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const [deposit,setDeposit]=useState(false);
 const [checkdepositup,setCheckdepositup]=useState(false);
 const [cheakcoin,setCheakcoin]=useState(false);

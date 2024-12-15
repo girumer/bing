@@ -6,7 +6,7 @@ import { AiOutlineComment } from 'react-icons/ai';
 import Navbar from '../components/Navbar';
 import './Helpdesk.css';
 function Helpdesk() {
-  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL||"https://adeybingo-11.onrender.com";
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
     const [visible, setVisible] = useState([false, false, false]);
 
     const paragraphs = [

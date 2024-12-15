@@ -11,7 +11,7 @@ const BingoBoard = () => {
     const navigate=useNavigate();
    // const token = localStorage.getItem('accesstoken');
     //console.log("token is ",token);
-    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL||"https://adeybingo-11.onrender.com";
+    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
         const token = localStorage.getItem('accesstoken');
         console.log("token is ",token);
     
