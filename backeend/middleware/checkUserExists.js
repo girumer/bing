@@ -17,3 +17,4 @@ const checkUserExists = async (req, res, next) => {
 };
 
 module.exports = checkUserExists;
+

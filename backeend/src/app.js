@@ -13,9 +13,10 @@ const authRoutessignup= require('../routes/signupauthRoutes');
 const gameHistoryRoutes = require('../routes/gameHistory');
 const depositRoutes = require('../routes/depositRoutes');
 const adminRoutes = require("../routes/adminRoutes");
-const {secretkey,refreshKey}=require("../config/jwtconfig")
 
-console.log("About to import signup route");
+const secretkey=process.env.JWT_SECRET;
+const refreshKey=process.env.JwT_PRIVATE;
+
 
 const bodyParser=require("body-parser")
 
@@ -134,6 +135,8 @@ app.use(cors({
 app.use(cors({
   origin: '*',  // Allow all origins
 })); */
+
+
   const verfyuser = async (req, res, next) => {
     const accesstoken = req.cookies.accesstoken;
   
