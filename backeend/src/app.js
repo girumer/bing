@@ -41,7 +41,8 @@ const allowedOrigins = [
   'http://localhost:3000', // Frontend URL
   'http://127.0.0.1:3000', // Alternative
   'http://167.235.140.218',
- 
+  'http://adeyebingo.com',       // Your domain name
+  'http://www.adeyebingo.com'
 ];
 
 app.use(cors({
