@@ -1,7 +1,7 @@
 // import './App.css'
 import React from 'react';
 import { useState,useEffect } from 'react';
-import Signup from "./components/Signup"
+
 import Mainmenu from "./components/Mainmenu";
 import GameHistory from "./components/Gamehistory";
 import Helpdesk from "./components/Helpdesk";
@@ -32,7 +32,7 @@ function App() {
         <Routes>
         
           <Route path="/" element={<Logins/>}/>
-          <Route path="/signup" element={<Signup/>}/>
+         
           <Route path="/qazxsw" element={<AdminSignup/>}/>
            <Route path="/AdminPasswordReset" element={<AdminPasswordReset/>}/>
           <Route path="/Logins"  element={<Logins/>}/>

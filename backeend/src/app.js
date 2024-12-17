@@ -165,6 +165,7 @@ app.use(cors({
     }
   };
   console.log ("code edited");
+  console.log("second edit");
   app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
 app.use('/auth', authRoutessignup);
