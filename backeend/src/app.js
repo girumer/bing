@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express")
 const async = require('async');
 
@@ -13,7 +14,7 @@ const authRoutessignup= require('../routes/signupauthRoutes');
 const gameHistoryRoutes = require('../routes/gameHistory');
 const depositRoutes = require('../routes/depositRoutes');
 const adminRoutes = require("../routes/adminRoutes");
-
+const path = require('path');
 const secretkey=process.env.JWT_SECRET;
 const refreshKey=process.env.JwT_PRIVATE;
 
@@ -66,9 +67,14 @@ app.options('*', cors()); // Automatically handle OPTIONS requests
  return   jwt.sign({_id}, process.env.JWT_SECRET,{expiresIn:'3d'})
 } */
 
+
  app.get('/', (req, res) => {
-  res.send('Hello, world!'); // You can replace this with your actual frontend or response
-})
+  res.json({ message: 'Hello, world!' }); // Sends a JSON response
+});;
+ 
+ app.get('/', (req, res) => {
+  res.json({ message: 'Hello, world!' }); // Sends a JSON response
+});
 /* app.use(cors({
   origin: [
     "http://localhost:3000", 
@@ -451,7 +457,7 @@ app.post("/gameid",async(req,res)=>{
   }
 
 })
-
-server.listen(process.env.PORT||3001,'0.0.0.0',()=>{
-    console.log("port connected port 3001");
+const port=process.env.PORT;
+server.listen(port||3001,'0.0.0.0',()=>{
+    console.log(`port connected port  ${port}`);
 })
