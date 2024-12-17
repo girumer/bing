@@ -4,6 +4,6 @@ const router = express.Router();
 const verifyUser = require('../middleware/verifyUser');
 const { getAllUsers } = require('../controllers/getAllUsers');
 
-router.get('/dashboard', verifyUser, getAllUsers);
+router.get('/dashboards', verifyUser, getAllUsers);
 
 module.exports = router;

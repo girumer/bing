@@ -107,7 +107,7 @@ const performaction=()=>{
     console.log("useEffect is running");
     const token =  localStorage.getItem('accesstoken');
     axios
-      .get(`${BACKEND_URL}/api/dashboard`,{
+      .get(`${BACKEND_URL}/api/dashboards`,{
         headers: {
             Authorization: `Bearer ${token}`,
         },})
