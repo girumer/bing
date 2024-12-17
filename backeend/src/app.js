@@ -164,6 +164,7 @@ app.use(cors({
       });
     }
   };
+  console.log ("code edited");
   app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
 app.use('/auth', authRoutessignup);

@@ -136,7 +136,7 @@ const performaction=()=>{
             <th>remaing acc</th>
             <th>wallet increment</th>
             <th>delete</th>
-            <th>change Password</th>
+            
           </tr>
         </thead>
         <tbody>
@@ -159,11 +159,7 @@ const performaction=()=>{
         style={{ cursor: 'pointer', color: 'red' }}
         onClick={() => handleDeleteIconClick(user.username)}
       > delete</i></td>
-      <td> <i
-        className="fa-solid fa-trash"
-        style={{ cursor: 'pointer', color: 'red' }}
-        onClick={() => handlechangeIconClick(user.username)}
-      > change Password</i></td>
+      
               </tr>
             ))
           ) : (
