@@ -66,7 +66,9 @@ app.options('*', cors()); // Automatically handle OPTIONS requests
  return   jwt.sign({_id}, process.env.JWT_SECRET,{expiresIn:'3d'})
 } */
 
-
+ app.get('/', (req, res) => {
+  res.send('Hello, world!'); // You can replace this with your actual frontend or response
+})
 /* app.use(cors({
   origin: [
     "http://localhost:3000", 
