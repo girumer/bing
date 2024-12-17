@@ -39,7 +39,7 @@ const server=http.createServer(app);
 app.use(bodyParser.json());
 const allowedOrigins = [
   'http://localhost:3000', // Frontend URL
-  'http://127.0.0.1:3000', // Alternative
+
   'http://167.235.140.218',
   'http://adeyebingo.com',       // Your domain name
   'http://www.adeyebingo.com'
@@ -69,12 +69,10 @@ app.options('*', cors()); // Automatically handle OPTIONS requests
 } */
 
 
- app.get('/', (req, res) => {
-  res.json({ message: 'Hello, world!' }); // Sends a JSON response
-});;
  
+ console.log("i change ");
  app.get('/', (req, res) => {
-  res.json({ message: 'Hello, world!' }); // Sends a JSON response
+  res.json({ message: 'Hello, world! ass i know ' }); // Sends a JSON response
 });
 /* app.use(cors({
   origin: [
