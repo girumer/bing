@@ -38,11 +38,13 @@ const server=http.createServer(app);
 
 app.use(bodyParser.json());
 const allowedOrigins = [
-  'http://localhost:3000', // Frontend URL
-
-  'http://167.235.140.218',
-  'http://adeyebingo.com',       // Your domain name
-  'http://www.adeyebingo.com'
+  'http://localhost:3000',         // Development URL
+  'https://localhost:3000',        // Development URL with HTTPS
+  'http://167.235.140.218',        // IP address (if needed)
+  'http://adeyebingo.com',         // Production domain with HTTP
+  'https://adeyebingo.com',        // Production domain with HTTPS
+  'http://www.adeyebingo.com',     // www version with HTTP
+  'https://www.adeyebingo.com'     // www version with HTTPS
 ];
 
 app.use(cors({
