@@ -77,7 +77,12 @@ const BingoBoard = () => {
     const [venderaward,setvenderaward]=useState(0);
     const [gamewinnerboard,setgamewinnerboard]=useState(false);
       const [marked,setmarked]=useState([]);
-      const [language, setLanguage] = useState('am'); // default to English
+     // const [language, setLanguage] = useState('am'); // default to English
+     const [language, setLanguage] = useState(() => {
+        const storedLanguage = localStorage.getItem('language');
+        console.log('Initial Language from localStorage:', storedLanguage); // Debugging log
+        return storedLanguage || 'am';
+    });
       const [selectedOption, setSelectedOption] = useState(4000);
       const [isOpen, setIsOpen] = useState(false);
       const options = [
@@ -94,7 +99,11 @@ const BingoBoard = () => {
         localStorage.setItem('calledNumbers', JSON.stringify(calledNumbersRef.current));
     
     }, [calledNumbersRef.current]);
-  
+    
+    useEffect(() => {
+        console.log('Language has changed:', language); // Debugging log
+        localStorage.setItem('language', language);
+    }, [language]);
     useEffect(() => {
         const checkToken = async () => {
           const token = localStorage.getItem('accesstoken');
@@ -166,6 +175,7 @@ const BingoBoard = () => {
         setTotalcash(totalcash);
         setawardforagent(awardforagen);
     };
+    
 // Stop function
 const handleStop = () => {
     isGeneratingRef.current = false;  // Stop the number generation
@@ -276,12 +286,19 @@ useEffect(() => {
         return audio;
          // Adjust the path if necessary
     });
-    const handleLanguageChange = (event) => {
+   /*  const handleLanguageChange = (event) => {
         setLanguage(event.target.value);
         // You can add any additional action when the language changes here
         console.log("Selected language:", event.target.value);
+    }; */
+    /* const handleLanguageChange = (event) => {
+       
+        setLanguage(event.target.value);
+         // Update state
+    }; */
+    const handleLanguageChange = (event) => {
+        setLanguage(event.target.value); // This updates the state which triggers useEffect
     };
-   
     const handleChange = (event) => {
         let value = parseInt(event.target.value, 10) - 1; // Adjust input for zero-based index
     
@@ -303,9 +320,18 @@ useEffect(() => {
         
     };
     const newgamet=()=>{
+        if(language=="am"){
        const gamestart=getGameStartedAudi();
        gamestart.preload="auto";
        gamestart.play();
+    }
+       else{
+        let message="Game started";
+        const utterance = new SpeechSynthesisUtterance(message);
+
+            window.speechSynthesis.speak(utterance);
+       }
+       
        
         setTimeout(() => {
             updateplayer();
@@ -430,6 +456,11 @@ useEffect(() => {
         audio.preload = "auto"; // Preload to reduce delay
        return audio;
     }
+    const playerNotwin=()=>{
+        const audio= new Audio('/gamestatus/notwin.mp3');
+        audio.preload = "auto"; // Preload to reduce delay
+       return audio;
+    }
     const getGamePusedAudio=()=>{
         const audio=new Audio('/gamestatus/gamepused.mp3');
         audio.preload = "auto"; // Preload to reduce delay
@@ -499,9 +530,21 @@ useEffect(() => {
                                 playAmharicAudioForNumber(number);
                             }
                             else{
-                            const utterance = new SpeechSynthesisUtterance(`B ${number}`);
-                            window.speechSynthesis.speak(utterance);}
-                           }
+                                if (number >= 10) {
+                                    // First announcement: "B {number}"
+                                    const utterance1 = new SpeechSynthesisUtterance(`B ${number}`);
+                                    window.speechSynthesis.speak(utterance1);
+                                
+                                    // Second announcement: Split and announce digits
+                                    const digits = String(number).split(''); // Split the number into individual digits
+                                    const utterance2 = new SpeechSynthesisUtterance(`B ${digits.join(' ')}`);
+                                    window.speechSynthesis.speak(utterance2);
+                                } else {
+                                    // For numbers less than 10
+                                    const utterance = new SpeechSynthesisUtterance(`B ${number}`);
+                                    window.speechSynthesis.speak(utterance);
+                                }
+                           }}
                           else if(number<=30){
                             
                             if(language==="am"){
@@ -509,7 +552,13 @@ useEffect(() => {
                             }
                             else{
                             const utterance = new SpeechSynthesisUtterance(`I ${number}`);
-                            window.speechSynthesis.speak(utterance);}
+                            utterance.lang = language === "en" ? "en-US" : "am-ET";
+                            window.speechSynthesis.speak(utterance);
+                            const digits = String(number).split(''); // Split the number into individual digits
+                            const utterance2 = new SpeechSynthesisUtterance(`I ${digits.join(' ')}`);
+                            utterance2.lang = utterance.lang; 
+                            window.speechSynthesis.speak(utterance2);
+                        }
                            }
                            else if(number<=45){
                             if(language==="am"){
@@ -517,16 +566,25 @@ useEffect(() => {
                             }
                             else{
                             const utterance = new SpeechSynthesisUtterance(`N ${number}`);
-                            window.speechSynthesis.speak(utterance);}
+                            window.speechSynthesis.speak(utterance);
+                            const digits = String(number).split(''); // Split the number into individual digits
+                            const utterance2 = new SpeechSynthesisUtterance(`N ${digits.join(' ')}`);
+                            window.speechSynthesis.speak(utterance2);
+                        }
                            }
-                         else   if(number<=60){
+                         else if(number<=60){
                           
                             if(language==="am"){
                                 playAmharicAudioForNumber(number);
                             }
                             else{
                             const utterance = new SpeechSynthesisUtterance(`G ${number}`);
-                            window.speechSynthesis.speak(utterance);}                           }
+                            window.speechSynthesis.speak(utterance);
+                            const digits = String(number).split(''); // Split the number into individual digits
+                            const utterance2 = new SpeechSynthesisUtterance(`G ${digits.join(' ')}`);
+                            window.speechSynthesis.speak(utterance2);
+                            }
+                                                }
                           else{
                           
                             if(language==="am"){
@@ -534,8 +592,12 @@ useEffect(() => {
                             }
                             else{
                             const utterance = new SpeechSynthesisUtterance(`O ${number}`);
-                            window.speechSynthesis.speak(utterance);}                           }
-                            
+                            window.speechSynthesis.speak(utterance);                          
+                            const digits = String(number).split(''); // Split the number into individual digits
+                            const utterance2 = new SpeechSynthesisUtterance(`O ${digits.join(' ')}`);
+                            window.speechSynthesis.speak(utterance2);} }
+                      
+         
             
         }
     };
@@ -831,10 +893,15 @@ useEffect(() => {
          else{
             
       
-     
+          if(language=="am"){
+            const notwin=playerNotwin();
+            notwin.play();
+          }
+          else{
            let message="you click wrong pattern";
            const utterance = new SpeechSynthesisUtterance(message);
                          window.speechSynthesis.speak(utterance);
+          }
                          //setgamewinnerboard(false);
            //alert(message);
              //    console.log(marked);
@@ -852,14 +919,14 @@ useEffect(() => {
     
         <React.Fragment>
            
-           {isnavbar && <Navbar />}      
-                        <div>
+           {isnavbar && <Navbar /> }     
+           {isnavbar    &&   <div>
             <label htmlFor="language-select">Select Language:</label>
             <select id="language-select" value={language} onChange={handleLanguageChange}>
                 <option value="en">English</option>
                 <option value="am">Amharic</option>
             </select>
-        </div>
+        </div>}
             <div className="mainbody">
                 <div className="board-container">
                     <div className="current-number">
@@ -894,9 +961,9 @@ useEffect(() => {
                         <button className="start_button" disabled={cartelas.length === 0} onClick={startGamer}>Resume</button>
                         <button className="claim_button" disabled={cartelas.length === 0} onClick={bingoclam}>BINGO</button>
                         <button className="Next_button" onClick={newgame}>New Game</button>
-                        <button className="Leav_button" >{username}</button>
+                       
                     </div>
-                    <div className="dropdown-container">
+                       <div className="dropdown-container">
                     <p className="selected-time">Selected time: {selectedOption / 1000} seconds</p>
             <button className="dropdown-toggle" onClick={() => setIsOpen(!isOpen)}>
                 {options.find((option) => option.value === selectedOption)?.label || "Select Time"}

@@ -38,7 +38,8 @@ const server=http.createServer(app);
 
 app.use(bodyParser.json());
 const allowedOrigins = [
-  'http://localhost:3000',         // Development URL
+  'http://localhost:3000',
+  //          // Development URL
   'https://localhost:3000',        // Development URL with HTTPS
   'http://167.235.140.218',        // IP address (if needed)
   'http://adeyebingo.com',         // Production domain with HTTP

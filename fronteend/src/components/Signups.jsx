@@ -46,7 +46,7 @@ const [formData,setFormData]=useState({
     <React.Fragment>
       <Navbar />
 <div className="signup-container">
-        <h2>Sign Up</h2>
+        <h2>Sign Up page is now </h2>
         <form className="signup-form" onSubmit={handleSubmit}>
             <div className="form-group">
                 <label for="username">Username</label>
