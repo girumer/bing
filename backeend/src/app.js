@@ -44,7 +44,8 @@ const allowedOrigins = [
   'http://adeyebingo.com',         // Production domain with HTTP
   'https://adeyebingo.com',        // Production domain with HTTPS
   'http://www.adeyebingo.com',     // www version with HTTP
-  'https://www.adeyebingo.com'     // www version with HTTPS
+  'https://www.adeyebingo.com',//      // www version with HTTPS
+  'https://api.adeyebingo.com',
 ];
 
 app.use(cors({
@@ -173,6 +174,9 @@ app.use(cors({
   };
   console.log ("code edited");
   console.log("second edit");
+  app.get('/api', (req, res) => {
+    res.send('API is working!');
+  });
   app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
 app.use('/auth', authRoutessignup);
