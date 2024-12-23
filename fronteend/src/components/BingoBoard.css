@@ -11,7 +11,126 @@
     padding: 20px;
     box-sizing: border-box;
 }
+.selected-time1{
+    margin-left: 150px;
+    margin-right: 150px;
+    margin-bottom: 10px;
+    color: #fff;
+}
+.current-number1{
+    margin-left: 150px;
+    margin-right: 150px;
+    margin-top: 10px;
+    width: 13vw; /* Outer circle size */
+    height: 13vw; /* Outer circle size */
+    background: rgb(2, 1, 33);
+    background-color: linear-gradient(90deg, rgb(162, 158, 226) 0%, rgba(9,9,121,0.5019257703081232) 43%, rgba(0,212,255,1) 100%);
+    border-radius: 50%; /* Make the div circular */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+   
+    position: relative;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+.bingo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
+    text-align: center;
+    background-color: #f8f9fa; /* Optional background color */
+    position: relative; /* Important for absolute positioning of child elements */
+}
 
+.shuffle-animation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    position: absolute;
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%);
+    animation: shuffle-container 2s ease-in-out infinite; /* Keep animation */
+}
+
+.bingo-ball {
+    width: 50px;
+    height: 50px;
+    background-color: #ffcc00;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    border: 2px solid #000;
+    animation: bounce 0.5s ease-in-out infinite alternate, rotate 2s linear infinite;
+}
+
+.shuffle-button {
+    position: absolute;
+    top: 10%; /* Place the button at the top of the screen */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%);
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.shuffle-button:hover {
+    background-color: #0056b3;
+}
+
+/* Keyframes for bouncing balls */
+@keyframes bounce {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Keyframes for shuffle container movement */
+@keyframes shuffle-container {
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+    50% {
+        transform: translateX(-30px);
+    }
+}
+
+.current-number1 p {
+    font-size: 4rem;
+    margin: 0;
+    color: #fff; /* White text for better contrast */
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
 .numbers-container {
     width: 75%;
     display: grid;
@@ -304,6 +423,17 @@
 }
 .Next_button{
     background-color: rgb(18, 245, 222);
+    width: 70%;
+    margin-left: 70px;
+    margin-top: 5px;
+    height: 50px;
+    margin-bottom: 5px;
+    border-radius: 25px;
+    color: black;
+    font-size: large;
+}
+.Next_shuffle{
+    background-color: #ffcc00;
     width: 70%;
     margin-left: 70px;
     margin-top: 5px;

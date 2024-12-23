@@ -36,7 +36,13 @@ const BingoBoard = () => {
         return storedNumbers ? JSON.parse(storedNumbers) : [];
     });
     const calledNumbersRef = useRef(numberCall);
-   
+    const [numberCallLength, setNumberCallLength] = useState(numberCall.length);
+    useEffect(() => {
+        // Sync the ref with the state
+        calledNumbersRef.current = numberCall;
+        // Update the length state whenever the numbers change
+        setNumberCallLength(numberCall.length);
+    }, [numberCall]);
     useEffect(() => {
         const checkToken = async () => {
           const token = await localStorage.getItem('accesstoken');
@@ -92,7 +98,24 @@ const BingoBoard = () => {
         { label: "7 seconds", value: 7000 },
     ];
       const interval = selectedOption;
-  
+      const [isShuffling, setIsShuffling] = useState(false);
+     
+      const audioRef = useRef(null);
+      const handleShuffle = () => {
+        // Play shuffle voice
+      
+        const gameshuffile =getshuffle();
+        gameshuffile.preload="auto";
+        gameshuffile.play();
+         //gameshuffile.play();
+        // Trigger animation
+        setIsShuffling(true);
+          console.log("shffule status",isShuffling);
+        // Reset animation after 1.5 seconds
+        setTimeout(() => {
+            setIsShuffling(false);
+        }, 15000);
+    };
     console.log("calling speed is",interval);
    
       useEffect(() => {
@@ -167,7 +190,7 @@ const BingoBoard = () => {
         const totalcash= stake * total ;
         const final = totalcash * 0.8;
         const award=totalcash*0.2;
-        const vendor=award*0.3;
+        const vendor=award*0.15;
         const awardforagen=award-vendor;
 
         setWinerAward(final);
@@ -346,6 +369,12 @@ useEffect(() => {
         aler.play();
         
        
+
+    }
+    const getshuffle=()=>{
+        const audio =new Audio('/gamestatus/shuffile.mp3');
+        audio.preload = "auto"; // Preload to reduce delay
+        return audio;
     }
     const getGameStartedAudi = () => {
         const audio= new Audio('/gamestatus/gamestarted.mp3');
@@ -389,7 +418,7 @@ useEffect(() => {
         else{
         const utterance = new SpeechSynthesisUtterance("Game Pused");
         window.speechSynthesis.speak(utterance);
-        setIsGenerating(false);
+        handleStop();
         setwinnerboard(true);}
     };
 
@@ -842,7 +871,7 @@ useEffect(() => {
          if(language=="am"){
             const win =getGameWining();
                win.play();
-               const marked1=[intialstate[0][0],intialstate[1][1],intialstate[1][3],intialstate[4][4]];
+               const marked1=[intialstate[0][0],intialstate[1][1],intialstate[1][3],intialstate[3][3],intialstate[4][4]];
              setmarked(marked1);
              //submit({preventDefault: () => {} });
              //updateplayer();
@@ -850,7 +879,7 @@ useEffect(() => {
              console.log(marked1);
          }
           else{
-            const marked1=[intialstate[0][0],intialstate[1][1],intialstate[1][3],intialstate[4][4]];
+            const marked1=[intialstate[0][0],intialstate[1][1],intialstate[1][3],intialstate[3][3],intialstate[4][4]];
              setmarked(marked1);
              //submit({preventDefault: () => {} });
              setgamewinnerboard(true);
@@ -879,8 +908,9 @@ useEffect(() => {
                  console.log(marked1);
              }
               else{
-                const marked1=[intialstate[0][0],intialstate[1][1],intialstate[1][3],intialstate[4][4]];
+                const marked1=[intialstate[0][0],intialstate[0][4],intialstate[4][0],intialstate[4][4]];
                 //submit({preventDefault: () => {} });
+                setmarked(marked1);
                  setgamewinnerboard(true);
                //  updateplayer();
                  console.log(marked1);
@@ -961,9 +991,10 @@ useEffect(() => {
                         <button className="start_button" disabled={cartelas.length === 0} onClick={startGamer}>Resume</button>
                         <button className="claim_button" disabled={cartelas.length === 0} onClick={bingoclam}>BINGO</button>
                         <button className="Next_button" onClick={newgame}>New Game</button>
+                        <button className="Next_shuffle" disabled={cartelas.length >= 1} onClick={handleShuffle}>shuffile</button>
                        
-                    </div>
-                       <div className="dropdown-container">
+                       </div>
+                       {isnavbar && <div className="dropdown-container">
                     <p className="selected-time">Selected time: {selectedOption / 1000} seconds</p>
             <button className="dropdown-toggle" onClick={() => setIsOpen(!isOpen)}>
                 {options.find((option) => option.value === selectedOption)?.label || "Select Time"}
@@ -989,8 +1020,15 @@ useEffect(() => {
             )}
 
             
-        </div>
+        </div>}
                   
+       {!isnavbar && <div>
+        <p className="selected-time1">number of calledNumbers</p>
+        <div className="current-number1">
+                            <p>{numberCallLength}</p>
+                        </div>
+                    </div>
+                    }
                     <div className="net-pay1">
                         <div className="net-pay2">
                             <p>{winerAward || 'winner'}</p>
@@ -1044,6 +1082,15 @@ useEffect(() => {
         </div>
     </div>}
   
+    {isShuffling && (
+                <div className="shuffle-animation">
+                    {Array.from({ length: 5 }, (_, i) => (
+                        <div key={i} className="bingo-ball">
+                            {Math.floor(Math.random() * 100) + 1}
+                        </div>
+                    ))}
+                </div>
+            )}
                 </div>
 
             </div>
