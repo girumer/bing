@@ -83,6 +83,9 @@ const handlelogin=()=>{
   const gotohelp=()=>{
     history("/Helpdesk") 
   }
+  const gotoreport=()=>{
+    history("/Report") 
+  }
   const gotogame=()=>{
     history("/StackPage") 
   }
@@ -104,15 +107,21 @@ const handlelogin=()=>{
       <nav ref={navRef}>
       {token?(
         <>
+       
+       <div >
       <button className="Home" aria-label="House User" onClick={gotohome}>
   <i className="fa-solid fa-house-user" onClick={gotohome}></i> {/* House User Icon */}
  HOME
 </button>
-         
+   
 
         <button className="history" aria-label="Game History" onClick={gotohistory}>
            <i className="fa-solid fa-history" onClick={gotohistory}></i> {/* History Icon */}
-                Game History
+                 History
+                </button>
+                <button className="history" aria-label="Game History" onClick={gotoreport}>
+           <i className="fa-solid fa-history" onClick={gotoreport}></i> {/* History Icon */}
+                 Report
                 </button>
                 <button className="wallet" aria-label="Wallet" onClick={gototransfer}>
   <i className="fa-solid fa-wallet" onClick={gototransfer}></i> {/* Wallet Icon */}
@@ -126,7 +135,9 @@ const handlelogin=()=>{
         <button className="nav-btn1 nav-close-btn" onClick={showNavBar}>
           <FaTimes />
         </button>
+        </div>  
     <button onClick={handlelogout}>LogOut</button></>):(<div><h1>to continue the game pleas click login</h1><button onClick={handlelogin}>login</button> </div>)} 
+    
       </nav>
     
       <button className="nav-btn1" onClick={showNavBar}>

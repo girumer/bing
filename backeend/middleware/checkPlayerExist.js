@@ -1,8 +1,11 @@
-// middleware/checkPlayerExist.js
 const BingoBord = require('../Models/BingoBord');
 
 const checkPlayerExist = async (req, res, next) => {
-  const { user } = req.body;
+  const { user } = req.query;  // Access user from query params, not body
+
+  if (!user) {
+    return res.status(400).json({ message: 'User parameter is required' });
+  }
 
   try {
     const player = await BingoBord.findOne({ username: user });

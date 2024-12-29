@@ -39,11 +39,15 @@ const BingoBordSchema = new mongoose.Schema({
     gameHistory: [{
        
         gameId: { type: Number,default:0 },
+        profit:{type:Number,default:0},
+        numberofplayer:{type:Number,default:0},
         PayeForVendor: { type: Number },
         totalcash:{type:Number},
         PayForPlayer:{type:Number},
         awardforagen:{type:Number},
-        stake: { type: Number,default:0 }
+        winerAward:{type:Number,default:0},
+        stake: { type: Number,default:0 },
+        timestamp: { type: Date, default: Date.now,  } 
     }],
 });
 

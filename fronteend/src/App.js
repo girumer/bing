@@ -10,7 +10,7 @@ import CartelaSelction from "./components/CartelaSelction";
 import Signups from "./components/Signups";
 import Logins from "./components/Logins";
 import Dashbord from "./components/Dashboard";
-
+import Report from './components/Report';
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AdminPasswordReset from './components/AdminPasswordReset';
@@ -35,12 +35,13 @@ function App() {
          
           <Route path="/qazxsw" element={<AdminSignup/>}/>
            <Route path="/AdminPasswordReset" element={<AdminPasswordReset/>}/>
+          
           <Route path="/Logins"  element={<Logins/>}/>
           <Route path="/signups" element={<Signups /> }/>
           {/* protected toutes*/ }
           <Route element={<ProtectedRoute/>}>
           <Route path="/Dashbord" element={<Dashbord/>}/>
-          
+          <Route path="/Report" element={<Report />} />
           <Route path="/mainmenu" element={<Mainmenu/>}/>
            <Route path="/GameHistory" element={<GameHistory/>}/>
           

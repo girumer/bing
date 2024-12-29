@@ -11,7 +11,7 @@ function CartelaSelction() {
     const options = [2,  4,  7,  10];
     localStorage.setItem('language',location.state.language);
     let  language= localStorage.getItem('language');
-    const [selectedStake, setSelectedStake] = useState(10); // Default stake is 10
+    const [selectedStake, setSelectedStake] = useState(20); // Default stake is 10
    
         console.log(language);
     const handleStakeChange = (event) => {
@@ -72,7 +72,7 @@ function CartelaSelction() {
                             key={num} 
                             onClick={() => handleButtonClick(num)} 
                             className="cartela" 
-                            style={{ background: numbers.includes(num) ? '#ff0000' : '#16e916ed' }}
+                            style={{ background: numbers.includes(num) ? 'red' : '#eeeeee',color:numbers.includes(num) ?'yellow':'black' }}
                         >
                             {num}
                         </button>

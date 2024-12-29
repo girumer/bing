@@ -322,6 +322,32 @@
     justify-content: space-between;
   
 }
+.button-containerw {
+    display: flex; /* Use flexbox for horizontal alignment */
+    justify-content: space-between; /* Distribute space evenly between buttons */
+    align-items: center; /* Align items vertically in the center */
+    gap: 10px; /* Optional: Add space between the buttons */
+    padding: 10px; /* Optional: Add some padding around the container */
+}
+.closebtn{
+    background-color: #fb4c0df1;
+    width: 25%; 
+    border-radius: 15px;
+    height: 35px;
+}
+.otherbtn{
+    background-color: #41fb0df1;
+    width: 25%; 
+    border-radius: 15px;
+    height: 35px;
+}
+.backbtn{
+    background-color: #040b01f1;
+    width: 25%; 
+    border-radius: 15px;
+    color: white;
+    height: 35px; 
+}
 .Colum button{
     border-radius: 50%;
 }

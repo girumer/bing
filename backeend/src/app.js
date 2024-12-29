@@ -14,6 +14,7 @@ const authRoutessignup= require('../routes/signupauthRoutes');
 const gameHistoryRoutes = require('../routes/gameHistory');
 const depositRoutes = require('../routes/depositRoutes');
 const adminRoutes = require("../routes/adminRoutes");
+const reportRoutes = require('../routes/reportRoutes');
 const path = require('path');
 const secretkey=process.env.JWT_SECRET;
 const refreshKey=process.env.JwT_PRIVATE;
@@ -180,6 +181,7 @@ app.use(cors({
   });
   app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
+app.use('/api', reportRoutes);
 app.use('/auth', authRoutessignup);
 app.use('/api', gameHistoryRoutes);
 app.use('/api', depositRoutes);
@@ -374,21 +376,24 @@ app.get("/dashboard", verfyuser, async (req, res) => {
     
 }) */
 app.post("/updateplayer", async (req, res) => { 
-  const { username,stake,awardforagent,totalcash,venderaward, winerAward } = req.body;
+  const { username,stake,numberofplayer,profit,awardforagent,totalcash,venderaward,winerAward } = req.body;
 
   const data = {
       username: username,
+      numberofplayer:numberofplayer,
+      profit:profit,
       stake: stake,
       totalcash: totalcash,
       venderaward: venderaward,
+      winerAward:winerAward,
       awardforagent:awardforagent
   };
 
   try {
       // Find if the player already exists
       const check = await BingoBord.findOne({ username: username });
-      console.log("user is ",check);
-        
+     // console.log("user is ",check);
+        console.log("winer awared is ",winerAward);
       if (check) {
        // Retrieve the last gameId from gameHistory if it exists, otherwise start from 0
 let depo1 = (check.gameHistory.length > 0) 
@@ -407,11 +412,13 @@ let depo1 = (check.gameHistory.length > 0)
                   gameHistory: { 
                       gameId: depo1,
                       stake: stake,
+                      numberofplayer:numberofplayer,
+                      profit:profit,
                       awardforagen:awardforagent, 
                       PayeForVendor: PayeForVendor, 
-                      PayForPlayer: winerAward,
-                      totalcash: totalcash
-
+                      winerAward: winerAward,
+                      totalcash: totalcash,
+                      timestamp: new Date()
                   } 
               } // Push new game history entry
           };
@@ -437,6 +444,8 @@ let depo1 = (check.gameHistory.length > 0)
       }
   }
 });
+
+
 app.post("/login", async(req,res)=>{
   const {username,password}=req.body
   res.json({mssg:'login user'})

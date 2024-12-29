@@ -26,6 +26,7 @@ const BingoBoard = () => {
     //let username= localStorage.getItem('username');
 
     const [isnavbar,setNavbar]=useState(true);
+    const [numberofplayer,setNumberofPlayer]=useState(0);
     const [currentNumber, setCurrentNumber] = useState(0);
     const [username, setUser] = useState(null);
     const [winerAward, setWinerAward] = useState(0);
@@ -92,14 +93,14 @@ const BingoBoard = () => {
       const [selectedOption, setSelectedOption] = useState(4000);
       const [isOpen, setIsOpen] = useState(false);
       const options = [
-        { label: "4 seconds", value: 4000 },
-        { label: "5 seconds", value: 5000 },
-        { label: "6 seconds", value: 6000 },
         { label: "7 seconds", value: 7000 },
+        { label: "8 seconds", value: 8000 },
+        { label: "9 seconds", value: 9000 },
+        { label: "10 seconds", value: 10000 },
     ];
       const interval = selectedOption;
       const [isShuffling, setIsShuffling] = useState(false);
-     
+      const [profit,setprofit]=useState(0);
       const audioRef = useRef(null);
       const handleShuffle = () => {
         // Play shuffle voice
@@ -175,6 +176,7 @@ const BingoBoard = () => {
    // console.log("cartelas length is",cartelas);
     const [cartes, setCartes] = useState(0); 
       const [winstate1, setWinstate] = useState(cartela[cartes]?.cart || []); 
+      const [losestate,setlosestate]= useState(cartela[cartes]?.cart || []);
     const stake = location.state?.stake || 0;
     let intialstate=cartela[cartes].cart;
     
@@ -186,14 +188,16 @@ const BingoBoard = () => {
         }
     };
     const setAmount = (cartelas, stake) => {
+        const numberofplayer=cartelas.length;
         const total = cartelas.length;
         const totalcash= stake * total ;
         const final = totalcash * 0.8;
         const award=totalcash*0.2;
-        const vendor=award*0.15;
+        const vendor=award*0.3;
         const awardforagen=award-vendor;
-
+        setNumberofPlayer(numberofplayer);
         setWinerAward(final);
+        setprofit(award)
         setvenderaward(vendor);
         setTotalcash(totalcash);
         setawardforagent(awardforagen);
@@ -226,48 +230,7 @@ useEffect(() => {
     console.log("is genrating is ",isGenerating);
     console.log("user is" ,username);
    
-    /* async function submit(e){
-        if (e && e.preventDefault) {
-            e.preventDefault();
-        }
-
-        try{
-
-            await axios.post("http://127.0.0.1:3001/updateplayer",{
-                username,stake,awardforagent,totalcash,venderaward,winerAward
-            })
-            .then(res=>{
-                console.log(res.data);
-                if(res.data=="exist"){
-                    alert("User already exists")
-                }
-                else if(res.data=="updated"){
-                   
-                    localStorage.removeItem('calledNumbers');
-
-                    // Reset the state to an empty array
-                    setCalledNumber([]);
-                
-                    // Update the ref to reflect the cleared state
-                    calledNumbersRef.current = [];
-                    setWinerAward(0);
-                    setgamewinnerboard(false);
-                    setCurrentNumber(0);
-                }
-            })
-            .catch(e=>{
-                alert("wrong details")
-                console.log(e);
-            })
-
-        }
-        catch(e){
-            console.log(e);
-
-        }
-
-    } */
-
+   
     useEffect(() => {
         setWinstate(cartela[cartes]?.cart || []); // Update winstate1 to the selected cart
     }, [cartes]); // This dependency array watches for changes to cartes
@@ -309,16 +272,7 @@ useEffect(() => {
         return audio;
          // Adjust the path if necessary
     });
-   /*  const handleLanguageChange = (event) => {
-        setLanguage(event.target.value);
-        // You can add any additional action when the language changes here
-        console.log("Selected language:", event.target.value);
-    }; */
-    /* const handleLanguageChange = (event) => {
-       
-        setLanguage(event.target.value);
-         // Update state
-    }; */
+   
     const handleLanguageChange = (event) => {
         setLanguage(event.target.value); // This updates the state which triggers useEffect
     };
@@ -405,6 +359,9 @@ useEffect(() => {
     const addother=()=>{
         setgamewinnerboard(false);
         setwinnerboard(true);
+    }
+    const  backtogame=()=>{
+        setgamewinnerboard(false);
     }
     const bingoclam = () => {
         if(language=="am"){
@@ -505,7 +462,7 @@ useEffect(() => {
         try{
 
             await axios.post(`${BACKEND_URL}/updateplayer`,{
-                username,stake,awardforagent,totalcash,venderaward,winerAward
+                username,stake,numberofplayer,profit,awardforagent,totalcash,venderaward,winerAward
             })
             .then(res=>{
                 console.log(res.data);
@@ -922,12 +879,17 @@ useEffect(() => {
   
          else{
             
-      
+            const marked1 = intialstate
+        .flatMap(row => row.filter(num => calledNumbers.includes(num) || num === '*'));
+            setmarked(marked1);
+            setgamewinnerboard(true);
+            console.log(marked1);
           if(language=="am"){
             const notwin=playerNotwin();
             notwin.play();
           }
           else{
+
            let message="you click wrong pattern";
            const utterance = new SpeechSynthesisUtterance(message);
                          window.speechSynthesis.speak(utterance);
@@ -978,7 +940,7 @@ useEffect(() => {
                                 <button 
                                     key={number} 
                                     className="number-button" 
-                                    style={{ background: numberCall.includes(number) ? '#eeeeee' : '#16e916ed' }}>
+                                    style={{ background: numberCall.includes(number) ? '#eeeeee' : '#040b01f1' ,color:numberCall.includes(number)?'black':'white'}}>
                                     {number}
                                 </button>
                             );
@@ -1076,8 +1038,9 @@ useEffect(() => {
 
         <div className="button-containerw">
             
-            <button className="button" id="closePopup" onClick={submit}>Close</button>
-            <button className="button" id="closePopup" onClick={addother}>other</button>
+            <button className="closebtn" id="closePopup" onClick={submit}>Close</button>
+            <button className="otherbtn" id="closePopup" onClick={addother}>other</button>
+            <button className="backbtn" id="closePopup" onClick={backtogame}>back</button>
         </div>
         </div>
     </div>}

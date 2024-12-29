@@ -3,10 +3,11 @@ import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './GameHistory.css';
 import Navbar from '../components/Navbar';
+import moment from 'moment';
 import ReactPaginate from 'react-paginate';
 import _ from 'lodash';
 import Cookies from "js-cookie";
-const GameHistory = ({ playerId }) => {
+const GameHistory = ({ game }) => {
   const location = useLocation();
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
   const navigate=useNavigate();
@@ -100,7 +101,7 @@ alert("user not founn");
 
   if (loading) return <div>Loading game history...</div>;
   if (error) return <div>{error}</div>;
-
+  
   return (
     <React.Fragment>
       <Navbar />
@@ -112,12 +113,13 @@ alert("user not founn");
           <thead>
             <tr>
               
-              <th>GameID</th>
+               <th>Time</th>
+               <th>Stake</th>
               <th>TotalCash</th>
-              <th>payforagenet</th>
-              <th>PayeForVendor</th>
+              <th>numberofplayer</th>
               <th>PayForPlayer</th>
-              <th>Stake</th>
+              <th>Profit</th>
+             
              
             </tr>
           </thead>
@@ -125,12 +127,13 @@ alert("user not founn");
             {currentPosts.map((game, index) => (
               <tr key={index}>
                 
-                <td>{game.gameId}</td>
-                <td>{game.totalcash}</td>
-                <td>{game.awardforagen}</td>
-                <td>{game.PayeForVendor}</td>
-                <td>{game.PayForPlayer}</td>
+                <td>{moment(game.timestamp).format('MMMM Do YYYY, h:mm:ss a')}</td>
                 <td>{game.stake}</td>
+                <td>{game.totalcash}</td>
+                <td>{game.numberofplayer}</td>
+                <td>{game.winerAward}</td>
+                <td>{game.profit}</td>
+               
               </tr>
             ))}
           </tbody>
