@@ -16,7 +16,7 @@ const GameHistory = ({ game }) => {
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
-  const rowsPerPage = 5;
+  const rowsPerPage = 10;
 
   // Set localStorage items once when location state changes
 /*   useEffect(() => {

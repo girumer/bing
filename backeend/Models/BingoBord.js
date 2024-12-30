@@ -47,7 +47,7 @@ const BingoBordSchema = new mongoose.Schema({
         awardforagen:{type:Number},
         winerAward:{type:Number,default:0},
         stake: { type: Number,default:0 },
-        timestamp: { type: Date, default: Date.now,  } 
+        timestamp: { type: Date,   } 
     }],
 });
 

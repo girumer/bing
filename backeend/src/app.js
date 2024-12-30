@@ -75,7 +75,7 @@ app.options('*', cors()); // Automatically handle OPTIONS requests
 
 
  
- console.log("i change ");
+ 
  app.get('/', (req, res) => {
   res.json({ message: 'Hello, world! ass i know ' }); // Sends a JSON response
 });
