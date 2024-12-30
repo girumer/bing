@@ -101,7 +101,8 @@ alert("user not founn");
 
   if (loading) return <div>Loading game history...</div>;
   if (error) return <div>{error}</div>;
-  
+  const validGames = currentPosts.filter((game) => game.timestamp && game.profit > 0);
+
   return (
     <React.Fragment>
       <Navbar />
@@ -124,7 +125,8 @@ alert("user not founn");
             </tr>
           </thead>
           <tbody>
-            {currentPosts.map((game, index) => (
+          {validGames.length > 0 ? (
+            validGames.map((game, index) => (
               <tr key={index}>
                 
                 <td>{moment(game.timestamp).format('MMMM Do YYYY, h:mm:ss a')}</td>
@@ -135,7 +137,10 @@ alert("user not founn");
                 <td>{game.profit}</td>
                
               </tr>
-            ))}
+            ))):(
+              <tr>
+                <td colSpan="6">No games played yet.</td>
+              </tr>)}
           </tbody>
         </table>
         <ReactPaginate
