@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Navbar from '../components/Navbar';
 import './Report.css';
 import moment from 'moment';
 const Report = () => {
@@ -72,6 +73,8 @@ const Report = () => {
   }
 
   return (
+    <React.Fragment>
+      <Navbar />
     <div className="report-container">
       <h2>Game Reports</h2>
 
@@ -156,6 +159,7 @@ const Report = () => {
         </table>
       </div>
     </div>
+   </React.Fragment>
   );
 };
 
