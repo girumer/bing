@@ -7,8 +7,23 @@ function CartelaSelction() {
     const location=useLocation();
     const history=useNavigate();
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-   
+   const [isOpen, setIsOpen] = useState(false);
+   const [opengame,setopengame]=useState(false);
     const options = [2,  4,  7,  10];
+    const percentoptions = [
+        { label: "10%", value: 0.1 },
+        { label: "15%", value: 0.15},
+        { label: "20%", value: 0.2 },
+       
+    ];
+    const [selectedpercent, setSelectedpercent] = useState(0.2);
+    const gametype = [
+        { label: "one cheak", value: 1},
+        { label: "two cheak", value: 2},
+        
+       
+    ];
+    const [selectegametype, setSelectgametype] = useState(1);
     localStorage.setItem('language',location.state.language);
     let  language= localStorage.getItem('language');
     const [selectedStake, setSelectedStake] = useState(20); // Default stake is 10
@@ -37,7 +52,7 @@ function CartelaSelction() {
         
         // Delay navigation slightly to allow "game started" to finish
         setTimeout(() => {
-            history("/BingoBoard", { state: { cartelas: numbers, stake: selectedStake } });
+            history("/BingoBoard", { state: { cartelas: numbers,selectegametype:selectegametype,stake: selectedStake, selectedpercent:selectedpercent} });
             localStorage.removeItem("selectedNumbers");
         }, 1000); // 1-second delay
     };
@@ -46,7 +61,7 @@ function CartelaSelction() {
         audio.preload = "auto"; // Preload to reduce delay
         return audio;
     };
-    console.log(numbers.length);
+   
     const handleButtonClick = (num) => {
         setNumbers((prevNumbers) => {
             // Ensure prevNumbers is an array
@@ -78,13 +93,56 @@ function CartelaSelction() {
                         </button>
                     );
                 })}
+               
             </div>
-           
+            
             <div className='cartelacomand_bord'>
                 <div className='Play'>
                 <button className="game_start" disabled={numbers.length <= 1} onClick={startGame }>START</button>
 
               </div>
+              <div className="pecentoption">
+              <button className="dropdown-toggle" onClick={() => setopengame(!opengame)}>
+                {gametype.find((option) => gametype.value === setSelectgametype)?.label || "Select gametype"}
+                <span className={`arrow ${opengame ? "open" : ""}`}>▼</span>
+                 </button>
+                 {opengame && ( <ul className="dropdown-menu">
+                    {gametype.map((option) => (
+                        <li key={option.value}>
+                            <button
+                                className="dropdown-item"
+                                onClick={() => {
+                                    setSelectgametype(option.value);
+                                    setopengame(false);
+                                }}
+                            >
+                                {option.label}
+                            </button>
+                        </li>
+                    ))}
+                </ul>)}
+                </div>
+              <div className="pecentoption">
+              <button className="dropdown-toggle" onClick={() => setIsOpen(!isOpen)}>
+                {percentoptions.find((option) => percentoptions.value === setSelectedpercent)?.label || "Select percent"}
+                <span className={`arrow ${isOpen ? "open" : ""}`}>▼</span>
+                 </button>
+                 {isOpen && ( <ul className="dropdown-menu">
+                    {percentoptions.map((option) => (
+                        <li key={option.value}>
+                            <button
+                                className="dropdown-item"
+                                onClick={() => {
+                                    setSelectedpercent(option.value);
+                                    setIsOpen(false);
+                                }}
+                            >
+                                {option.label}
+                            </button>
+                        </li>
+                    ))}
+                </ul>)}
+                </div>
                 <div className='Stakeplace'>
             <h2>Select a Stake</h2>
             <div className='stakevalue'>
@@ -118,11 +176,38 @@ function CartelaSelction() {
                 <label>
                     <input
                         type="radio"
+                        value="30"
+                        checked={selectedStake === 30}
+                        onChange={handleStakeChange}
+                    />
+                    40
+                </label>
+                <label>
+                    <input
+                        type="radio"
                         value="50"
                         checked={selectedStake === 50}
                         onChange={handleStakeChange}
                     />
                     50
+                </label>
+                <label>
+                    <input
+                        type="radio"
+                        value="30"
+                        checked={selectedStake === 30}
+                        onChange={handleStakeChange}
+                    />
+                    100
+                </label>
+                <label>
+                    <input
+                        type="radio"
+                        value="30"
+                        checked={selectedStake === 30}
+                        onChange={handleStakeChange}
+                    />
+                    200
                 </label>
             </div>
            

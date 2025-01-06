@@ -31,7 +31,8 @@ const BingoBoard = () => {
     const [username, setUser] = useState(null);
     const [winerAward, setWinerAward] = useState(0);
     
-   
+    const lastCalledNumberRef = useRef(null);
+  
     const [numberCall, setCalledNumber] = useState(() => {
         const storedNumbers = localStorage.getItem('calledNumbers');
         return storedNumbers ? JSON.parse(storedNumbers) : [];
@@ -90,12 +91,12 @@ const BingoBoard = () => {
         console.log('Initial Language from localStorage:', storedLanguage); // Debugging log
         return storedLanguage || 'am';
     });
-      const [selectedOption, setSelectedOption] = useState(4000);
+      const [selectedOption, setSelectedOption] = useState(8000); 
       const [isOpen, setIsOpen] = useState(false);
       const options = [
-        { label: "7 seconds", value: 7000 },
-        { label: "8 seconds", value: 8000 },
-        { label: "9 seconds", value: 9000 },
+        { label: "7 seconds", value: 8000 },
+        { label: "8 seconds", value: 9000 },
+        { label: "9 seconds", value: 10000},
         { label: "10 seconds", value: 10000 },
     ];
       const interval = selectedOption;
@@ -638,15 +639,17 @@ useEffect(() => {
             } while (calledNumbersRef.current.includes(rand)); // This should work as `current` is an array
     
             calledNumbersRef.current.push(rand); // Adds the new number to the ref array
+            lastCalledNumberRef.current=rand;
+            console.log("last clled number is",lastCalledNumberRef.current);
             
             announceNumber(rand)
             // Update the state so the component re-renders with the new called numbers
             
-    
+            
             // Store the updated numbers in localStorage
             localStorage.setItem('calledNumbers', JSON.stringify(calledNumbersRef.current));
             setCalledNumber([...calledNumbersRef.current]);
-    
+         
             updateCurrentNumber(rand);
     
             await new Promise(resolve => setTimeout(resolve, interval));
@@ -678,234 +681,160 @@ useEffect(() => {
             console.error('Number out of range');
         }
     };
-    const cheakwin=async(intialstate,num)=>{
-        const  calledNumbers= calledNumbersRef.current;
-
-        if(!cartelas.includes(num)){
-            if(language=="am"){
-                gameisnot();
-                
-            }
-            else{
-            const utterance = new SpeechSynthesisUtterance("the number is not in the list");
-
-            window.speechSynthesis.speak(utterance);}}
-        else{
-       for (let i=0;i<5;i++){
-        
-         if(intialstate[i].every((num)=>
-            calledNumbers.includes(num)|| num === '*')){
-                
-                if(language=="am"){
-                   const win =getGameWining();
-                      win.play();
-                    const marked1= intialstate[i];
-                    setmarked(marked1);
-                    //updateplayer();
-                   // submit({preventDefault: () => {} });
-                    setgamewinnerboard(true);
-                    console.log(marked1);
-                }
-                 else{
-                    const marked1= intialstate[i];
-                    setmarked(marked1);
-                    //updateplayer();
-                   // submit({preventDefault: () => {} });
-                    setgamewinnerboard(true);
-                    console.log(marked1);
-                    const utterance = new SpeechSynthesisUtterance(`cartela number ${num} win`);
-                    window.speechSynthesis.speak(utterance);
-                 }
-            
-      return;
-        }
-  
-      }
-       
-        for (let i=0;i<5;i++){
-          
-          
-            if ( intialstate.every(row => row[i] === '*' || calledNumbers.includes(row[i]))){
-                  
-                 if(language=="am"){
-                    const win =getGameWining();
-                       win.play();
-                       const marked1 = intialstate.map(row => (calledNumbers.includes(row[i]) || row[i] === '*') ? row[i] : null);
-                     setmarked(marked1);
-                   //  updateplayer();
-                     //submit({preventDefault: () => {} });
-                     setgamewinnerboard(true);
-                     console.log(marked1);
-                 }
-                  else{
-                    const marked1 = intialstate.map(row => (calledNumbers.includes(row[i]) || row[i] === '*') ? row[i] : null);
-                     setmarked(marked1);
-                     //submit({preventDefault: () => {} });
-                     //updateplayer();
-                     setgamewinnerboard(true);
-                     console.log(marked1);
-                     const utterance = new SpeechSynthesisUtterance(`cartela number ${num} win`);
-                     window.speechSynthesis.speak(utterance);
-                  }
-
-      return;
-  
-          }
-          
-        }
+    const cheakwin = async (initialState, num) => {
+        const calledNumbers = calledNumbersRef.current;
+        const lastCalledNumber = lastCalledNumberRef.current;
     
-        // Check diagonals
-         if (
-            calledNumbers.includes(intialstate[0][0]) &&
-            calledNumbers.includes(intialstate[1][1]) &&
-            calledNumbers.includes(intialstate[3][3]) &&
-            calledNumbers.includes(intialstate[4][4])
-        ) {
-            
-            if(language=="am"){
-                const win =getGameWining();
-                   win.play();
-                   const marked1=[intialstate[0][0],intialstate[1][1],intialstate[3][3],intialstate[4][4]];
-                 setmarked(marked1);
-                 //submit({preventDefault: () => {} });
-                // updateplayer();
-                 setgamewinnerboard(true);
-                 console.log(marked1);
-             }
-              else{
-                const marked1=[intialstate[0][0],intialstate[1][1],intialstate[3][3],intialstate[4][4]];
-                 setmarked(marked1);
-                 setgamewinnerboard(true);
-                 //submit({preventDefault: () => {} });
-                 //updateplayer();
-                 console.log(marked1);
-                 const utterance = new SpeechSynthesisUtterance(`cartela number ${num} win`);
-                 window.speechSynthesis.speak(utterance);
-              }
-
-         return;
-     
-        }
-        if (
-            calledNumbers.includes(intialstate[0][4]) &&
-            calledNumbers.includes(intialstate[1][3]) &&
-            calledNumbers.includes(intialstate[3][1]) &&
-            calledNumbers.includes(intialstate[4][0])
-        ) {
-         
-         if(language=="am"){
-            const win =getGameWining();
-               win.play();
-               const marked1=[intialstate[0][4],intialstate[1][3],intialstate[3][1],intialstate[4][0]];
-             setmarked(marked1);
-             //submit({preventDefault: () => {} });
-             //updateplayer();
-             setgamewinnerboard(true);
-             console.log(marked1);
-         }
-          else{
-            const marked1=[intialstate[0][4],intialstate[1][3],intialstate[3][1],intialstate[4][0]];
-             setmarked(marked1);
-             //submit({preventDefault: () => {} });
-             //updateplayer();
-             setgamewinnerboard(true);
-             console.log(marked1);
-             const utterance = new SpeechSynthesisUtterance(`cartela number ${num} win`);
-             window.speechSynthesis.speak(utterance);
-          }
-
-         return;
-           }
-        if (
-            calledNumbers.includes(intialstate[0][0]) &&
-            calledNumbers.includes(intialstate[1][1]) &&
-            calledNumbers.includes(intialstate[1][3]) &&
-            calledNumbers.includes(intialstate[3][3]) &&
-            calledNumbers.includes(intialstate[4][4])
-        ) {
-         // setWin(true);
-       
-         if(language=="am"){
-            const win =getGameWining();
-               win.play();
-               const marked1=[intialstate[0][0],intialstate[1][1],intialstate[1][3],intialstate[3][3],intialstate[4][4]];
-             setmarked(marked1);
-             //submit({preventDefault: () => {} });
-             //updateplayer();
-             setgamewinnerboard(true);
-             console.log(marked1);
-         }
-          else{
-            const marked1=[intialstate[0][0],intialstate[1][1],intialstate[1][3],intialstate[3][3],intialstate[4][4]];
-             setmarked(marked1);
-             //submit({preventDefault: () => {} });
-             setgamewinnerboard(true);
-             console.log(marked1);
-             const utterance = new SpeechSynthesisUtterance(`cartela number ${num} win`);
-             window.speechSynthesis.speak(utterance);
-          }
-
-
-       return;
-         }
-        if (
-            calledNumbers.includes(intialstate[0][0]) &&
-            calledNumbers.includes(intialstate[0][4]) &&
-            calledNumbers.includes(intialstate[4][0]) &&
-            calledNumbers.includes(intialstate[4][4])
-        ) {
-            if(language=="am"){
-                const win =getGameWining();
-                   win.play();
-                   const marked1=[intialstate[0][0],intialstate[0][4],intialstate[4][0],intialstate[4][4]];
-                 setmarked(marked1);
-                // submit({preventDefault: () => {} });
-               // updateplayer();
-                 setgamewinnerboard(true);
-                 console.log(marked1);
-             }
-              else{
-                const marked1=[intialstate[0][0],intialstate[0][4],intialstate[4][0],intialstate[4][4]];
-                //submit({preventDefault: () => {} });
-                setmarked(marked1);
-                 setgamewinnerboard(true);
-               //  updateplayer();
-                 console.log(marked1);
-                 const utterance = new SpeechSynthesisUtterance(`cartela number ${num} win`);
-                 window.speechSynthesis.speak(utterance);
-              }
-       return;
-         }
-  
-         else{
-            
-            const marked1 = intialstate
-        .flatMap(row => row.filter(num => calledNumbers.includes(num) || num === '*'));
+        if (!cartelas.includes(num)) {
+            if (language == "am") {
+                gameisnot();
+            } else {
+                const utterance = new SpeechSynthesisUtterance("the number is not in the list");
+                window.speechSynthesis.speak(utterance);
+            }
+        } else {
+            // Check rows
+            for (let i = 0; i < 5; i++) {
+                if (initialState[i].every((num) => calledNumbers.includes(num) || num === '*')) {
+                    // Check if the last called number is in this row
+                    if (initialState[i].includes(lastCalledNumber)) {
+                        if (language == "am") {
+                            const win = getGameWining();
+                            win.play();
+                            const marked1 = initialState[i];
+                            setmarked(marked1);
+                            setgamewinnerboard(true);
+                            console.log(marked1);
+                        } else {
+                            const marked1 = initialState[i];
+                            setmarked(marked1);
+                            setgamewinnerboard(true);
+                            console.log(marked1);
+                            const utterance = new SpeechSynthesisUtterance(`cartela number ${num} win`);
+                            window.speechSynthesis.speak(utterance);
+                        }
+                        return;
+                    }
+                }
+            }
+    
+            // Check columns
+            for (let i = 0; i < 5; i++) {
+                if (initialState.every((row) => row[i] === '*' || calledNumbers.includes(row[i]))) {
+                    // Check if the last called number is in this column
+                    if (initialState.some((row) => row[i] === lastCalledNumber)) {
+                        if (language == "am") {
+                            const win = getGameWining();
+                            win.play();
+                            const marked1 = initialState.map((row) =>
+                                calledNumbers.includes(row[i]) || row[i] === '*' ? row[i] : null
+                            );
+                            setmarked(marked1);
+                            setgamewinnerboard(true);
+                            console.log(marked1);
+                        } else {
+                            const marked1 = initialState.map((row) =>
+                                calledNumbers.includes(row[i]) || row[i] === '*' ? row[i] : null
+                            );
+                            setmarked(marked1);
+                            setgamewinnerboard(true);
+                            console.log(marked1);
+                            const utterance = new SpeechSynthesisUtterance(`cartela number ${num} win`);
+                            window.speechSynthesis.speak(utterance);
+                        }
+                        return;
+                    }
+                }
+            }
+    
+            // Check diagonals
+            const diagonals = [
+                [initialState[0][0], initialState[1][1], initialState[2][2], initialState[3][3], initialState[4][4]],
+                [initialState[0][4], initialState[1][3], initialState[2][2], initialState[3][1], initialState[4][0]],
+            ];
+    
+            for (let diagonal of diagonals) {
+                if (diagonal.every((num) => calledNumbers.includes(num) || num === '*')) {
+                    // Check if the last called number is in the diagonal
+                    if (diagonal.includes(lastCalledNumber)) {
+                        if (language == "am") {
+                            const win = getGameWining();
+                            win.play();
+                            setmarked(diagonal);
+                            setgamewinnerboard(true);
+                            console.log(diagonal);
+                        } else {
+                            setmarked(diagonal);
+                            setgamewinnerboard(true);
+                            console.log(diagonal);
+                            const utterance = new SpeechSynthesisUtterance(`cartela number ${num} win`);
+                            window.speechSynthesis.speak(utterance);
+                        }
+                        return;
+                    }
+                }
+            }
+    
+            // Check corners (if applicable)
+            const corners = [
+                [initialState[0][0], initialState[0][4], initialState[4][0], initialState[4][4]],
+            ];
+    
+            for (let corner of corners) {
+                if (corner.every((num) => calledNumbers.includes(num) || num === '*')) {
+                    // Check if the last called number is in the corner
+                    if (corner.includes(lastCalledNumber)) {
+                        if (language == "am") {
+                            const win = getGameWining();
+                            win.play();
+                            setmarked(corner);
+                            setgamewinnerboard(true);
+                            console.log(corner);
+                        } else {
+                            setmarked(corner);
+                            setgamewinnerboard(true);
+                            console.log(corner);
+                            const utterance = new SpeechSynthesisUtterance(`cartela number ${num} win`);
+                            window.speechSynthesis.speak(utterance);
+                        }
+                        return;
+                    }
+                }
+            }
+    
+            // If no win condition is met, notify player
+            const marked1 = initialState
+                .flatMap((row) => row.filter((num) => calledNumbers.includes(num) || num === '*'));
             setmarked(marked1);
             setgamewinnerboard(true);
             console.log(marked1);
-          if(language=="am"){
-            const notwin=playerNotwin();
-            notwin.play();
-          }
-          else{
-
-           let message="you click wrong pattern";
-           const utterance = new SpeechSynthesisUtterance(message);
-                         window.speechSynthesis.speak(utterance);
-          }
-                         //setgamewinnerboard(false);
-           //alert(message);
-             //    console.log(marked);
-           //  handleStart();
-                // console.log(typeof -roomid);
-                 
-    
-               // setgamestate("Flexexm");
-               }
+            if (language == "am") {
+                const notwin = playerNotwin();
+                notwin.play();
+            } else {
+                let message = "you click wrong pattern";
+                const utterance = new SpeechSynthesisUtterance(message);
+                window.speechSynthesis.speak(utterance);
             }
+        }
+    };
+    // Handle win logic
+    const handleWin = (markedNumbers) => {
+        if (language === "am") {
+            const win = getGameWining();
+            win.play();
+            setmarked(markedNumbers);
+            setgamewinnerboard(true);
+            console.log(markedNumbers);
+        } else {
+            setmarked(markedNumbers);
+            setgamewinnerboard(true);
+            const utterance = new SpeechSynthesisUtterance(`Cartela number ${markedNumbers} win`);
+            window.speechSynthesis.speak(utterance);
+        }
+    };
     
-    }  
+     
     console.log("the token is  apend",token);
     return (
     

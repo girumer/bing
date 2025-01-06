@@ -25,10 +25,16 @@
 .cartelacomand_bord{
     background-color: rgba(79, 98, 130, 0.974);
     display: grid;
-    grid-template-columns: repeat(2,1fr);
+    grid-template-columns: repeat(4,1fr);
     height: 50vh;
     width: 100%;
 }
+.pecentoption{
+    margin-top: 50Px;
+    margin-left: 10px;
+    margin-right: 50px;
+}
+
 .game_start{
     background-color: rgb(95, 11, 213);
     
@@ -49,7 +55,7 @@
     font-family: Arial, sans-serif;
     margin-left: 1px;
     margin-right: 1px;
-    margin-top: 5px;
+    margin-top: 50px;
 }
 .Stakeplace h2{
     background-color: #333;
@@ -118,7 +124,9 @@
 .stakevalue{
    
     margin-top: 5px;
-    
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Adjust to 4 items per row */
+    gap: 10px; /* Space between items */
     font-size: large;
 }
 .stakevalue label {
