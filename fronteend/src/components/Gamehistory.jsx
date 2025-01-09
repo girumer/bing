@@ -119,6 +119,7 @@ alert("user not founn");
               <th>TotalCash</th>
               <th>numberofplayer</th>
               <th>PayForPlayer</th>
+              <th>percentdeduced</th>
               <th>Profit</th>
              
              
@@ -134,6 +135,7 @@ alert("user not founn");
                 <td>{game.totalcash}</td>
                 <td>{game.numberofplayer}</td>
                 <td>{game.winerAward}</td>
+                <td>{game.percent}</td>
                 <td>{game.profit}</td>
                
               </tr>

@@ -45,6 +45,7 @@ const BingoBordSchema = new mongoose.Schema({
         totalcash:{type:Number},
         PayForPlayer:{type:Number},
         awardforagen:{type:Number},
+        percent:{type:Number,default:0.2},
         winerAward:{type:Number,default:0},
         stake: { type: Number,default:0 },
         timestamp: { type: Date,   } 

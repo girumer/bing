@@ -45,15 +45,16 @@
 }
 
 .shuffle-animation {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(15,1fr);
     justify-content: center;
     align-items: center;
     gap: 10px;
     position: absolute;
-    top: 50%; /* Center vertically */
-    left: 50%; /* Center horizontally */
+    top: 20%; /* Center vertically */
+    left: 20%; /* Center horizontally */
     transform: translate(-50%, -50%);
-    animation: shuffle-container 2s ease-in-out infinite; /* Keep animation */
+    animation: shuffle-container 2s ease-in-out infinite;/* Keep animation */
 }
 
 .bingo-ball {
@@ -422,6 +423,7 @@
     display: grid;
     grid-template-columns: repeat(1,1fr);
 }
+
 .start_button{
     background-color: rgb(95, 11, 213);
     
@@ -462,7 +464,7 @@
     background-color: #ffcc00;
     width: 70%;
     margin-left: 70px;
-    margin-top: 5px;
+    margin-top: 25px;
     height: 50px;
     margin-bottom: 5px;
     border-radius: 25px;
@@ -646,3 +648,89 @@ dropdown-container {
 .net-pay2 p{
     color: black;
 }
+/* Define the keyframes for the bounce animation */
+@keyframes shuffle-container {
+    0% {
+        transform: translateY(0);
+    }
+    20% {
+        transform: translateY(-30px);
+    }
+    40% {
+        transform: translateY(15px);
+    }
+    60% {
+        transform: translateY(-15px);
+    }
+    80% {
+        transform: translateY(7px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+/* Keyframes for scattering */
+@keyframes scatter-drop {
+    0% {
+        transform: translateY(-100px) translateX(0) rotate(0deg) scale(1);
+        opacity: 0;
+    }
+    50% {
+        transform: translateY(200px) translateX(50px) rotate(180deg) scale(1.2);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(400px) translateX(-30px) rotate(360deg) scale(1);
+        opacity: 1;
+    }
+}
+
+/* Base style for scattered items */
+.scatter {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-color: gold;
+    border-radius: 50%;
+    animation: scatter-drop 2s ease-out infinite;
+    opacity: 0;
+}
+
+/* Randomize animation delay for different items */
+.scatter:nth-child(1) {
+    animation-delay: 0s;
+    transform: translateX(-100px);
+}
+.scatter:nth-child(2) {
+    animation-delay: 0.2s;
+    transform: translateX(50px);
+}
+.scatter:nth-child(3) {
+    animation-delay: 0.4s;
+    transform: translateX(-200px);
+}
+.scatter:nth-child(4) {
+    animation-delay: 0.6s;
+    transform: translateX(150px);
+}
+.scatter:nth-child(5) {
+    animation-delay: 0.8s;
+    transform: translateX(30px);
+}
+
+  canvas {
+    
+    margin-top: 10%;
+    margin-right: 250px;
+    margin-left: 250px;
+    transform: translate(-5%, -5%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 75%;
+    height: 75%;
+    pointer-events: none; /* Allow interactions with other elements */
+  }
+  
+  

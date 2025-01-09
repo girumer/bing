@@ -5,6 +5,7 @@ import Navbar from '../components/Navbar';
 import cartela from './cartela.json';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Cookies from "js-cookie";
+import confetti from "canvas-confetti";
 
 const BingoBoard = () => {
     const location=useLocation();
@@ -15,7 +16,7 @@ const BingoBoard = () => {
         const token = localStorage.getItem('accesstoken');
         console.log("token is ",token);
     
-    
+     
     //console.log(token);
    // const token=Cookies.get('accesstoken');
   
@@ -30,7 +31,7 @@ const BingoBoard = () => {
     const [currentNumber, setCurrentNumber] = useState(0);
     const [username, setUser] = useState(null);
     const [winerAward, setWinerAward] = useState(0);
-    
+    const [fireworklun,setfireworklun]=useState(false);
     const lastCalledNumberRef = useRef(null);
   
     const [numberCall, setCalledNumber] = useState(() => {
@@ -84,7 +85,9 @@ const BingoBoard = () => {
     const [isGenerating, setIsGenerating] = useState(false);
     const [venderaward,setvenderaward]=useState(0);
     const [gamewinnerboard,setgamewinnerboard]=useState(false);
+    const [gamewinnerboard1,setgamewinnerboard1]=useState(false);
       const [marked,setmarked]=useState([]);
+      const [marked1,setmarked1]=useState([]);
      // const [language, setLanguage] = useState('am'); // default to English
      const [language, setLanguage] = useState(() => {
         const storedLanguage = localStorage.getItem('language');
@@ -177,11 +180,44 @@ const BingoBoard = () => {
    // console.log("cartelas length is",cartelas);
     const [cartes, setCartes] = useState(0); 
       const [winstate1, setWinstate] = useState(cartela[cartes]?.cart || []); 
+      const [winstate2, setWinstate2] = useState(cartela[cartes]?.cart || []); 
       const [losestate,setlosestate]= useState(cartela[cartes]?.cart || []);
     const stake = location.state?.stake || 0;
+    const gametype=location.state?.selectegametype||1;
+    const percent=location.state?.selectedpercent||0.2;
+    console.log("percent is",percent);
+    console.log("game type is",gametype);
     let intialstate=cartela[cartes].cart;
-    
-   
+    const launchFireworks = () => {
+        const duration = 5 * 1000; // 5 seconds
+        const end = Date.now() + duration;
+      
+        const frame = () => {
+          confetti({
+            particleCount: 100,
+            startVelocity: 30,
+            spread: 360,
+            ticks: 60,
+            origin: {
+              x: Math.random(),
+              y: Math.random() - 0.2, // Slightly above the screen
+            },
+          });
+      
+          if (Date.now() < end) {
+            requestAnimationFrame(frame);
+          }
+        };
+      
+        frame();
+      };
+      useEffect(() => {
+        if (fireworklun) {
+          launchFireworks();
+        }
+      }, [fireworklun]);
+   console.log("winstate",winstate2);
+   console.log("Marked1 State:", marked1);
     const handleStart = () => {
         if (!isGenerating) {
             isGeneratingRef.current = true;  // Stop the number generation
@@ -192,8 +228,9 @@ const BingoBoard = () => {
         const numberofplayer=cartelas.length;
         const total = cartelas.length;
         const totalcash= stake * total ;
-        const final = totalcash * 0.8;
-        const award=totalcash*0.2;
+        const percentdeduction=1-percent;
+        const final = totalcash * percentdeduction;
+        const award=totalcash*percent;
         const vendor=award*0.3;
         const awardforagen=award-vendor;
         setNumberofPlayer(numberofplayer);
@@ -233,7 +270,13 @@ useEffect(() => {
    
    
     useEffect(() => {
-        setWinstate(cartela[cartes]?.cart || []); // Update winstate1 to the selected cart
+        if(gametype===1){
+            setWinstate(cartela[cartes]?.cart || []);
+        }
+        else{
+            setWinstate2(cartela[cartes]?.cart || []);
+        }
+        // Update winstate1 to the selected cart
     }, [cartes]); // This dependency array watches for changes to cartes
 
     async function submit(e){
@@ -249,6 +292,8 @@ useEffect(() => {
         calledNumbersRef.current = [];
         setWinerAward(0);
         setgamewinnerboard(false);
+        setgamewinnerboard1(false);
+        setfireworklun(false);
         setCurrentNumber(0);
       
     }
@@ -291,11 +336,20 @@ useEffect(() => {
     };
     const claimNumber = () => {
       const num=cartes+1;
-            cheakwin(intialstate,num);
+      if(gametype===1){
+       
+        cheakwin(intialstate,num);
+        console.log(intialstate);
+        setwinnerboard(false);
+        setIsGenerating(false);
+      }
+        else{
+            
+            cheakwin1(intialstate,num);
             console.log(intialstate);
             setwinnerboard(false);
             setIsGenerating(false);
-        
+        }
     };
     const newgamet=()=>{
         if(language=="am"){
@@ -356,13 +410,51 @@ useEffect(() => {
         
         )
       )))
-      
+      /* onst carts3 =  winstate2.map((row, rowIndex) => (
+        row.map((cell, cellIndex) => (
+            <button
+                className="boxes"
+                key={cellIndex}
+                style={{
+                    backgroundColor: marked1.some(([r, c]) => r === rowIndex && c === cellIndex) ? '#008000' : '#000000',
+                }}
+            >
+                {cell}
+            </button>
+        ))
+    )); */
+    // Ensure that `winstate2` is always an array of arrays
+    const carts3 = winstate2.map((row, rowIndex) => (
+        row.map((cell, cellIndex) => (
+            <button
+                className="boxes"
+                key={`${rowIndex}-${cellIndex}`}
+                style={{
+                    backgroundColor: marked1.some(([r, c]) => r === rowIndex && c === cellIndex) 
+                        ? '#008000' 
+                        : '#000000',
+                }}
+            >
+                {cell}
+            </button>
+        ))
+    ));
+     // Return null or handle if winstate2 isn't structured correctly
+
+
+    // Handle case where winstate2 is not a valid 2D array
+
+     
     const addother=()=>{
         setgamewinnerboard(false);
+        setgamewinnerboard1(false);
         setwinnerboard(true);
+        setfireworklun(false);
     }
     const  backtogame=()=>{
         setgamewinnerboard(false);
+        setgamewinnerboard1(false);
+        setfireworklun(false);
     }
     const bingoclam = () => {
         if(language=="am"){
@@ -463,7 +555,7 @@ useEffect(() => {
         try{
 
             await axios.post(`${BACKEND_URL}/updateplayer`,{
-                username,stake,numberofplayer,profit,awardforagent,totalcash,venderaward,winerAward
+                username,stake,numberofplayer,profit,awardforagent,totalcash,venderaward,winerAward,percent
             })
             .then(res=>{
                 console.log(res.data);
@@ -704,11 +796,13 @@ useEffect(() => {
                             const marked1 = initialState[i];
                             setmarked(marked1);
                             setgamewinnerboard(true);
+                            setfireworklun(true);
                             console.log(marked1);
                         } else {
                             const marked1 = initialState[i];
                             setmarked(marked1);
                             setgamewinnerboard(true);
+                            setfireworklun(true);
                             console.log(marked1);
                             const utterance = new SpeechSynthesisUtterance(`cartela number ${num} win`);
                             window.speechSynthesis.speak(utterance);
@@ -730,6 +824,7 @@ useEffect(() => {
                                 calledNumbers.includes(row[i]) || row[i] === '*' ? row[i] : null
                             );
                             setmarked(marked1);
+                            setfireworklun(true);
                             setgamewinnerboard(true);
                             console.log(marked1);
                         } else {
@@ -738,6 +833,8 @@ useEffect(() => {
                             );
                             setmarked(marked1);
                             setgamewinnerboard(true);
+                            setfireworklun(true);
+                           
                             console.log(marked1);
                             const utterance = new SpeechSynthesisUtterance(`cartela number ${num} win`);
                             window.speechSynthesis.speak(utterance);
@@ -762,10 +859,12 @@ useEffect(() => {
                             win.play();
                             setmarked(diagonal);
                             setgamewinnerboard(true);
+                            setfireworklun(true);
                             console.log(diagonal);
                         } else {
                             setmarked(diagonal);
                             setgamewinnerboard(true);
+                            setfireworklun(true);
                             console.log(diagonal);
                             const utterance = new SpeechSynthesisUtterance(`cartela number ${num} win`);
                             window.speechSynthesis.speak(utterance);
@@ -789,10 +888,12 @@ useEffect(() => {
                             win.play();
                             setmarked(corner);
                             setgamewinnerboard(true);
+                            setfireworklun(true);
                             console.log(corner);
                         } else {
                             setmarked(corner);
                             setgamewinnerboard(true);
+                            setfireworklun(true);
                             console.log(corner);
                             const utterance = new SpeechSynthesisUtterance(`cartela number ${num} win`);
                             window.speechSynthesis.speak(utterance);
@@ -818,6 +919,157 @@ useEffect(() => {
             }
         }
     };
+    const cheakwin1 = async (initialState, num) => {
+        const calledNumbers = calledNumbersRef.current;
+        const lastCalledNumber = lastCalledNumberRef.current;
+    
+        // Number is not part of the cartela
+        if (!cartelas.flat().includes(num)) {
+            language === "am" ? gameisnot() : speak("The number is not in the list.");
+            return;
+        }
+    
+        // Helper function to check if the last called number is in the pattern
+        const includesLastCalledNumber = (pattern) => pattern.includes(lastCalledNumber);
+    
+        // Fully marked rows
+        const fullyMarkedRows = initialState.filter(row =>
+            row.every(num => calledNumbers.includes(num) || num === '*')
+        );
+    
+        console.log("Fully marked rows: ", fullyMarkedRows); // Debugging
+    
+        // Fully marked columns
+        const fullyMarkedColumns = [];
+        for (let i = 0; i < 5; i++) {
+            const column = initialState.map(row => row[i]);
+            if (column.every(num => calledNumbers.includes(num) || num === '*')) {
+                fullyMarkedColumns.push(column);
+            }
+        }
+    
+        console.log("Fully marked columns: ", fullyMarkedColumns); // Debugging
+    
+        // Fully marked diagonals (accounting for the middle `*`)
+        const diagonals = [
+            [initialState[0][0], initialState[1][1], initialState[2][2], initialState[3][3], initialState[4][4]],
+            [initialState[0][4], initialState[1][3], initialState[2][2], initialState[3][1], initialState[4][0]],
+        ];
+    
+        const fullyMarkedDiagonals = diagonals.filter(diagonal =>
+            diagonal.every(num => num === '*' || calledNumbers.includes(num))
+        );
+    
+        console.log("Fully marked diagonals: ", fullyMarkedDiagonals); // Debugging
+    
+        // Fully marked corners
+        const corners = [initialState[0][0], initialState[0][4], initialState[4][0], initialState[4][4]];
+        const cornersWin = corners.every(num => calledNumbers.includes(num) || num === '*');
+    
+        console.log("Corners Win: ", cornersWin); // Debugging
+    
+        // Last called number validation for two rows, columns, or diagonals
+        if (fullyMarkedRows.length >= 2 && 
+            (fullyMarkedRows.some(row => includesLastCalledNumber(row)))) {
+            return declareWin("Two rows are fully marked!", fullyMarkedRows.flat());
+        }
+    
+        if (fullyMarkedColumns.length >= 2 && 
+            (fullyMarkedColumns.some(col => includesLastCalledNumber(col)))) {
+            return declareWin("Two columns are fully marked!", fullyMarkedColumns.flat());
+        }
+    
+        if (fullyMarkedDiagonals.length >= 2 && 
+            (fullyMarkedDiagonals.some(diagonal => includesLastCalledNumber(diagonal)))) {
+            return declareWin("Two diagonals are fully marked!", fullyMarkedDiagonals.flat());
+        }
+    
+        // Row + Diagonal Win (ensure last called number is in either the row or diagonal)
+        if (fullyMarkedRows.length >= 1 && fullyMarkedDiagonals.length >= 1 &&
+            (fullyMarkedRows.some(row => includesLastCalledNumber(row)) || 
+            fullyMarkedDiagonals.some(diagonal => includesLastCalledNumber(diagonal)))) {
+            return declareWin("One row and one diagonal are fully marked!", [...fullyMarkedRows.flat(), ...fullyMarkedDiagonals.flat()]);
+        }
+    
+        // Column + Diagonal Win (ensure last called number is in either the column or diagonal)
+        if (fullyMarkedColumns.length >= 1 && fullyMarkedDiagonals.length >= 1 &&
+            (fullyMarkedColumns.some(col => includesLastCalledNumber(col)) || 
+            fullyMarkedDiagonals.some(diagonal => includesLastCalledNumber(diagonal)))) {
+            return declareWin("One column and one diagonal are fully marked!", [...fullyMarkedColumns.flat(), ...fullyMarkedDiagonals.flat()]);
+        }
+    
+        // For combinations of one row and one column, one row and one diagonal, etc., no need for the last called number check
+        if (fullyMarkedRows.length >= 1 && fullyMarkedColumns.length >= 1 &&
+            (fullyMarkedRows.some(row => includesLastCalledNumber(row)) || 
+            fullyMarkedColumns.some(col => includesLastCalledNumber(col)))) {
+            return declareWin("One row and one column are fully marked!", [...fullyMarkedRows.flat(), ...fullyMarkedColumns.flat()]);
+        }
+    
+        if (fullyMarkedRows.length >= 1 && fullyMarkedDiagonals.length >= 1 &&
+            (fullyMarkedRows.some(row => includesLastCalledNumber(row)) || 
+            fullyMarkedDiagonals.some(diagonal => includesLastCalledNumber(diagonal)))) {
+            return declareWin("One row and one diagonal are fully marked!", [...fullyMarkedRows.flat(), ...fullyMarkedDiagonals.flat()]);
+        }
+    
+        if (fullyMarkedColumns.length >= 1 && fullyMarkedDiagonals.length >= 1 &&
+            (fullyMarkedColumns.some(col => includesLastCalledNumber(col)) || 
+            fullyMarkedDiagonals.some(diagonal => includesLastCalledNumber(diagonal)))) {
+            return declareWin("One column and one diagonal are fully marked!", [...fullyMarkedColumns.flat(), ...fullyMarkedDiagonals.flat()]);
+        }
+    
+        if (cornersWin) return declareWin("Four corners are fully marked!", corners);
+    
+        console.log("fully marked rows", fullyMarkedRows.length);
+        console.log("fully marked columns", fullyMarkedColumns.length);
+        console.log("fully marked diagonals", fullyMarkedDiagonals.length);
+    
+        // Notify if no win is found
+        notifyNoWin(initialState);
+    };
+    
+    
+    const declareWin = (message, markedNumbers) => {
+        console.log(message); 
+        const message2="player win";// Debugging
+        setmarked1(markedNumbers.map(num => findCoordinates(num, winstate2)));
+        setgamewinnerboard1(true);
+        setfireworklun(true);
+        language === "am" ? getGameWining().play() : speak(message);
+    };
+    
+    const notifyNoWin = (initialState) => {
+        const markedNumbers = initialState.flatMap((row, rowIndex) =>
+            row.map((num, cellIndex) => {
+                if (calledNumbersRef.current.includes(num) || num === '*') {
+                    return [rowIndex, cellIndex];
+                }
+                return null;
+            }).filter(item => item !== null)
+        );
+    
+        console.log("Marked Numbers for no win: ", markedNumbers); // Debugging
+    
+        setmarked1(markedNumbers);
+        setgamewinnerboard1(true);
+        language === "am" ? playerNotwin().play() : speak("You clicked the wrong pattern.");
+    };
+
+    
+    
+    const findCoordinates = (num, state) => {
+        for (let rowIndex = 0; rowIndex < state.length; rowIndex++) {
+            const cellIndex = state[rowIndex].indexOf(num);
+            if (cellIndex !== -1) return [rowIndex, cellIndex];
+        }
+        return null;
+    };
+    
+    const speak = (message) => {
+        const utterance = new SpeechSynthesisUtterance(message);
+        window.speechSynthesis.speak(utterance);
+    };
+    
+    
     // Handle win logic
     const handleWin = (markedNumbers) => {
         if (language === "am") {
@@ -878,40 +1130,60 @@ useEffect(() => {
                 </div>
                 <div className="playboard">
                     <div className="comandboards">
-                    <button className="Leav_button"  disabled={cartelas.length === 0} onClick={newgamet}>Start Game</button>
-                        <button className="start_button" disabled={cartelas.length === 0} onClick={startGamer}>Resume</button>
+                    <button className="Leav_button"  disabled={cartelas.length === 0||isGenerating} onClick={newgamet}>Start Game</button>
+                        <button className="start_button" disabled={cartelas.length === 0||isGenerating} onClick={startGamer}>Resume</button>
                         <button className="claim_button" disabled={cartelas.length === 0} onClick={bingoclam}>BINGO</button>
                         <button className="Next_button" onClick={newgame}>New Game</button>
-                        <button className="Next_shuffle" disabled={cartelas.length >= 1} onClick={handleShuffle}>shuffile</button>
+                     
                        
                        </div>
-                       {isnavbar && <div className="dropdown-container">
-                    <p className="selected-time">Selected time: {selectedOption / 1000} seconds</p>
-            <button className="dropdown-toggle" onClick={() => setIsOpen(!isOpen)}>
-                {options.find((option) => option.value === selectedOption)?.label || "Select Time"}
-                <span className={`arrow ${isOpen ? "open" : ""}`}>▼</span>
-            </button>
+                       {isnavbar && (
+    <div className="dropdown-container">
+        {/* Display the selected time */}
+        <p className="selected-time">
+            Selected time: {selectedOption / 1000} seconds
+        </p>
 
-            {isOpen && (
-                <ul className="dropdown-menu">
-                    {options.map((option) => (
-                        <li key={option.value}>
-                            <button
-                                className="dropdown-item"
-                                onClick={() => {
-                                    setSelectedOption(option.value);
-                                    setIsOpen(false);
-                                }}
-                            >
-                                {option.label}
-                            </button>
-                        </li>
-                    ))}
-                </ul>
-            )}
+        {/* Dropdown toggle button */}
+        <button
+            className="dropdown-toggle"
+            onClick={() => setIsOpen(!isOpen)}
+        >
+            {/* Display selected option or default text */}
+            {options.find((option) => option.value === selectedOption)?.label || "Select Time"}
+            <span className={`arrow ${isOpen ? "open" : ""}`}>▼</span>
+        </button>
 
-            
-        </div>}
+        {/* Dropdown menu */}
+        {isOpen && (
+            <ul className="dropdown-menu">
+                {options.map((option) => (
+                    <li key={option.value}>
+                        <button
+                            className="dropdown-item"
+                            onClick={() => {
+                                setSelectedOption(option.value); // Update selected option
+                                setIsOpen(false); // Close dropdown
+                            }}
+                        >
+                            {option.label}
+                        </button>
+                    </li>
+                ))}
+            </ul>
+        )}
+
+        {/* Next Shuffle button */}
+        <button
+            className="Next_shuffle"
+            disabled={cartelas.length >= 1} // Disable if cartelas has at least one item
+            onClick={handleShuffle}
+        >
+            Shuffle
+        </button>
+    </div>
+)}
+
                   
        {!isnavbar && <div>
         <p className="selected-time1">number of calledNumbers</p>
@@ -973,10 +1245,41 @@ useEffect(() => {
         </div>
         </div>
     </div>}
-  
+    {gamewinnerboard1 &&
+      <div className="popupw" id="bingoPopup">
+      <div className="popup-contentw">
+   
+          <h3> win by  cartela number {winernumber}</h3>
+            
+         
+          
+          <div className="bingoboard2w">
+    
+    <div className="B">B</div>
+   <div className="I">I</div>
+   <div className="N">N</div>
+   <div className="G">G</div>
+   <div className="O">O</div>
+   
+  </div>
+  <div className="playCartela3w">
+      
+      {carts3}
+ 
+ 
+  </div>
+
+        <div className="button-containerw">
+            
+            <button className="closebtn" id="closePopup" onClick={submit}>Close</button>
+            <button className="otherbtn" id="closePopup" onClick={addother}>other</button>
+            <button className="backbtn" id="closePopup" onClick={backtogame}>back</button>
+        </div>
+        </div>
+    </div>}
     {isShuffling && (
                 <div className="shuffle-animation">
-                    {Array.from({ length: 5 }, (_, i) => (
+                    {Array.from({ length: 75 }, (_, i) => (
                         <div key={i} className="bingo-ball">
                             {Math.floor(Math.random() * 100) + 1}
                         </div>

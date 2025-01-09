@@ -54,6 +54,6 @@ html, body {
   .paragraph {
     margin: 10px 0; /* Add some margin above and below the paragraph */
     font-size: 16px; /* Font size for the paragraph */
-    color: white; /* Text color for the paragraph */
+    color: rgb(10, 10, 10); /* Text color for the paragraph */
   }
   

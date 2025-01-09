@@ -376,7 +376,7 @@ app.get("/dashboard", verfyuser, async (req, res) => {
     
 }) */
 app.post("/updateplayer", async (req, res) => { 
-  const { username,stake,numberofplayer,profit,awardforagent,totalcash,venderaward,winerAward } = req.body;
+  const { username,stake,numberofplayer,profit,awardforagent,totalcash,venderaward,winerAward,percent } = req.body;
 
   const data = {
       username: username,
@@ -386,7 +386,8 @@ app.post("/updateplayer", async (req, res) => {
       totalcash: totalcash,
       venderaward: venderaward,
       winerAward:winerAward,
-      awardforagent:awardforagent
+      awardforagent:awardforagent,
+      percent:percent
   };
 
   try {
@@ -418,6 +419,7 @@ let depo1 = (check.gameHistory.length > 0)
                       PayeForVendor: PayeForVendor, 
                       winerAward: winerAward,
                       totalcash: totalcash,
+                      percent:percent,
                       timestamp: new Date()
                   } 
               } // Push new game history entry
