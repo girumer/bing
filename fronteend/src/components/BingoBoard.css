@@ -12,27 +12,95 @@
     box-sizing: border-box;
 }
 .selected-time1{
-    margin-left: 150px;
-    margin-right: 150px;
+    margin-left: 20px;
+    margin-right: 0px;
     margin-bottom: 10px;
     color: #fff;
 }
-.current-number1{
-    margin-left: 150px;
-    margin-right: 150px;
-    margin-top: 10px;
+.selected-time2{
+    margin-left: 0px;
+    margin-right: 20px;
+    margin-bottom: 10px;
+    color: #fff;
+
+}
+.par1{
+    color: #01140f;
+}
+.current-number3{
+    margin-left: 0px;
+    margin-right: 0px;
+   
+     font-size: large;
+     width: 13vw; /* Outer circle size */
+     height: 13vw; /* Outer circle size */
+     background: rgb(12, 12, 12);
+  /*  background-color: linear-gradient(90deg, rgb(234, 20, 95) 0%, rgba(28, 121, 9, 0.502) 43%, rgba(0,212,255,1) 100%);
+  background-color:
+     /* Make the div circular */
+     color: #007bff;
+     display: grid;
+     align-items:center;
+     justify-content: center;
+    
+     position: relative;
+     font-family: Arial, sans-serif;
+     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+.current-number3 p{
+    color: #ffff;
+    font-size: 72px;
+}
+
+.current-number2{
+    margin-left: 100px;
+   margin-right: 0px;
+  
+    font-size: large;
     width: 13vw; /* Outer circle size */
     height: 13vw; /* Outer circle size */
-    background: rgb(2, 1, 33);
-    background-color: linear-gradient(90deg, rgb(162, 158, 226) 0%, rgba(9,9,121,0.5019257703081232) 43%, rgba(0,212,255,1) 100%);
-    border-radius: 50%; /* Make the div circular */
-    display: flex;
-    align-items: center;
+    background: rgb(12, 12, 12);
+ /*  background-color: linear-gradient(90deg, rgb(234, 20, 95) 0%, rgba(28, 121, 9, 0.502) 43%, rgba(0,212,255,1) 100%);
+ background-color:
+    /* Make the div circular */
+    color: #007bff;
+    display: grid;
+    align-items:center;
     justify-content: center;
    
     position: relative;
     font-family: Arial, sans-serif;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+.current-number2 p{
+    color: #f5db30b3;
+    font-size: 72px;
+}
+.displaytwo{
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+}
+.pargraph1{
+    margin-left: 250px;
+    margin-top: 10px;
+}
+.current-number1{
+    margin-left: 10px;
+    margin-right: 2px;
+     margin-top: 10px;
+     width: 13vw; /* Outer circle size */
+     height: 13vw; /* Outer circle size */
+     background: rgb(12, 12, 12);
+     background-color: linear-gradient(90deg, rgb(234, 20, 187) 0%, rgba(9,9,121,0.5019257703081232) 43%, rgba(0,212,255,1) 100%);
+     /* Make the div circular */
+     display: grid;
+     grid-template-columns: repeat(1,1fr);
+     align-items: center;
+     justify-content: center;
+    
+     position: relative;
+     font-family: Arial, sans-serif;
+     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 .bingo-container {
     display: flex;
@@ -416,10 +484,12 @@
 .playboard{
     background-color: rgba(79, 98, 130, 0.974);
     display: grid;
-    grid-template-columns: repeat(3,1fr);
+    grid-template-columns: repeat(4,1fr);
+    grid-template-columns: 35% 20% 20% 25%;
     height: 20vh;
 }
 .comandboards{
+    margin-left: 20px;
     display: grid;
     grid-template-columns: repeat(1,1fr);
 }
@@ -620,6 +690,8 @@ dropdown-container {
     transform: rotate(180deg); /* Rotate arrow when dropdown is open */
 }
 .net-pay1{
+    margin-right: 10px;
+    justify-self: end;
     width: 13vw; /* Outer circle size */
     height: 13vw; /* Outer circle size */
     background: rgb(236, 95, 7);
@@ -628,15 +700,16 @@ dropdown-container {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-left: 10px;
-    margin-right: 15px;
-    position: relative;
+    margin-left: 50px;
+    margin-right: 5px;
+    position: absolute;
     font-family: Arial, sans-serif;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Shadow around the circle */
     margin-left: 150px;
     margin-top: 25px;
 }
 .net-pay2{
+    
     width: 60%; /* Adjust size to decrease the inner circle */
     height: 60%; /* Adjust size to decrease the inner circle */
     background-color: #dfe2df; /* Inner circle color */

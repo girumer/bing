@@ -1185,12 +1185,24 @@ useEffect(() => {
 )}
 
                   
-       {!isnavbar && <div>
-        <p className="selected-time1">number of calledNumbers</p>
-        <div className="current-number1">
-                            <p>{numberCallLength}</p>
+       {!isnavbar && <div className="displaytwo">
+       
+       
+       
+        <div className="current-number2">
+        <small>number of called numbers</small>
+                            <p >{numberCallLength}</p>
                         </div>
-                    </div>
+                       
+                        <div>
+                        
+                     <div className="current-number3">
+                     <small>the laast called number
+                     </small>
+                     <p >{lastCalledNumberRef.current}</p>
+                 </div>
+                 </div>
+             </div>
                     }
                     <div className="net-pay1">
                         <div className="net-pay2">
