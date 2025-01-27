@@ -814,7 +814,9 @@ useEffect(() => {
     
             // Check columns
             for (let i = 0; i < 5; i++) {
-                if (initialState.every((row) => row[i] === '*' || calledNumbers.includes(row[i]))) {
+                const isColumnComplete = intialstate.every((row) => {
+                  return row[i] === "*" || calledNumbers.includes(row[i]);
+                }); {
                     // Check if the last called number is in this column
                     if (initialState.some((row) => row[i] === lastCalledNumber)) {
                         if (language == "am") {

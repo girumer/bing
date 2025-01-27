@@ -49,7 +49,7 @@ const allowedOrigins = [
   'https://www.adeyebingo.com',//      // www version with HTTPS
   'https://api.adeyebingo.com',
 ];
-
+console.log("json update");
 app.use(cors({
   origin: function (origin, callback) {
     // Allow requests with no 'origin' (e.g., mobile apps, Postman)
