@@ -506,7 +506,7 @@ useEffect(() => {
             const gameStartedAudio = getGameStartedAudio();
               
             gameStartedAudio.play();
-          
+            setNavbar(false);
            setTimeout(() => {
              handleStart();
                   startRandomNumberGenerator();
@@ -786,7 +786,7 @@ useEffect(() => {
             }
         } else {
             // Check rows
-            for (let i = 0; i < 5; i++) {
+           for (let i = 0; i < 5; i++) {
                 if (initialState[i].every((num) => calledNumbers.includes(num) || num === '*')) {
                     // Check if the last called number is in this row
                     if (initialState[i].includes(lastCalledNumber)) {
@@ -810,17 +810,19 @@ useEffect(() => {
                         return;
                     }
                 }
-            }
+            } 
     
             // Check columns
             for (let i = 0; i < 5; i++) {
                 const isColumnComplete = intialstate.every((row) => {
                   return row[i] === "*" || calledNumbers.includes(row[i]);
                 }); {
+                    if(isColumnComplete){
                     // Check if the last called number is in this column
                     if (initialState.some((row) => row[i] === lastCalledNumber)) {
                         if (language == "am") {
                             const win = getGameWining();
+                            console.log()
                             win.play();
                             const marked1 = initialState.map((row) =>
                                 calledNumbers.includes(row[i]) || row[i] === '*' ? row[i] : null
@@ -844,10 +846,11 @@ useEffect(() => {
                         return;
                     }
                 }
-            }
+                }
+            } 
     
             // Check diagonals
-            const diagonals = [
+             const diagonals = [
                 [initialState[0][0], initialState[1][1], initialState[2][2], initialState[3][3], initialState[4][4]],
                 [initialState[0][4], initialState[1][3], initialState[2][2], initialState[3][1], initialState[4][0]],
             ];
@@ -875,7 +878,7 @@ useEffect(() => {
                     }
                 }
             }
-    
+     
             // Check corners (if applicable)
             const corners = [
                 [initialState[0][0], initialState[0][4], initialState[4][0], initialState[4][4]],
@@ -903,8 +906,33 @@ useEffect(() => {
                         return;
                     }
                 }
+            } 
+                const center=[
+            [initialState[1][2], initialState[2][1], initialState[2][3], initialState[3][2]],
+        ];
+           for (let centerPattern  of center) {
+            if (centerPattern.every((num) => calledNumbers.includes(num) || num === '*')) {
+                // Check if the last called number is in the corner
+                if (centerPattern.includes(lastCalledNumber)) {
+                    if (language == "am") {
+                        const win = getGameWining();
+                        win.play();
+                        setmarked(centerPattern );
+                        setgamewinnerboard(true);
+                        setfireworklun(true);
+                        console.log(centerPattern);
+                    } else {
+                        setmarked(centerPattern);
+                        setgamewinnerboard(true);
+                        setfireworklun(true);
+                        console.log(centerPattern);
+                        const utterance = new SpeechSynthesisUtterance(`cartela number ${num} win`);
+                        window.speechSynthesis.speak(utterance);
+                    }
+                    return;
+                }
             }
-    
+        }
             // If no win condition is met, notify player
             const marked1 = initialState
                 .flatMap((row) => row.filter((num) => calledNumbers.includes(num) || num === '*'));
@@ -1199,7 +1227,7 @@ useEffect(() => {
                         <div>
                         
                      <div className="current-number3">
-                     <small>the laast called number
+                     <small>the last called number
                      </small>
                      <p >{lastCalledNumberRef.current}</p>
                  </div>
