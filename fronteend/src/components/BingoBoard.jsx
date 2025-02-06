@@ -94,9 +94,10 @@ const BingoBoard = () => {
         console.log('Initial Language from localStorage:', storedLanguage); // Debugging log
         return storedLanguage || 'am';
     });
-      const [selectedOption, setSelectedOption] = useState(8000); 
+      const [selectedOption, setSelectedOption] = useState(5000); 
       const [isOpen, setIsOpen] = useState(false);
       const options = [
+        { label: "5 seconds", value: 5000 },
         { label: "7 seconds", value: 8000 },
         { label: "8 seconds", value: 9000 },
         { label: "9 seconds", value: 10000},
@@ -231,7 +232,7 @@ const BingoBoard = () => {
         const percentdeduction=1-percent;
         const final = totalcash * percentdeduction;
         const award=totalcash*percent;
-        const vendor=award*0.3;
+        const vendor=totalcash * percentdeduction;
         const awardforagen=award-vendor;
         setNumberofPlayer(numberofplayer);
         setWinerAward(final);
@@ -297,27 +298,56 @@ useEffect(() => {
         setCurrentNumber(0);
       
     }
-    const newgame=()=>{
+   /*  const newgame=()=>{
 
 
         localStorage.removeItem('calledNumbers');
-
-                    // Reset the state to an empty array
+        handleStop();
+                    
                     setCalledNumber([]);
                 
-                    // Update the ref to reflect the cleared state
+                   
                     calledNumbersRef.current = [];
                     setWinerAward(0);
-                   handleStop();
+                   
                     setCurrentNumber(0);
       navigate("/CartelaSelction", { state: { language: language } });
-    }
+    } */
+      const newgame = async () => {
+        try {
+            localStorage.removeItem('calledNumbers');
+            
+             handleStop();  // Ensure handleStop completes if it's async
+            
+            // Reset the state to an empty array
+            setCalledNumber([]);
+            
+            // Update the ref to reflect the cleared state
+            calledNumbersRef.current = [];
+            setWinerAward(0);
+            setCurrentNumber(0);
+            
+            // Navigate to selection screen
+            navigate("/CartelaSelction", { state: { language: language } });
+    
+        } catch (error) {
+            console.error("Error resetting game:", error);
+        }
+    };
+    
     const amharicAudioFiles = Array.from({ length: 75 }, (_, i) => {
        const audio=new Audio(`/amharicnumbers/${i + 1}.mp3`);
        audio.preload= "auto";
         return audio;
          // Adjust the path if necessary
     });
+    const amharicAudioFilesfemale= Array.from({ length: 75 }, (_, i) => {
+        const audio=new Audio(`/amharicfemale/${i + 1}.mp3`);
+        audio.preload= "auto";
+         return audio;
+          // Adjust the path if necessary
+     });
+     
    
     const handleLanguageChange = (event) => {
         setLanguage(event.target.value); // This updates the state which triggers useEffect
@@ -357,6 +387,11 @@ useEffect(() => {
        gamestart.preload="auto";
        gamestart.play();
     }
+    else if(language=="amf"){
+        const gamestart=getGameStartedAudif();
+        gamestart.preload="auto";
+        gamestart.play();
+     }
        else{
         let message="Game started";
         const utterance = new SpeechSynthesisUtterance(message);
@@ -380,6 +415,13 @@ useEffect(() => {
        
 
     }
+    const gameisnotf=()=>{
+        const aler=getcartelanotf();
+        aler.play();
+        
+       
+
+    }
     const getshuffle=()=>{
         const audio =new Audio('/gamestatus/shuffile.mp3');
         audio.preload = "auto"; // Preload to reduce delay
@@ -387,6 +429,12 @@ useEffect(() => {
     }
     const getGameStartedAudi = () => {
         const audio= new Audio('/gamestatus/gamestarted.mp3');
+        audio.preload = "auto"; // Preload to reduce delay
+        return audio;
+
+    };
+    const getGameStartedAudif = () => {
+        const audio= new Audio('/gamestatusfemale/gamestarted.mp3');
         audio.preload = "auto"; // Preload to reduce delay
         return audio;
 
@@ -410,20 +458,6 @@ useEffect(() => {
         
         )
       )))
-      /* onst carts3 =  winstate2.map((row, rowIndex) => (
-        row.map((cell, cellIndex) => (
-            <button
-                className="boxes"
-                key={cellIndex}
-                style={{
-                    backgroundColor: marked1.some(([r, c]) => r === rowIndex && c === cellIndex) ? '#008000' : '#000000',
-                }}
-            >
-                {cell}
-            </button>
-        ))
-    )); */
-    // Ensure that `winstate2` is always an array of arrays
     const carts3 = winstate2.map((row, rowIndex) => (
         row.map((cell, cellIndex) => (
             <button
@@ -465,6 +499,14 @@ useEffect(() => {
            
             
         }
+       else if(language=="amf"){
+            const getGamePuse = getGamePusedAudiof();
+            getGamePuse.play();
+            handleStop();
+            setwinnerboard(true);
+           
+            
+        }
         else{
         const utterance = new SpeechSynthesisUtterance("Game Pused");
         window.speechSynthesis.speak(utterance);
@@ -479,31 +521,28 @@ useEffect(() => {
         }
     }, [cartelas, stake]);
 
-    /* useEffect(() => {
-        if (isGenerating) {
-            startRandomNumberGenerator();
-        }
-        return () => { shouldGenerate.current = false; };
-    }, [isGenerating]); */
-/* 
-    useEffect(()=>{
-        if(cartelas.length>=2){
-            setTimeout(() => {
-                setIsGenerating(true);
-            }, 2000);
-        }
-    },[cartelas]); */
     useEffect(() => {
         setAmount(cartelas, stake);
     }, [cartelas, stake]);
-    /* useEffect(() => {
-       
-    }, []); */
-    
+   
     const startGamer = () => {
          if(language=="am"){
             //const started="started"
             const gameStartedAudio = getGameStartedAudio();
+              
+            gameStartedAudio.play();
+            setNavbar(false);
+           setTimeout(() => {
+             handleStart();
+                  startRandomNumberGenerator();
+                  
+            }, 2000); // 1-second delay
+          
+            
+        }
+        if(language=="amf"){
+            //const started="started"
+            const gameStartedAudio = getGameStartedAudiof();
               
             gameStartedAudio.play();
             setNavbar(false);
@@ -530,8 +569,18 @@ useEffect(() => {
         audio.preload = "auto"; // Preload to reduce delay
        return audio;
     }
+    const getcartelanotf=()=>{
+        const audio= new Audio('/gamestatusfemale/number_is_not.mp3');
+        audio.preload = "auto"; // Preload to reduce delay
+       return audio;
+    }
     const getGameWining=()=>{
         const audio= new Audio('/gamestatus/the_player_win.mp3');
+        audio.preload = "auto"; // Preload to reduce delay
+       return audio;
+    }
+    const  getGameWiningfeamel=()=>{
+        const audio= new Audio('/gamestatusfemale/the_player_win.mp3');
         audio.preload = "auto"; // Preload to reduce delay
        return audio;
     }
@@ -540,13 +589,28 @@ useEffect(() => {
         audio.preload = "auto"; // Preload to reduce delay
        return audio;
     }
+    const playerNotwinf=()=>{
+        const audio= new Audio('/gamestatusfemale/number_is_not.mp3');
+        audio.preload = "auto"; // Preload to reduce delay
+       return audio;
+    }
     const getGamePusedAudio=()=>{
         const audio=new Audio('/gamestatus/gamepused.mp3');
         audio.preload = "auto"; // Preload to reduce delay
         return audio;
     }
+    const getGamePusedAudiof=()=>{
+        const audio=new Audio('/gamestatusfemale/gamepused.mp3');
+        audio.preload = "auto"; // Preload to reduce delay
+        return audio;
+    }
     const getGameStartedAudio = () => {
         const audio= new Audio('/gamestatus/gameresume.mp3');
+        audio.preload = "auto"; // Preload to reduce delay
+        return audio;
+    };
+    const getGameStartedAudiof = () => {
+        const audio= new Audio('/gamestatusfemale/gameresume.mp3');
         audio.preload = "auto"; // Preload to reduce delay
         return audio;
     };
@@ -608,6 +672,9 @@ useEffect(() => {
                             if(language==="am"){
                                 playAmharicAudioForNumber(number);
                             }
+                            else if(language==="amf"){
+                                playAmharicAudioForNumberfemale(number)  
+                            }
                             else{
                                 if (number >= 10) {
                                     // First announcement: "B {number}"
@@ -629,6 +696,9 @@ useEffect(() => {
                             if(language==="am"){
                                 playAmharicAudioForNumber(number);
                             }
+                            else if(language==="amf"){
+                                playAmharicAudioForNumberfemale(number)  
+                            }
                             else{
                             const utterance = new SpeechSynthesisUtterance(`I ${number}`);
                             utterance.lang = language === "en" ? "en-US" : "am-ET";
@@ -643,6 +713,9 @@ useEffect(() => {
                             if(language==="am"){
                                 playAmharicAudioForNumber(number);
                             }
+                            else if(language==="amf"){
+                                playAmharicAudioForNumberfemale(number)  
+                            }
                             else{
                             const utterance = new SpeechSynthesisUtterance(`N ${number}`);
                             window.speechSynthesis.speak(utterance);
@@ -655,6 +728,9 @@ useEffect(() => {
                           
                             if(language==="am"){
                                 playAmharicAudioForNumber(number);
+                            }
+                            else if(language==="amf"){
+                                playAmharicAudioForNumberfemale(number)  
                             }
                             else{
                             const utterance = new SpeechSynthesisUtterance(`G ${number}`);
@@ -669,6 +745,9 @@ useEffect(() => {
                             if(language==="am"){
                                 playAmharicAudioForNumber(number);
                             }
+                            else if(language==="amf"){
+                                playAmharicAudioForNumberfemale(number)  
+                            }
                             else{
                             const utterance = new SpeechSynthesisUtterance(`O ${number}`);
                             window.speechSynthesis.speak(utterance);                          
@@ -681,34 +760,6 @@ useEffect(() => {
         }
     };
 
-/*     const startRandomNumberGenerator = async () => {
-        shouldGenerate.current = true;
-
-        while (calledNumbersRef.current.length < 75 && shouldGenerate.current) {
-            let rand;
-            do {
-                rand = Math.floor(Math.random() * 75) + 1;
-            } while (calledNumbersRef.current.includes(rand));
-
-            calledNumbersRef.current.push(rand); // Adds the new number to the ref array
-            announceNumber(rand);
-    
-            // Update the state so the component re-renders with the new called numbers
-            setCalledNumber([...calledNumbersRef.current]);
-    
-            // Store the updated numbers in localStorage
-            localStorage.setItem('calledNumbers', JSON.stringify(calledNumbersRef.current));
-    
-            updateCurrentNumber(rand)
-    
-            await new Promise(resolve => setTimeout(resolve, interval)
-
-            //await new Promise(resolve => setTimeout(resolve, interval));
-        }
-        
-        setIsGenerating(false);
-    };
- */
     const startRandomNumberGenerator = async () => {
        
         
@@ -721,7 +772,7 @@ useEffect(() => {
         //setIsGenerating(true);
         while (calledNumbersRef.current.length < 75 &&  isGeneratingRef.current ) {
           
-            if (!isGenerating) {
+            if (!isGeneratingRef.current) {
                 console.log("Number generation stopped.");
                 return; // Exit the loop
             }
@@ -773,6 +824,20 @@ useEffect(() => {
             console.error('Number out of range');
         }
     };
+    const playAmharicAudioForNumberfemale = (number) => {
+        if (number >= 1 && number <= 75) {
+           try { const audio=amharicAudioFilesfemale[number - 1].play();
+            audio.preload = "auto"; // Preload each number audio
+            return audio; // Play audio for the specific number}
+            }
+            catch (err) {
+            console.error('Error playing audio:', err);
+        }
+        } 
+        else {
+            console.error('Number out of range');
+        }
+    };
     const cheakwin = async (initialState, num) => {
         const calledNumbers = calledNumbersRef.current;
         const lastCalledNumber = lastCalledNumberRef.current;
@@ -780,7 +845,11 @@ useEffect(() => {
         if (!cartelas.includes(num)) {
             if (language == "am") {
                 gameisnot();
-            } else {
+            }
+           else if (language == "amf") {
+                gameisnotf();
+            }
+            else {
                 const utterance = new SpeechSynthesisUtterance("the number is not in the list");
                 window.speechSynthesis.speak(utterance);
             }
@@ -798,7 +867,17 @@ useEffect(() => {
                             setgamewinnerboard(true);
                             setfireworklun(true);
                             console.log(marked1);
-                        } else {
+                        } 
+                        else if (language == "amf") {
+                            const win = getGameWiningfeamel();
+                            win.play();
+                            const marked1 = initialState[i];
+                            setmarked(marked1);
+                            setgamewinnerboard(true);
+                            setfireworklun(true);
+                            console.log(marked1);
+                        }
+                        else {
                             const marked1 = initialState[i];
                             setmarked(marked1);
                             setgamewinnerboard(true);
@@ -831,7 +910,17 @@ useEffect(() => {
                             setfireworklun(true);
                             setgamewinnerboard(true);
                             console.log(marked1);
-                        } else {
+                        } 
+                        else if (language == "amf") {
+                            const win = getGameWiningfeamel();
+                            win.play();
+                            const marked1 = initialState[i];
+                            setmarked(marked1);
+                            setgamewinnerboard(true);
+                            setfireworklun(true);
+                            console.log(marked1);
+                        }
+                        else {
                             const marked1 = initialState.map((row) =>
                                 calledNumbers.includes(row[i]) || row[i] === '*' ? row[i] : null
                             );
@@ -866,7 +955,17 @@ useEffect(() => {
                             setgamewinnerboard(true);
                             setfireworklun(true);
                             console.log(diagonal);
-                        } else {
+                        }
+                        else if (language == "amf") {
+                            const win = getGameWiningfeamel();
+                           
+                            win.play();
+                            setmarked(diagonal);
+                            setgamewinnerboard(true);
+                            setfireworklun(true);
+                            console.log(diagonal);
+                        }
+                         else {
                             setmarked(diagonal);
                             setgamewinnerboard(true);
                             setfireworklun(true);
@@ -895,7 +994,16 @@ useEffect(() => {
                             setgamewinnerboard(true);
                             setfireworklun(true);
                             console.log(corner);
-                        } else {
+                        } 
+                        else if (language == "amf") {
+                            const win = getGameWiningfeamel();
+                            win.play();
+                            setmarked(corner);
+                            setgamewinnerboard(true);
+                            setfireworklun(true);
+                            console.log(corner);
+                        }
+                        else {
                             setmarked(corner);
                             setgamewinnerboard(true);
                             setfireworklun(true);
@@ -921,7 +1029,16 @@ useEffect(() => {
                         setgamewinnerboard(true);
                         setfireworklun(true);
                         console.log(centerPattern);
-                    } else {
+                    } 
+                    else if (language == "amf") {
+                        const win = getGameWiningfeamel();
+                        win.play();
+                        setmarked(centerPattern );
+                        setgamewinnerboard(true);
+                        setfireworklun(true);
+                        console.log(centerPattern);
+                    }
+                    else {
                         setmarked(centerPattern);
                         setgamewinnerboard(true);
                         setfireworklun(true);
@@ -942,7 +1059,12 @@ useEffect(() => {
             if (language == "am") {
                 const notwin = playerNotwin();
                 notwin.play();
-            } else {
+            } 
+            if (language == "amf") {
+                const notwin = playerNotwinf();
+                notwin.play();
+            } 
+            else {
                 let message = "you click wrong pattern";
                 const utterance = new SpeechSynthesisUtterance(message);
                 window.speechSynthesis.speak(utterance);
@@ -955,7 +1077,16 @@ useEffect(() => {
     
         // Number is not part of the cartela
         if (!cartelas.flat().includes(num)) {
-            language === "am" ? gameisnot() : speak("The number is not in the list.");
+            if (language == "am") {
+                gameisnot();
+            }
+           else if (language == "amf") {
+                gameisnotf();
+            }
+            else {
+                const utterance = new SpeechSynthesisUtterance("the number is not in the list");
+                window.speechSynthesis.speak(utterance);
+            }
             return;
         }
     
@@ -1064,7 +1195,14 @@ useEffect(() => {
         setmarked1(markedNumbers.map(num => findCoordinates(num, winstate2)));
         setgamewinnerboard1(true);
         setfireworklun(true);
-        language === "am" ? getGameWining().play() : speak(message);
+      //  language === "am" ? getGameWining().play() : speak(message);
+        if (language === "am") {
+            getGameWining().play();
+        } else if (language === "amf") {
+            getGameWiningfeamel().play();
+        } else {
+            speak(message);// Handle other cases if needed
+        }
     };
     
     const notifyNoWin = (initialState) => {
@@ -1081,7 +1219,14 @@ useEffect(() => {
     
         setmarked1(markedNumbers);
         setgamewinnerboard1(true);
-        language === "am" ? playerNotwin().play() : speak("You clicked the wrong pattern.");
+       // language === "am" ? playerNotwin().play() : speak("You clicked the wrong pattern.");
+        if (language === "am") {
+            playerNotwin().play();
+        } else if (language === "amf") {
+            playerNotwinf().play();
+        } else {
+            speak("You clicked the wrong pattern.");// Handle other cases if needed
+        }
     };
 
     
@@ -1127,7 +1272,8 @@ useEffect(() => {
             <label htmlFor="language-select">Select Language:</label>
             <select id="language-select" value={language} onChange={handleLanguageChange}>
                 <option value="en">English</option>
-                <option value="am">Amharic</option>
+                <option value="am">Amharic Male</option>
+                <option value="amf">Amharic FeMale</option>
             </select>
         </div>}
             <div className="mainbody">
@@ -1227,8 +1373,7 @@ useEffect(() => {
                         <div>
                         
                      <div className="current-number3">
-                     <small>the last called number
-                     </small>
+                     
                      <p >{lastCalledNumberRef.current}</p>
                  </div>
                  </div>

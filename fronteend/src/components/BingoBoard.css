@@ -28,13 +28,13 @@
     color: #01140f;
 }
 .current-number3{
-    margin-left: 0px;
+    margin-left: 120px;
     margin-right: 0px;
-   
+    border-radius: 50%;
      font-size: large;
-     width: 13vw; /* Outer circle size */
-     height: 13vw; /* Outer circle size */
-     background: rgb(12, 12, 12);
+     width: 16vw; /* Outer circle size */
+     height: 16vw; /* Outer circle size */
+     background: rgb(241, 247, 242);
   /*  background-color: linear-gradient(90deg, rgb(234, 20, 95) 0%, rgba(28, 121, 9, 0.502) 43%, rgba(0,212,255,1) 100%);
   background-color:
      /* Make the div circular */
@@ -48,22 +48,22 @@
      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 .current-number3 p{
-    color: #ffff;
+    color: #080808;
     font-size: 72px;
 }
 
 .current-number2{
-    margin-left: 100px;
+    margin-left: 10px;
    margin-right: 0px;
-  
+   
     font-size: large;
-    width: 13vw; /* Outer circle size */
-    height: 13vw; /* Outer circle size */
+    width: 16vw; /* Outer circle size */
+    height: 16vw; /* Outer circle size */
     background: rgb(12, 12, 12);
  /*  background-color: linear-gradient(90deg, rgb(234, 20, 95) 0%, rgba(28, 121, 9, 0.502) 43%, rgba(0,212,255,1) 100%);
  background-color:
     /* Make the div circular */
-    color: #007bff;
+    color: #bac8d6;
     display: grid;
     align-items:center;
     justify-content: center;
@@ -75,6 +75,7 @@
 .current-number2 p{
     color: #f5db30b3;
     font-size: 72px;
+    align-items: center;
 }
 .displaytwo{
     display: grid;
