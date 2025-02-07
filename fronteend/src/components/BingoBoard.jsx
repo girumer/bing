@@ -33,7 +33,7 @@ const BingoBoard = () => {
     const [winerAward, setWinerAward] = useState(0);
     const [fireworklun,setfireworklun]=useState(false);
     const lastCalledNumberRef = useRef(null);
-  
+  let lastt=lastCalledNumberRef;
     const [numberCall, setCalledNumber] = useState(() => {
         const storedNumbers = localStorage.getItem('calledNumbers');
         return storedNumbers ? JSON.parse(storedNumbers) : [];
@@ -244,9 +244,9 @@ const BingoBoard = () => {
     };
     
 // Stop function
-const handleStop = () => {
-    isGeneratingRef.current = false;  // Stop the number generation
-    setIsGenerating(false);  
+const handleStop = async () => {
+    isGeneratingRef.current = false;
+    setIsGenerating(false);  // This doesn't return a Promise, but you could use a timeout if needed
 };
 useEffect(() => {
    
@@ -314,11 +314,11 @@ useEffect(() => {
                     setCurrentNumber(0);
       navigate("/CartelaSelction", { state: { language: language } });
     } */
-      const newgame = async () => {
+  /*     const newgame = async () => {
         try {
             localStorage.removeItem('calledNumbers');
             
-             handleStop();  // Ensure handleStop completes if it's async
+          await   handleStop();  // Ensure handleStop completes if it's async
             
             // Reset the state to an empty array
             setCalledNumber([]);
@@ -333,6 +333,30 @@ useEffect(() => {
     
         } catch (error) {
             console.error("Error resetting game:", error);
+        }
+    }; */
+    const newgame = async () => {
+        try {
+            // Remove called numbers from localStorage
+            localStorage.removeItem('calledNumbers');
+            
+            // Wait for handleStop to finish (if it's asynchronous)
+            await handleStop();  // Ensure handleStop completes before proceeding
+            
+            // Reset the necessary states
+            setCalledNumber([]);  // Clear the list of called numbers
+            calledNumbersRef.current = [];  // Clear the ref to ensure consistency
+    
+            // Reset other game-related states
+           // setWinerAward(0);  // Reset the winner award
+            //setCurrentNumber(0);  // Reset the current number
+            
+            // Optionally, if you want to reset any other states, do it here
+    
+            // Navigate to the selection screen after all async logic is done
+            navigate("/CartelaSelction", { state: { language: language } });
+        } catch (error) {
+            console.error("Error resetting game:", error);  // Catch any errors and log them
         }
     };
     
@@ -387,20 +411,21 @@ useEffect(() => {
        const gamestart=getGameStartedAudi();
        gamestart.preload="auto";
        gamestart.play();
+       //setIsGenerating(true);
        
     }
     else if(language=="amf"){
         const gamestart=getGameStartedAudif();
         gamestart.preload="auto";
         gamestart.play();
-        
+       // setIsGenerating(true);
      }
        else{
         let message="Game started";
         const utterance = new SpeechSynthesisUtterance(message);
 
             window.speechSynthesis.speak(utterance);
-        
+          //  setIsGenerating(true);
        }
        
        
@@ -536,11 +561,11 @@ useEffect(() => {
               
             gameStartedAudio.play();
             setNavbar(false);
-           setTimeout(() => {
+          // setTimeout(() => {
              handleStart();
                  // startRandomNumberGenerator();
                   
-            }, 2000); // 1-second delay
+         //   }, 2000); // 1-second delay
           
             
         }
@@ -766,7 +791,7 @@ useEffect(() => {
         }
     }; */
 
-/*     const announceNumber = (number) => {
+   /*  const announceNumber = (number) => {
         return new Promise((resolve) => {
         if ('speechSynthesis' in window) {
             window.speechSynthesis.cancel(); // Cancel any ongoing speech
@@ -854,7 +879,86 @@ useEffect(() => {
             
         }
     });
-    }; */
+    };  */
+    
+    const announceNumber = (number) => {
+        return new Promise((resolve) => {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel(); // Cancel any ongoing speech
+    
+                const announceWithDelay = (text, delay = 0) => {
+                    return new Promise((resolve) => {
+                        setTimeout(() => {
+                            const utterance = new SpeechSynthesisUtterance(text);
+                            utterance.lang = language === "en" ? "en-US" : "am-ET";
+                            utterance.onend = resolve; // Resolve when the utterance ends
+                            window.speechSynthesis.speak(utterance);
+                        }, delay);
+                    });
+                };
+    
+                const announceDigits = async (prefix, number) => {
+                    const digits = String(number).split('');
+                    const fullNumberText = `${prefix} ${number}`;
+                    const digitsText = `${prefix} ${digits.join(' ')}`;
+    
+                    await announceWithDelay(fullNumberText);
+                    await announceWithDelay(digitsText, 1000);
+                };
+    
+                const playAmharicAudio = (number) => {
+                    return new Promise((resolve) => {
+                        if (language === "am") {
+                            playAmharicAudioForNumber(number);
+                        } else if (language === "amf") {
+                            playAmharicAudioForNumberfemale(number);
+                        }
+                        setTimeout(resolve, 2000); // Simulate audio duration
+                    });
+                };
+    
+                (async () => {
+                    if (number <= 15) {
+                        if (language === "am" || language === "amf") {
+                            await playAmharicAudio(number);
+                        } else {
+                            if (number >= 10) {
+                                await announceDigits("B", number);
+                            } else {
+                                await announceWithDelay(`B ${number}`);
+                            }
+                        }
+                    } else if (number <= 30) {
+                        if (language === "am" || language === "amf") {
+                            await playAmharicAudio(number);
+                        } else {
+                            await announceDigits("I", number);
+                        }
+                    } else if (number <= 45) {
+                        if (language === "am" || language === "amf") {
+                            await playAmharicAudio(number);
+                        } else {
+                            await announceDigits("N", number);
+                        }
+                    } else if (number <= 60) {
+                        if (language === "am" || language === "amf") {
+                            await playAmharicAudio(number);
+                        } else {
+                            await announceDigits("G", number);
+                        }
+                    } else {
+                        if (language === "am" || language === "amf") {
+                            await playAmharicAudio(number);
+                        } else {
+                            await announceDigits("O", number);
+                        }
+                    }
+                    resolve(); // Now resolve only after the announcement completes
+                })();
+            }
+        });
+    };
+    
     const startRandomNumberGenerator = async () => {
        
         
@@ -897,8 +1001,8 @@ useEffect(() => {
     }
     
         setIsGenerating(false);
-    };
-    const announceNumber = (number) => {
+    }; 
+    /* const announceNumber = (number) => {
         return new Promise((resolve) => {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel(); // Cancel any ongoing speech
@@ -979,7 +1083,7 @@ useEffect(() => {
                 processAnnouncement().then(resolve);
             }
         });
-    };
+    }; */
     
     const handleOptionClick = (option) => {
         setSelectedOption(option);
@@ -1017,9 +1121,9 @@ useEffect(() => {
             console.error('Number out of range');
         }
     };
-    const cheakwin = async (initialState, num) => {
+   /*  const cheakwin = async (initialState, num) => {
         const calledNumbers = calledNumbersRef.current;
-        const lastCalledNumber = lastCalledNumberRef.current;
+        //const lastCalledNumber = lastCalledNumberRef.current;
     
         if (!cartelas.includes(num)) {
             if (language == "am") {
@@ -1249,7 +1353,131 @@ useEffect(() => {
                 window.speechSynthesis.speak(utterance);
             }
         }
+    }; */
+    const cheakwin = async (initialState, num) => {
+        const calledNumbers = calledNumbersRef.current;
+        const lastCalledNumber = lastCalledNumberRef.current;
+    
+        if (!cartelas.includes(num)) {
+            if (language == "am") {
+                gameisnot();
+            } else if (language == "amf") {
+                gameisnotf();
+            } else {
+                const utterance = new SpeechSynthesisUtterance("the number is not in the list");
+                window.speechSynthesis.speak(utterance);
+            }
+        } else {
+            // Check rows
+            for (let i = 0; i < 5; i++) {
+                if (initialState[i].every((num) => calledNumbers.includes(num) || num === '*')) {
+                    // Ensure the last called number is part of this row
+                    if (initialState[i].includes(lastCalledNumber)) {
+                        // Handle win logic for rows
+                        handleWinLogic(initialState[i], "row", i);
+                        return;
+                    }
+                }
+            }
+    
+            // Check columns
+            for (let i = 0; i < 5; i++) {
+                const isColumnComplete = initialState.every((row) => row[i] === "*" || calledNumbers.includes(row[i]));
+                if (isColumnComplete) {
+                    // Ensure the last called number is part of this column
+                    if (initialState.some((row) => row[i] === lastCalledNumber)) {
+                        // Handle win logic for columns
+                        handleWinLogic(initialState.map((row) => row[i]), "column", i);
+                        return;
+                    }
+                }
+            }
+    
+            // Check diagonals
+            const diagonals = [
+                [initialState[0][0], initialState[1][1], initialState[2][2], initialState[3][3], initialState[4][4]],
+                [initialState[0][4], initialState[1][3], initialState[2][2], initialState[3][1], initialState[4][0]],
+            ];
+    
+            for (let diagonal of diagonals) {
+                if (diagonal.every((num) => calledNumbers.includes(num) || num === '*')) {
+                    // Ensure the last called number is part of this diagonal
+                    if (diagonal.includes(lastCalledNumber)) {
+                        // Handle win logic for diagonals
+                        handleWinLogic(diagonal, "diagonal");
+                        return;
+                    }
+                }
+            }
+    
+            // Check corners (if applicable)
+            const corners = [
+                [initialState[0][0], initialState[0][4], initialState[4][0], initialState[4][4]],
+            ];
+    
+            for (let corner of corners) {
+                if (corner.every((num) => calledNumbers.includes(num) || num === '*')) {
+                    // Ensure the last called number is part of this corner
+                    if (corner.includes(lastCalledNumber)) {
+                        // Handle win logic for corners
+                        handleWinLogic(corner, "corner");
+                        return;
+                    }
+                }
+            }
+    
+            // Handle no win scenario
+            handleNoWin(initialState, num);
+        }
     };
+    
+    const handleWinLogic = (pattern, type, index) => {
+        // Win logic for row, column, diagonal, or corner
+        if (language === "am") {
+            const win = getGameWining();
+            win.play();
+            setmarked(pattern);
+            setgamewinnerboard(true);
+            setfireworklun(true);
+            console.log(pattern);
+        } else if (language === "amf") {
+            const win = getGameWiningfeamel();
+            win.play();
+            setmarked(pattern);
+            setgamewinnerboard(true);
+            setfireworklun(true);
+            console.log(pattern);
+        } else {
+            setmarked(pattern);
+            setgamewinnerboard(true);
+            setfireworklun(true);
+            console.log(pattern);
+            const utterance = new SpeechSynthesisUtterance(`cartela number ${index} win`);
+            window.speechSynthesis.speak(utterance);
+        }
+    };
+    
+    const handleNoWin = (initialState, num) => {
+        const calledNumbers = calledNumbersRef.current;
+        const marked1 = initialState
+            .flatMap((row) => row.filter((num) => calledNumbers.includes(num) || num === '*'));
+        setmarked(marked1);
+        setgamewinnerboard(true);
+        console.log(marked1);
+        if (language === "am") {
+            const notwin = playerNotwin();
+            notwin.play();
+        } else if (language === "amf") {
+            const notwin = playerNotwinf();
+            notwin.play();
+        } else {
+            let message = "you click wrong pattern";
+            const utterance = new SpeechSynthesisUtterance(message);
+            window.speechSynthesis.speak(utterance);
+        }
+    };
+    
+  
     const cheakwin1 = async (initialState, num) => {
         const calledNumbers = calledNumbersRef.current;
         const lastCalledNumber = lastCalledNumberRef.current;
@@ -1585,7 +1813,7 @@ useEffect(() => {
    
           <h3> win by  cartela number {winernumber}</h3>
             
-         
+          <h3> win by  cartela number {lastCalledNumberRef.current}</h3>
           
           <div className="bingoboard2w">
     
@@ -1616,7 +1844,7 @@ useEffect(() => {
       <div className="popup-contentw">
    
           <h3> win by  cartela number {winernumber}</h3>
-            
+          <h3> win by  cartela number {winernumber}</h3>
          
           
           <div className="bingoboard2w">
