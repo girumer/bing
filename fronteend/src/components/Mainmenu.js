@@ -85,7 +85,7 @@ async function checkpoint(){
     <Navbar />
     <div className="play-page">
         <div className="welcome-text">
-          <h1>Welcome to Ultimate Bingo Game</h1>
+          <h1>Welcome to Adeye Bingo Game</h1>
           <p>Enjoy playing thank you for selecting Us</p>
           <p>Here is your remaining package </p>
         </div>

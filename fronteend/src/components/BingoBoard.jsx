@@ -98,9 +98,10 @@ const BingoBoard = () => {
       const [isOpen, setIsOpen] = useState(false);
       const options = [
         { label: "5 seconds", value: 5000 },
-        { label: "7 seconds", value: 8000 },
-        { label: "8 seconds", value: 9000 },
-        { label: "9 seconds", value: 10000},
+        { label: "6 seconds", value: 5000 },
+        { label: "7 seconds", value: 5000 },
+        { label: "8 seconds", value: 8000 },
+        { label: "9 seconds", value: 9000 },
         { label: "10 seconds", value: 10000 },
     ];
       const interval = selectedOption;
@@ -232,7 +233,7 @@ const BingoBoard = () => {
         const percentdeduction=1-percent;
         const final = totalcash * percentdeduction;
         const award=totalcash*percent;
-        const vendor=totalcash * percentdeduction;
+        const vendor=totalcash * percent;
         const awardforagen=award-vendor;
         setNumberofPlayer(numberofplayer);
         setWinerAward(final);
@@ -590,7 +591,7 @@ useEffect(() => {
        return audio;
     }
     const playerNotwinf=()=>{
-        const audio= new Audio('/gamestatusfemale/number_is_not.mp3');
+        const audio= new Audio('/gamestatusfemale/notwinf.mp3');
         audio.preload = "auto"; // Preload to reduce delay
        return audio;
     }
@@ -664,7 +665,7 @@ useEffect(() => {
         else setCurrentNumber(`O ${rand}`);
     };
 
-    const announceNumber = (number) => {
+   /*  const announceNumber = (number) => {
         if ('speechSynthesis' in window) {
             window.speechSynthesis.cancel();
             let prefix;
@@ -758,8 +759,97 @@ useEffect(() => {
          
             
         }
-    };
+    }; */
 
+/*     const announceNumber = (number) => {
+        return new Promise((resolve) => {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel(); // Cancel any ongoing speech
+    
+            const announceWithDelay = (text, delay = 0) => {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        const utterance = new SpeechSynthesisUtterance(text);
+                        utterance.lang = language === "en" ? "en-US" : "am-ET";
+                        utterance.onend = resolve; // Resolve the promise when the utterance ends
+                        window.speechSynthesis.speak(utterance);
+                    }, delay);
+                });
+            };
+    
+            const announceDigits = async (prefix, number) => {
+                const digits = String(number).split(''); // Split the number into individual digits
+                const fullNumberText = `${prefix} ${number}`;
+                const digitsText = `${prefix} ${digits.join(' ')}`;
+    
+                // Announce the full number first
+                await announceWithDelay(fullNumberText);
+    
+                // Announce the digits after a delay (e.g., 1000ms or 1 second)
+                await announceWithDelay(digitsText, 1000);
+            };
+            
+            if (number <= 15) {
+                if (language === "am") {
+                    playAmharicAudioForNumber(number);
+                    resolve();
+                } else if (language === "amf") {
+                    playAmharicAudioForNumberfemale(number);
+                    resolve();
+                } else {
+                    if (number >= 10) {
+                        announceDigits("B", number);
+                        resolve();
+                    } else {
+                        announceWithDelay(`B ${number}`);
+                        resolve();
+                    }
+                }
+            } else if (number <= 30) {
+                if (language === "am") {
+                    playAmharicAudioForNumber(number);
+                } else if (language === "amf") {
+                    playAmharicAudioForNumberfemale(number);
+                } else {
+                    announceDigits("I", number);
+                }
+            } else if (number <= 45) {
+                if (language === "am") {
+                    playAmharicAudioForNumber(number);
+                    resolve();
+                } else if (language === "amf") {
+                    playAmharicAudioForNumberfemale(number);
+                    resolve();
+                } else {
+                    announceDigits("N", number);
+                    resolve();
+                }
+            } else if (number <= 60) {
+                if (language === "am") {
+                    playAmharicAudioForNumber(number);
+                    resolve();
+                } else if (language === "amf") {
+                    playAmharicAudioForNumberfemale(number);
+                    resolve();
+                } else {
+                    announceDigits("G", number);
+                    resolve();
+                }
+            } else {
+                if (language === "am") {
+                    playAmharicAudioForNumber(number);
+                } else if (language === "amf") {
+                    playAmharicAudioForNumberfemale(number);
+                    resolve();
+                } else {
+                    announceDigits("O", number);
+                    resolve();
+                }
+            }
+            
+        }
+    });
+    }; */
     const startRandomNumberGenerator = async () => {
        
         
@@ -780,12 +870,14 @@ useEffect(() => {
             do {
                 rand = Math.floor(Math.random() * 75) + 1;
             } while (calledNumbersRef.current.includes(rand)); // This should work as `current` is an array
-    
+           
+            await  announceNumber(rand);
             calledNumbersRef.current.push(rand); // Adds the new number to the ref array
+           
             lastCalledNumberRef.current=rand;
             console.log("last clled number is",lastCalledNumberRef.current);
             
-            announceNumber(rand)
+           
             // Update the state so the component re-renders with the new called numbers
             
             
@@ -800,6 +892,88 @@ useEffect(() => {
     }
     
         setIsGenerating(false);
+    };
+    const announceNumber = (number) => {
+        return new Promise((resolve) => {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel(); // Cancel any ongoing speech
+    
+                const announceWithDelay = (text, delay = 0) => {
+                    return new Promise((resolve) => {
+                        setTimeout(() => {
+                            const utterance = new SpeechSynthesisUtterance(text);
+                            utterance.lang = language === "en" ? "en-US" : "am-ET";
+                            utterance.onend = resolve; // Resolve the promise when speech ends
+                            window.speechSynthesis.speak(utterance);
+                        }, delay);
+                    });
+                };
+    
+                const announceDigits = async (prefix, number) => {
+                    const digits = String(number).split('');
+                    const fullNumberText = `${prefix} ${number}`;
+                    const digitsText = `${prefix} ${digits.join(' ')}`;
+    
+                    // Wait for the full number announcement
+                    await announceWithDelay(fullNumberText);
+    
+                    // Wait for the digits announcement
+                    await announceWithDelay(digitsText, 1000);
+                };
+    
+                // Handle Amharic audio (must return a promise)
+                const playAmharicAudio = (number) => {
+                    return new Promise((resolve) => {
+                        if (language === "am") {
+                            playAmharicAudioForNumber(number);
+                        } else if (language === "amf") {
+                            playAmharicAudioForNumberfemale(number);
+                        }
+                        setTimeout(resolve, 2000); // Assume Amharic audio takes 2 seconds
+                    });
+                };
+    
+                const processAnnouncement = async () => {
+                    if (number <= 15) {
+                        if (language === "am" || language === "amf") {
+                            await playAmharicAudio(number);
+                        } else {
+                            if (number >= 10) {
+                                await announceDigits("B", number);
+                            } else {
+                                await announceWithDelay(`B ${number}`);
+                            }
+                        }
+                    } else if (number <= 30) {
+                        if (language === "am" || language === "amf") {
+                            await playAmharicAudio(number);
+                        } else {
+                            await announceDigits("I", number);
+                        }
+                    } else if (number <= 45) {
+                        if (language === "am" || language === "amf") {
+                            await playAmharicAudio(number);
+                        } else {
+                            await announceDigits("N", number);
+                        }
+                    } else if (number <= 60) {
+                        if (language === "am" || language === "amf") {
+                            await playAmharicAudio(number);
+                        } else {
+                            await announceDigits("G", number);
+                        }
+                    } else {
+                        if (language === "am" || language === "amf") {
+                            await playAmharicAudio(number);
+                        } else {
+                            await announceDigits("O", number);
+                        }
+                    }
+                };
+    
+                processAnnouncement().then(resolve);
+            }
+        });
     };
     
     const handleOptionClick = (option) => {
