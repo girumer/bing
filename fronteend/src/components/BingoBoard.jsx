@@ -387,17 +387,20 @@ useEffect(() => {
        const gamestart=getGameStartedAudi();
        gamestart.preload="auto";
        gamestart.play();
+       
     }
     else if(language=="amf"){
         const gamestart=getGameStartedAudif();
         gamestart.preload="auto";
         gamestart.play();
+        
      }
        else{
         let message="Game started";
         const utterance = new SpeechSynthesisUtterance(message);
 
             window.speechSynthesis.speak(utterance);
+        
        }
        
        
@@ -535,7 +538,7 @@ useEffect(() => {
             setNavbar(false);
            setTimeout(() => {
              handleStart();
-                  startRandomNumberGenerator();
+                 // startRandomNumberGenerator();
                   
             }, 2000); // 1-second delay
           
@@ -549,7 +552,7 @@ useEffect(() => {
             setNavbar(false);
            setTimeout(() => {
              handleStart();
-                  startRandomNumberGenerator();
+                  //startRandomNumberGenerator();
                   
             }, 2000); // 1-second delay
           
@@ -558,7 +561,9 @@ useEffect(() => {
         else{
         const utterance = new SpeechSynthesisUtterance("Game Started");
         window.speechSynthesis.speak(utterance);
-        setIsGenerating(true);}
+        handleStart();
+       // setIsGenerating(true);
+       }
     };
     const closeWinboard=()=>{
         setgamewinnerboard(false);
@@ -1230,11 +1235,11 @@ useEffect(() => {
             setmarked(marked1);
             setgamewinnerboard(true);
             console.log(marked1);
-            if (language == "am") {
+            if (language === "am") {
                 const notwin = playerNotwin();
                 notwin.play();
             } 
-            if (language == "amf") {
+          else  if (language ==="amf") {
                 const notwin = playerNotwinf();
                 notwin.play();
             } 
