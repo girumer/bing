@@ -29,10 +29,16 @@ const BingoBoard = () => {
     const [isnavbar,setNavbar]=useState(true);
     const [numberofplayer,setNumberofPlayer]=useState(0);
     const [currentNumber, setCurrentNumber] = useState(0);
+    const [letter,setleter]=useState("-")
     const [username, setUser] = useState(null);
     const [winerAward, setWinerAward] = useState(0);
     const [fireworklun,setfireworklun]=useState(false);
     const lastCalledNumberRef = useRef(null);
+    const [displayarray, setdisplayarray] = useState(() => {
+        // Load the displayarray from localStorage and slice it to get only the last 5 items
+        const savedDisplayArray = JSON.parse(localStorage.getItem("displayarray"));
+        return savedDisplayArray ? savedDisplayArray.slice(-5) : [];
+      })
   let lastt=lastCalledNumberRef;
     const [numberCall, setCalledNumber] = useState(() => {
         const storedNumbers = localStorage.getItem('calledNumbers');
@@ -95,6 +101,7 @@ const BingoBoard = () => {
         return storedLanguage || 'am';
     });
       const [selectedOption, setSelectedOption] = useState(5000); 
+      const [countdown, setCountdown] = useState(selectedOption / 1000);
       const [isOpen, setIsOpen] = useState(false);
       const options = [
         { label: "5 seconds", value: 5000 },
@@ -248,6 +255,7 @@ const handleStop = async () => {
     isGeneratingRef.current = false;
     setIsGenerating(false);  // This doesn't return a Promise, but you could use a timeout if needed
 };
+
 useEffect(() => {
    
     if (isGenerating) {
@@ -368,7 +376,8 @@ useEffect(() => {
     });
     const amharicAudioFilesfemale= Array.from({ length: 75 }, (_, i) => {
         const audio=new Audio(`/amharicfemale/${i + 1}.mp3`);
-        audio.preload= "auto";
+      //  audio.play().catch(error => console.error("Audio play error:", error));
+      audio.preload= "auto";
          return audio;
           // Adjust the path if necessary
      });
@@ -959,7 +968,7 @@ useEffect(() => {
         });
     };
     
-    const startRandomNumberGenerator = async () => {
+   /*  const startRandomNumberGenerator = async () => {
        
         
       //  shouldGenerate.current = true;
@@ -985,7 +994,45 @@ useEffect(() => {
            
             lastCalledNumberRef.current=rand;
             console.log("last clled number is",lastCalledNumberRef.current);
-            
+            let letter1 = " ";
+            if (rand <= 15) {
+                letter1 = "B-";
+                setleter("B-");
+              } else if (rand <= 30) {
+                letter1 = "I-";
+                setleter("I-");
+              } else if (rand <= 45) {
+                letter1 = "N-";
+                setleter("N-");
+              } else if (rand <= 60) {
+                letter1 = "G-";
+                setleter("G-");
+              } else if (rand <= 75) {
+                letter1 = "O-";
+                setleter("O-");
+              } else {
+                setleter("-");
+              }
+          
+              let rand2 = letter1 + `${rand}`;
+          
+
+
+            setdisplayarray((prevDisplayArray) => {
+                const updatedArray = [...prevDisplayArray];
+          
+                // Add the new number only if it's not already in the array
+                if (!updatedArray.includes(rand2)) {
+                  updatedArray.push(rand2); // Add the new number
+                }
+          
+                // Ensure the array doesn't exceed 5 items
+                if (updatedArray.length > 5) {
+                  updatedArray.shift(); // Remove the first item if the array exceeds 5 items
+                }
+          
+                return updatedArray; // Return the updated array
+              });
            
             // Update the state so the component re-renders with the new called numbers
             
@@ -1001,7 +1048,136 @@ useEffect(() => {
     }
     
         setIsGenerating(false);
-    }; 
+    };  */
+   /*  const startRandomNumberGenerator = async () => {
+        console.log("Starting number generator. isGenerating:", isGeneratingRef.current);
+        isGeneratingRef.current = true;
+    
+        while (calledNumbersRef.current.length < 75 && isGeneratingRef.current) {
+            if (!isGeneratingRef.current) {
+                console.log("Number generation stopped.");
+                return; // Exit the loop
+            }
+    
+            let rand;
+            do {
+                rand = Math.floor(Math.random() * 75) + 1;
+            } while (calledNumbersRef.current.includes(rand));
+    
+            // **Start Countdown FIRST**
+            let timeLeft = selectedOption / 1000; // Convert ms to seconds
+            setCountdown(timeLeft);
+    
+            while (timeLeft > 0) {
+                await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second
+                timeLeft--;
+                setCountdown(timeLeft);
+            }
+    
+            // **Now Announce the Number AFTER Countdown Reaches 0**
+            await announceNumber(rand);
+    
+            // **Update State AFTER Announcement**
+            calledNumbersRef.current.push(rand);
+            lastCalledNumberRef.current = rand;
+            console.log("Last called number is", lastCalledNumberRef.current);
+            localStorage.setItem('calledNumbers', JSON.stringify(calledNumbersRef.current));
+            setCalledNumber([...calledNumbersRef.current]);
+            updateCurrentNumber(rand);
+    
+            let letter1 = " ";
+            if (rand <= 15) letter1 = "B-";
+            else if (rand <= 30) letter1 = "I-";
+            else if (rand <= 45) letter1 = "N-";
+            else if (rand <= 60) letter1 = "G-";
+            else letter1 = "O-";
+    
+            setleter(letter1);
+            let rand2 = letter1 + `${rand}`;
+    
+            setdisplayarray((prevDisplayArray) => {
+                const updatedArray = [...prevDisplayArray];
+                if (!updatedArray.includes(rand2)) {
+                    updatedArray.push(rand2);
+                }
+                if (updatedArray.length > 5) {
+                    updatedArray.shift();
+                }
+                return updatedArray;
+            });
+    
+            // **Wait for Additional Time Before Next Number**
+            await new Promise(resolve => setTimeout(resolve, selectedOption));
+        }
+    
+        setIsGenerating(false);
+    }; */
+    const startRandomNumberGenerator = async () => {
+        console.log("Starting number generator. isGenerating:", isGeneratingRef.current);
+        isGeneratingRef.current = true;
+    
+        while (calledNumbersRef.current.length < 75 && isGeneratingRef.current) {
+            if (!isGeneratingRef.current) {
+                console.log("Number generation stopped.");
+                return; // Exit the loop
+            }
+    
+            let rand;
+            do {
+                rand = Math.floor(Math.random() * 75) + 1;
+            } while (calledNumbersRef.current.includes(rand));
+    
+            // **✅ Announce FIRST**
+            await announceNumber(rand);
+    
+            // **✅ Update everything AFTER announcement**
+            calledNumbersRef.current.push(rand);
+            lastCalledNumberRef.current = rand;
+            console.log("Last called number is", lastCalledNumberRef.current);
+            localStorage.setItem('calledNumbers', JSON.stringify(calledNumbersRef.current));
+            setCalledNumber([...calledNumbersRef.current]);
+            updateCurrentNumber(rand);
+    
+            let letter1 = " ";
+            if (rand <= 15) letter1 = "B-";
+            else if (rand <= 30) letter1 = "I-";
+            else if (rand <= 45) letter1 = "N-";
+            else if (rand <= 60) letter1 = "G-";
+            else letter1 = "O-";
+    
+            setleter(letter1);
+            let rand2 = letter1 + `${rand}`;
+    
+            setdisplayarray((prevDisplayArray) => {
+                const updatedArray = [...prevDisplayArray];
+                if (!updatedArray.includes(rand2)) {
+                    updatedArray.push(rand2);
+                }
+                if (updatedArray.length > 5) {
+                    updatedArray.shift();
+                }
+                return updatedArray;
+            });
+    
+            // **✅ Countdown AFTER the number is announced**
+            let timeLeft = selectedOption / 1000; // Convert ms to seconds
+            setCountdown(timeLeft);
+    
+            while (timeLeft > 0) {
+                await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second
+                timeLeft--;
+                setCountdown(timeLeft);
+            }
+    
+            // **✅ Wait before the next number**
+            await new Promise(resolve => setTimeout(resolve, selectedOption));
+        }
+    
+        setIsGenerating(false);
+    };
+    
+    
+    
     /* const announceNumber = (number) => {
         return new Promise((resolve) => {
             if ('speechSynthesis' in window) {
@@ -1671,219 +1847,267 @@ useEffect(() => {
      
     console.log("the token is  apend",token);
     return (
-    
         <React.Fragment>
            
-           {isnavbar && <Navbar /> }     
-           {isnavbar    &&   <div>
-            <label htmlFor="language-select">Select Language:</label>
-            <select id="language-select" value={language} onChange={handleLanguageChange}>
-                <option value="en">English</option>
-                <option value="am">Amharic Male</option>
-                <option value="amf">Amharic FeMale</option>
-            </select>
-        </div>}
-            <div className="mainbody">
-                <div className="board-container">
-                    <div className="current-number">
-                        <div className="inner-circle">
-                            <p>{currentNumber}</p>
-                        </div>
-                    </div>
-                    <div className='Colum'>
-                        <button>B</button>
-                        <button>I</button>
-                        <button>N</button>
-                        <button>G</button>
-                        <button>O</button>
-                    </div>
-                    <div className="numbers-container">
-                        {[...Array(75)].map((_, index) => {
-                            const number = index + 1;
-                            return (
-                                <button 
-                                    key={number} 
-                                    className="number-button" 
-                                    style={{ background: numberCall.includes(number) ? '#eeeeee' : '#040b01f1' ,color:numberCall.includes(number)?'black':'white'}}>
-                                    {number}
-                                </button>
-                            );
-                        })}
-                    </div>
-                </div>
-                <div className="playboard">
-                    <div className="comandboards">
-                    <button className="Leav_button"  disabled={cartelas.length === 0||isGenerating} onClick={newgamet}>Start Game</button>
-                        <button className="start_button" disabled={cartelas.length === 0||isGenerating} onClick={startGamer}>Resume</button>
-                        <button className="claim_button" disabled={cartelas.length === 0} onClick={bingoclam}>BINGO</button>
-                        <button className="Next_button" onClick={newgame}>New Game</button>
-                     
-                       
-                       </div>
-                       {isnavbar && (
-    <div className="dropdown-container">
-        {/* Display the selected time */}
-        <p className="selected-time">
-            Selected time: {selectedOption / 1000} seconds
-        </p>
-
-        {/* Dropdown toggle button */}
-        <button
-            className="dropdown-toggle"
-            onClick={() => setIsOpen(!isOpen)}
-        >
-            {/* Display selected option or default text */}
-            {options.find((option) => option.value === selectedOption)?.label || "Select Time"}
-            <span className={`arrow ${isOpen ? "open" : ""}`}>▼</span>
-        </button>
-
-        {/* Dropdown menu */}
-        {isOpen && (
-            <ul className="dropdown-menu">
-                {options.map((option) => (
-                    <li key={option.value}>
-                        <button
-                            className="dropdown-item"
-                            onClick={() => {
-                                setSelectedOption(option.value); // Update selected option
-                                setIsOpen(false); // Close dropdown
-                            }}
-                        >
-                            {option.label}
-                        </button>
-                    </li>
-                ))}
-            </ul>
-        )}
-
-        {/* Next Shuffle button */}
-        <button
-            className="Next_shuffle"
-            disabled={cartelas.length >= 1} // Disable if cartelas has at least one item
-            onClick={handleShuffle}
-        >
-            Shuffle
-        </button>
-    </div>
-)}
-
-                  
-       {!isnavbar && <div className="displaytwo">
-       
-       
-       
-        <div className="current-number2">
-        <small>number of called numbers</small>
-                            <p >{numberCallLength}</p>
-                        </div>
-                       
-                        <div>
-                        
-                     <div className="current-number3">
-                     
-                     <p >{lastCalledNumberRef.current}</p>
+        {isnavbar && <Navbar /> }     
+        {isnavbar    &&   <div>
+         <label htmlFor="language-select">Select Language:</label>
+         <select id="language-select" value={language} onChange={handleLanguageChange}>
+             <option value="en">English</option>
+             <option value="am">Amharic Male</option>
+             <option value="amf">Amharic FeMale</option>
+         </select>
+     </div>}
+         <div className="mainbody">
+             <div className="board-container">
+             <div className='subnumb'>
+                 <div className="current-number">
+                     <div className="inner-circle">
+                         <p>{currentNumber}</p>
+                     </div>
                  </div>
+                 <div className='realtime'>
+                 <div className="current-number2">
+     <small>call length</small>
+                         <p >{numberCallLength}</p>
+                     </div>
+                     <div className="countdown">
+     <small>time</small>
+                         <p >{countdown}</p>
+                     </div>
+                 </div>
+                
+                     </div>
+                 <div className='Colum'>
+                     <button>B</button>
+                     <button>I</button>
+                     <button>N</button>
+                     <button>G</button>
+                     <button>O</button>
+                 </div>
+                 <div className="numbers-container">
+                     {[...Array(75)].map((_, index) => {
+                         const number = index + 1;
+                         return (
+                             <button 
+                                 key={number} 
+                                 className="number-button" 
+                                 style={{ background: numberCall.includes(number) ? '#eeeeee' : '#040b01f1' ,color:numberCall.includes(number)?'black':'white'}}>
+                                 {number}
+                             </button>
+                         );
+                     })}
                  </div>
              </div>
-                    }
-                    <div className="net-pay1">
-                        <div className="net-pay2">
-                            <p>{winerAward || 'winner'}</p>
-                        </div>
+             <div className="playboard">
+                 <div className="comandboards">
+                 <button className="Leav_button"  disabled={cartelas.length === 0||isGenerating} onClick={newgamet}>Start Game</button>
+                     <button className="start_button" disabled={cartelas.length === 0||isGenerating} onClick={startGamer}>Resume</button>
+                     <button className="claim_button" disabled={cartelas.length === 0} onClick={bingoclam}>BINGO</button>
+                     <button className="puse_button" disabled={cartelas.length === 0} onClick={handleStop}>puse</button>
+                     <button className="Next_button" onClick={newgame}>New Game</button>
+                  
+                    
                     </div>
+                    {isnavbar && (
+ <div className="dropdown-container">
+     {/* Display the selected time */}
+     <p className="selected-time">
+         Selected time: {selectedOption / 1000} seconds
+     </p>
 
-                    {winnerboard && (
-                        <div className="popup" id="bingoPopup">
-                            <div className="popup-content">
-                                <div className='claim'>
-                                    <p>Enter the Bingo Claimer Number </p>
-                                </div>
-                                <div className='claiminput'>
-                                    <input type='number' onChange={handleChange} />
-                                </div>
-                                <div className='Cheack'>
-                                    <button onClick={claimNumber}>Check</button>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                    {gamewinnerboard &&
-      <div className="popupw" id="bingoPopup">
-      <div className="popup-contentw">
-   
-          <h3> win by  cartela number {winernumber}</h3>
-            
-          <h3> win by  cartela number {lastCalledNumberRef.current}</h3>
-          
-          <div className="bingoboard2w">
-    
-    <div className="B">B</div>
-   <div className="I">I</div>
-   <div className="N">N</div>
-   <div className="G">G</div>
-   <div className="O">O</div>
-   
-  </div>
-  <div className="playCartela3w">
-      
-      {carts2}
- 
- 
-  </div>
+     {/* Dropdown toggle button */}
+     <button
+         className="dropdown-toggle"
+         onClick={() => setIsOpen(!isOpen)}
+     >
+         {/* Display selected option or default text */}
+         {options.find((option) => option.value === selectedOption)?.label || "Select Time"}
+         <span className={`arrow ${isOpen ? "open" : ""}`}>▼</span>
+     </button>
 
-        <div className="button-containerw">
-            
-            <button className="closebtn" id="closePopup" onClick={submit}>Close</button>
-            <button className="otherbtn" id="closePopup" onClick={addother}>other</button>
-            <button className="backbtn" id="closePopup" onClick={backtogame}>back</button>
-        </div>
-        </div>
-    </div>}
-    {gamewinnerboard1 &&
-      <div className="popupw" id="bingoPopup">
-      <div className="popup-contentw">
+     {/* Dropdown menu */}
+     {isOpen && (
+         <ul className="dropdown-menu">
+             {options.map((option) => (
+                 <li key={option.value}>
+                     <button
+                         className="dropdown-item"
+                         onClick={() => {
+                             setSelectedOption(option.value); // Update selected option
+                             setIsOpen(false); // Close dropdown
+                         }}
+                     >
+                         {option.label}
+                     </button>
+                 </li>
+             ))}
+         </ul>
+     )}
+
+     {/* Next Shuffle button */}
+     <button
+         className="Next_shuffle"
+         disabled={cartelas.length >= 1} // Disable if cartelas has at least one item
+         onClick={handleShuffle}
+     >
+         Shuffle
+     </button>
+ </div>
+)}
+
+               
+    {!isnavbar && 
+     <div className="maincalldisplay">
+       <div className="maincalldisplay">
+       <div className="maincalldisplay">
+       <div className="maincalldisplay">
+  {displayarray.map((callb, index) => {
+    // Extract only the number part from the value (e.g. "B-15" => 15)
+    const number = parseInt(callb.split('-')[1]);
+
+    let outerCircleBackground = ''; // Default outer circle background color
+    let outerCircleBorder = ''; // Default outer circle border color
+
+    // Set outer circle background and border color based on the number range
+    if (number <= 15) {
+      outerCircleBackground = 'white';
+      outerCircleBorder = 'darkgreen';
+    } else if (number <= 30) {
+      outerCircleBackground = 'white';
+      outerCircleBorder = 'orange';
+    } else if (number <= 45) {
+      outerCircleBackground = 'white';
+      outerCircleBorder = 'darkbrown';
+    } else if (number <= 60) {
+      outerCircleBackground = 'white';
+      outerCircleBorder = 'darkred';
+    } else if (number <= 75) {
+      outerCircleBackground = 'white';
+      outerCircleBorder = 'darkblue';
+    }
+
+    return (
+      <button
+        key={index}
+        className="numbercalldis"
+        style={{
+          backgroundColor: outerCircleBackground, // Outer circle background color
+          borderColor: outerCircleBorder, // Outer circle border color
+        }}
+      >
+        {callb} {/* Display the original value (e.g., "B-15") */}
+      </button>
+    );
+  })}
+</div>
+
+</div>
+
+</div>
+
    
-          <h3> win by  cartela number {winernumber}</h3>
-          <h3> win by  cartela number {winernumber}</h3>
+       
+        </div>
+                 }
+                 <div className="net-pay1">
+                     <div className="net-pay2">
+                         <p>{winerAward || 'winner'}</p>
+                     </div>
+                 </div>
+
+                 {winnerboard && (
+                     <div className="popup" id="bingoPopup">
+                         <div className="popup-content">
+                             <div className='claim'>
+                                 <p>Enter the Bingo Claimer Number </p>
+                             </div>
+                             <div className='claiminput'>
+                                 <input type='number' onChange={handleChange} />
+                             </div>
+                             <div className='Cheack'>
+                                 <button onClick={claimNumber}>Check</button>
+                             </div>
+                         </div>
+                     </div>
+                 )}
+                 {gamewinnerboard &&
+   <div className="popupw" id="bingoPopup">
+   <div className="popup-contentw">
+
+       <h3> win by  cartela number {winernumber}</h3>
          
-          
-          <div className="bingoboard2w">
-    
-    <div className="B">B</div>
-   <div className="I">I</div>
-   <div className="N">N</div>
-   <div className="G">G</div>
-   <div className="O">O</div>
+       <h3> win by  cartela number {lastCalledNumberRef.current}</h3>
+       
+       <div className="bingoboard2w">
+ 
+ <div className="B">B</div>
+<div className="I">I</div>
+<div className="N">N</div>
+<div className="G">G</div>
+<div className="O">O</div>
+
+</div>
+<div className="playCartela3w">
    
-  </div>
-  <div className="playCartela3w">
+   {carts2}
+
+
+</div>
+
+     <div className="button-containerw">
+         
+         <button className="closebtn" id="closePopup" onClick={submit}>Close</button>
+         <button className="otherbtn" id="closePopup" onClick={addother}>other</button>
+         <button className="backbtn" id="closePopup" onClick={backtogame}>back</button>
+     </div>
+     </div>
+ </div>}
+ {gamewinnerboard1 &&
+   <div className="popupw" id="bingoPopup">
+   <div className="popup-contentw">
+
+       <h3> win by  cartela number {winernumber}</h3>
+       <h3> win by  cartela number {winernumber}</h3>
       
-      {carts3}
+       
+       <div className="bingoboard2w">
  
- 
-  </div>
+ <div className="B">B</div>
+<div className="I">I</div>
+<div className="N">N</div>
+<div className="G">G</div>
+<div className="O">O</div>
 
-        <div className="button-containerw">
-            
-            <button className="closebtn" id="closePopup" onClick={submit}>Close</button>
-            <button className="otherbtn" id="closePopup" onClick={addother}>other</button>
-            <button className="backbtn" id="closePopup" onClick={backtogame}>back</button>
-        </div>
-        </div>
-    </div>}
-    {isShuffling && (
-                <div className="shuffle-animation">
-                    {Array.from({ length: 75 }, (_, i) => (
-                        <div key={i} className="bingo-ball">
-                            {Math.floor(Math.random() * 100) + 1}
-                        </div>
-                    ))}
-                </div>
-            )}
-                </div>
+</div>
+<div className="playCartela3w">
+   
+   {carts3}
 
-            </div>
-        </React.Fragment>
+
+</div>
+
+     <div className="button-containerw">
+         
+         <button className="closebtn" id="closePopup" onClick={submit}>Close</button>
+         <button className="otherbtn" id="closePopup" onClick={addother}>other</button>
+         <button className="backbtn" id="closePopup" onClick={backtogame}>back</button>
+     </div>
+     </div>
+ </div>}
+ {isShuffling && (
+             <div className="shuffle-animation">
+                 {Array.from({ length: 75 }, (_, i) => (
+                     <div key={i} className="bingo-ball">
+                         {Math.floor(Math.random() * 100) + 1}
+                     </div>
+                 ))}
+             </div>
+         )}
+             </div>
+
+         </div>
+     </React.Fragment>
     );
 };
 

@@ -4,6 +4,26 @@
     height: 90vh;
     width: 100%;
 }
+.callednums{
+    display: flex;
+    justify-content: flex-end;  /* Align numbers to the right */
+    align-items: center;  /* Keep them vertically centered */
+    flex-wrap: wrap; /* Prevents breaking */
+    gap: 10px; /* Space between circles */
+    width: 100%; /* Ensure full width */
+    direction: rtl; 
+}
+.numbercalldis::before {
+    content: "";
+    position: absolute;
+    width: 40px; /* Inner circle smaller */
+    height: 40px;
+    border-radius: 50%;
+    background-color: #ffffff; /* Inner circle color */
+    display: block;
+    z-index: -1; /* Behind the button text */
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2); /* Inner shadow */
+}
 .board-container {
     display: flex;
     flex-direction: row;
@@ -57,8 +77,8 @@
    margin-right: 0px;
    
     font-size: large;
-    width: 16vw; /* Outer circle size */
-    height: 16vw; /* Outer circle size */
+    width: 6vw; /* Outer circle size */
+    height: 6vw; /* Outer circle size */
     background: rgb(12, 12, 12);
  /*  background-color: linear-gradient(90deg, rgb(234, 20, 95) 0%, rgba(28, 121, 9, 0.502) 43%, rgba(0,212,255,1) 100%);
  background-color:
@@ -74,9 +94,38 @@
 }
 .current-number2 p{
     color: #f5db30b3;
-    font-size: 72px;
+    font-size: 52px;
     align-items: center;
 }
+.maincalldisplay{
+    display: flex;
+    justify-content: flex-end; /* Align items to the right */
+    flex-direction: row-reverse; /* Display numbers from right to left */
+    gap: 10px; /* Space between buttons */
+    width: 100%; /* Full width */
+    padding: 10px;
+}
+.numbercalldis {
+    position: relative;
+    width: 150px; /* Fixed size */
+    height: 150px;
+    border-radius: 50%; /* Outer circle */
+    color: black;
+    font-size: 40px;
+    font-weight: bold;
+    text-align: center;
+    border: 8px solid #ff9900; /* Border color */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4); /* Soft shadow */
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+    flex-shrink: 0; /* Prevent shrinking */
+}
+
+
+
 .displaytwo{
     display: grid;
     grid-template-columns: repeat(4,1fr);
@@ -102,6 +151,11 @@
      position: relative;
      font-family: Arial, sans-serif;
      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+.subnumb{
+    margin-left: 20px;
+    display: grid;
+    grid-template-columns: repeat(1,1fr);
 }
 .bingo-container {
     display: flex;
@@ -485,8 +539,8 @@
 .playboard{
     background-color: rgba(79, 98, 130, 0.974);
     display: grid;
-    grid-template-columns: repeat(4,1fr);
-    grid-template-columns: 35% 20% 20% 25%;
+    grid-template-columns: repeat(3,1fr);
+    grid-template-columns: 20% 40% 20%;
     height: 20vh;
 }
 .comandboards{
@@ -500,22 +554,34 @@
     
     width: 70%;
    margin-left: 70px;
-   margin-top: 5px;
-   height: 50px;
-   margin-bottom: 5px;
+   margin-top: 2px;
+   height: 45px;
+   margin-bottom: 2px;
    border-radius: 25px;
    color: white;
    font-size: large;
    
+}
+.puse_button{
+    background-color: rgb(52, 21, 190);
+    
+    width: 70%;
+   margin-left: 70px;
+   margin-top: 2px;
+   height: 45px;
+   margin-bottom: 2px;
+   border-radius: 25px;
+   color: rgb(14, 14, 14);
+   font-size: large; 
 }
 .claim_button{
     background-color: rgb(238, 131, 31);
     
     width: 70%;
    margin-left: 70px;
-   margin-top: 5px;
-   height: 50px;
-   margin-bottom: 5px;
+   margin-top: 2px;
+   height: 45px;
+   margin-bottom: 2px;
    border-radius: 25px;
    color: rgb(14, 14, 14);
    font-size: large;
@@ -524,9 +590,9 @@
     background-color: rgb(18, 245, 222);
     width: 70%;
     margin-left: 70px;
-    margin-top: 5px;
-    height: 50px;
-    margin-bottom: 5px;
+    margin-top: 2px;
+    height: 45px;
+    margin-bottom: 2px;
     border-radius: 25px;
     color: black;
     font-size: large;
@@ -546,9 +612,9 @@
     background-color: rgb(158, 11, 65);
     width: 70%;
     margin-left: 70px;
-    margin-top: 5px;
-    height: 50px;
-    margin-bottom: 5px;
+    margin-top: 2px;
+    height: 45px;
+    margin-bottom: 2px;
     border-radius: 25px;
     color: white;
     font-size: large;
@@ -672,12 +738,39 @@ dropdown-container {
     transition: background-color 0.7s;
 
 }
-
+.countdown{
+    margin-left: 10px;
+    margin-right: 0px;
+    
+     font-size: large;
+     width: 6vw; /* Outer circle size */
+     height: 6vw; /* Outer circle size */
+     background: rgb(12, 12, 12);
+  /*  background-color: linear-gradient(90deg, rgb(234, 20, 95) 0%, rgba(28, 121, 9, 0.502) 43%, rgba(0,212,255,1) 100%);
+  background-color:
+     /* Make the div circular */
+     color: #bac8d6;
+     display: grid;
+     align-items:center;
+     justify-content: center;
+    
+     position: relative;
+     font-family: Arial, sans-serif;
+     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+.countdown p{
+    color: #ece6e6;
+    font-size: 72px;
+}
 .dropdown-item:hover {
     background-color: #ec3636; /* Change background color on hover */
     border-radius: 40px;
 }
-
+.realtime{
+    margin-left: 30px;
+    display: flex;
+flex-direction: row;
+}
 .arrow {
     width: 0;
     height: 0;
