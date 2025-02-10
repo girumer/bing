@@ -100,12 +100,12 @@ const BingoBoard = () => {
         console.log('Initial Language from localStorage:', storedLanguage); // Debugging log
         return storedLanguage || 'am';
     });
-      const [selectedOption, setSelectedOption] = useState(5000); 
+      const [selectedOption, setSelectedOption] = useState(3000); 
       const [countdown, setCountdown] = useState(selectedOption / 1000);
       const [isOpen, setIsOpen] = useState(false);
       const options = [
-        { label: "5 seconds", value: 5000 },
-        { label: "6 seconds", value: 5000 },
+        { label: "5 seconds", value: 3000 },
+        { label: "6 seconds", value: 4000 },
         { label: "7 seconds", value: 5000 },
         { label: "8 seconds", value: 8000 },
         { label: "9 seconds", value: 9000 },
