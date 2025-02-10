@@ -100,16 +100,15 @@ const BingoBoard = () => {
         console.log('Initial Language from localStorage:', storedLanguage); // Debugging log
         return storedLanguage || 'am';
     });
-      const [selectedOption, setSelectedOption] = useState(3000); 
+      const [selectedOption, setSelectedOption] = useState(5000); 
       const [countdown, setCountdown] = useState(selectedOption / 1000);
       const [isOpen, setIsOpen] = useState(false);
       const options = [
-        { label: "5 seconds", value: 3000 },
-        { label: "6 seconds", value: 4000 },
-        { label: "7 seconds", value: 5000 },
-        { label: "8 seconds", value: 8000 },
-        { label: "9 seconds", value: 9000 },
-        { label: "10 seconds", value: 10000 },
+        { label: "5 seconds", value: 5000 },
+        { label: "6 seconds", value: 6000 },
+        { label: "7 seconds", value: 7000 },
+   
+      
     ];
       const interval = selectedOption;
       const [isShuffling, setIsShuffling] = useState(false);
@@ -1160,14 +1159,7 @@ useEffect(() => {
             });
     
             // **✅ Countdown AFTER the number is announced**
-            let timeLeft = selectedOption / 1000; // Convert ms to seconds
-            setCountdown(timeLeft);
-    
-            while (timeLeft > 0) {
-                await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second
-                timeLeft--;
-                setCountdown(timeLeft);
-            }
+            
     
             // **✅ Wait before the next number**
             await new Promise(resolve => setTimeout(resolve, selectedOption));
@@ -1871,19 +1863,16 @@ useEffect(() => {
      <small>call length</small>
                          <p >{numberCallLength}</p>
                      </div>
-                     <div className="countdown">
-     <small>time</small>
-                         <p >{countdown}</p>
-                     </div>
+                    
                  </div>
                 
                      </div>
                  <div className='Colum'>
-                     <button>B</button>
-                     <button>I</button>
-                     <button>N</button>
-                     <button>G</button>
-                     <button>O</button>
+                     <button  style={{ backgroundColor: "red",fontWeight: "bold" ,fontSize: "36px"}}>B</button>
+                     <button style={{ backgroundColor: "blue" ,fontWeight: "bold",fontSize: "36px"}}>I</button>
+                     <button style={{ backgroundColor: "green",fontWeight: "bold" ,fontSize: "36px"}}>N</button>
+                     <button style={{ backgroundColor: "yellow",fontWeight: "bold",fontSize: "36px" }}>G</button>
+                     <button style={{ backgroundColor: "purple",fontWeight: "bold" ,fontSize: "36px"}}>O</button>
                  </div>
                  <div className="numbers-container">
                      {[...Array(75)].map((_, index) => {
@@ -1901,11 +1890,13 @@ useEffect(() => {
              </div>
              <div className="playboard">
                  <div className="comandboards">
+                 <input type="number" id="numberInput" onChange={handleChange} disabled={cartelas.length === 0||isGenerating} className='chekinput' name="numberInput" min="0" step="1"/> 
+                 <button className="claim_button" disabled={cartelas.length === 0} onClick={claimNumber}>cheak</button>
                  <button className="Leav_button"  disabled={cartelas.length === 0||isGenerating} onClick={newgamet}>Start Game</button>
                      <button className="start_button" disabled={cartelas.length === 0||isGenerating} onClick={startGamer}>Resume</button>
-                     <button className="claim_button" disabled={cartelas.length === 0} onClick={bingoclam}>BINGO</button>
+                    
                      <button className="puse_button" disabled={cartelas.length === 0} onClick={handleStop}>puse</button>
-                     <button className="Next_button" onClick={newgame}>New Game</button>
+                     <button className="Next_button"disabled={isGenerating}onClick={newgame}>New Game</button>
                   
                     
                     </div>
@@ -1972,19 +1963,19 @@ useEffect(() => {
     // Set outer circle background and border color based on the number range
     if (number <= 15) {
       outerCircleBackground = 'white';
-      outerCircleBorder = 'darkgreen';
+      outerCircleBorder = 'red';
     } else if (number <= 30) {
       outerCircleBackground = 'white';
-      outerCircleBorder = 'orange';
+      outerCircleBorder = 'blue';
     } else if (number <= 45) {
       outerCircleBackground = 'white';
-      outerCircleBorder = 'darkbrown';
+      outerCircleBorder = 'green';
     } else if (number <= 60) {
       outerCircleBackground = 'white';
-      outerCircleBorder = 'darkred';
+      outerCircleBorder = 'yellow';
     } else if (number <= 75) {
       outerCircleBackground = 'white';
-      outerCircleBorder = 'darkblue';
+      outerCircleBorder = 'purple';
     }
 
     return (
@@ -2041,7 +2032,7 @@ useEffect(() => {
        
        <div className="bingoboard2w">
  
- <div className="B">B</div>
+ <div className="B"  >B</div>
 <div className="I">I</div>
 <div className="N">N</div>
 <div className="G">G</div>
