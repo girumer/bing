@@ -10,47 +10,58 @@ import confetti from "canvas-confetti";
 const BingoBoard = () => {
     const location=useLocation();
     const navigate=useNavigate();
-   // const token = localStorage.getItem('accesstoken');
-    //console.log("token is ",token);
+  
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
         const token = localStorage.getItem('accesstoken');
-        console.log("token is ",token);
-    
+       
      
-    //console.log(token);
-   // const token=Cookies.get('accesstoken');
+    
   
    const isGeneratingRef = useRef(false);
     
-    //localStorage.setItem('username',location.state.user);
-
-    //let username= localStorage.getItem('username');
+    
 
     const [isnavbar,setNavbar]=useState(true);
     const [numberofplayer,setNumberofPlayer]=useState(0);
-    const [currentNumber, setCurrentNumber] = useState(0);
+    const currentNumberRef = useRef(null)
+    const [currentNumber, setCurrentNumber] = useState(() => {
+        return localStorage.getItem('currentNumber') || ''; 
+    });
     const [letter,setleter]=useState("-")
     const [username, setUser] = useState(null);
     const [winerAward, setWinerAward] = useState(0);
     const [fireworklun,setfireworklun]=useState(false);
     const lastCalledNumberRef = useRef(null);
+    const displayArrayRef = useRef([]);
     const [displayarray, setdisplayarray] = useState(() => {
-        // Load the displayarray from localStorage and slice it to get only the last 5 items
         const savedDisplayArray = JSON.parse(localStorage.getItem("displayarray"));
         return savedDisplayArray ? savedDisplayArray.slice(-5) : [];
-      })
+    });
+    
   let lastt=lastCalledNumberRef;
     const [numberCall, setCalledNumber] = useState(() => {
         const storedNumbers = localStorage.getItem('calledNumbers');
         return storedNumbers ? JSON.parse(storedNumbers) : [];
     });
     const calledNumbersRef = useRef(numberCall);
-    const [numberCallLength, setNumberCallLength] = useState(numberCall.length);
+    const [numberCallLength, setNumberCallLength] = useState(() => {
+        return JSON.parse(localStorage.getItem('numberCallLength')) || 0;
+    });
     useEffect(() => {
-        // Sync the ref with the state
+        displayArrayRef.current = displayarray;
+    }, [displayarray]);
+    
+    useEffect(() => {
+        currentNumberRef.current = currentNumber;
+    }, [currentNumber]);
+    
+    useEffect(() => {
         calledNumbersRef.current = numberCall;
-        // Update the length state whenever the numbers change
         setNumberCallLength(numberCall.length);
+    
+        // Store the numbers and length in localStorage
+        localStorage.setItem('calledNumbers', JSON.stringify(numberCall));
+        localStorage.setItem('numberCallLength', JSON.stringify(numberCall.length));
     }, [numberCall]);
     useEffect(() => {
         const checkToken = async () => {
@@ -303,69 +314,40 @@ useEffect(() => {
         setgamewinnerboard(false);
         setgamewinnerboard1(false);
         setfireworklun(false);
-        setCurrentNumber(0);
+      
       
     }
-   /*  const newgame=()=>{
-
-
-        localStorage.removeItem('calledNumbers');
-        handleStop();
-                    
-                    setCalledNumber([]);
-                
-                   
-                    calledNumbersRef.current = [];
-                    setWinerAward(0);
-                   
-                    setCurrentNumber(0);
-      navigate("/CartelaSelction", { state: { language: language } });
-    } */
-  /*     const newgame = async () => {
+   
+    const newgame = async () => {
         try {
-            localStorage.removeItem('calledNumbers');
-            
-          await   handleStop();  // Ensure handleStop completes if it's async
-            
-            // Reset the state to an empty array
-            setCalledNumber([]);
-            
-            // Update the ref to reflect the cleared state
-            calledNumbersRef.current = [];
-            setWinerAward(0);
-            setCurrentNumber(0);
-            
-            // Navigate to selection screen
-            navigate("/CartelaSelction", { state: { language: language } });
+            // ✅ Clear localStorage items
+            await Promise.all([
+                localStorage.removeItem('calledNumbers'),
+                localStorage.removeItem('displayarray'),
+                localStorage.removeItem('currentNumber'),
+                localStorage.removeItem('numberCallLength')
+            ]);
+    
+            // ✅ Clear states and refs
+            setCalledNumber([]);  
+            calledNumbersRef.current = [];  
+            setdisplayarray([]); 
+            displayArrayRef.current = [];
+            setCurrentNumber("");  
+            currentNumberRef.current = "";  
+    
+            console.log("Game reset successfully!");
+    
+            // ✅ Ensure the state updates are complete before navigating
+            setTimeout(() => {
+                navigate("/CartelaSelction", { state: { language: language } });
+            }, 100); // Small delay to ensure cleanup is fully applied before navigating
     
         } catch (error) {
             console.error("Error resetting game:", error);
         }
-    }; */
-    const newgame = async () => {
-        try {
-            // Remove called numbers from localStorage
-            localStorage.removeItem('calledNumbers');
-            
-            // Wait for handleStop to finish (if it's asynchronous)
-            await handleStop();  // Ensure handleStop completes before proceeding
-            
-            // Reset the necessary states
-            setCalledNumber([]);  // Clear the list of called numbers
-            calledNumbersRef.current = [];  // Clear the ref to ensure consistency
-    
-            // Reset other game-related states
-           // setWinerAward(0);  // Reset the winner award
-            //setCurrentNumber(0);  // Reset the current number
-            
-            // Optionally, if you want to reset any other states, do it here
-    
-            // Navigate to the selection screen after all async logic is done
-            navigate("/CartelaSelction", { state: { language: language } });
-        } catch (error) {
-            console.error("Error resetting game:", error);  // Catch any errors and log them
-        }
     };
+    
     
     const amharicAudioFiles = Array.from({ length: 75 }, (_, i) => {
        const audio=new Audio(`/amharicnumbers/${i + 1}.mp3`);
@@ -696,13 +678,26 @@ useEffect(() => {
 
     }
     const updateCurrentNumber = (rand) => {
-        if (rand <= 15) setCurrentNumber(`B ${rand}`);
-        else if (rand <= 30) setCurrentNumber(`I ${rand}`);
-        else if (rand <= 45) setCurrentNumber(`N ${rand}`);
-        else if (rand <= 60) setCurrentNumber(`G ${rand}`);
-        else setCurrentNumber(`O ${rand}`);
+        let newNumber = '';
+    
+        if (rand <= 15) newNumber = `B ${rand}`;
+        else if (rand <= 30) newNumber = `I ${rand}`;
+        else if (rand <= 45) newNumber = `N ${rand}`;
+        else if (rand <= 60) newNumber = `G ${rand}`;
+        else newNumber = `O ${rand}`;
+    
+        setCurrentNumber(newNumber);
+        currentNumberRef.current = newNumber; // Store in ref
+        localStorage.setItem('currentNumber', newNumber); // Persist in localStorage
     };
-
+ 
+    useEffect(() => {
+        const storedNumber = localStorage.getItem('currentNumber');
+        if (storedNumber) {
+            setCurrentNumber(storedNumber);
+            currentNumberRef.current = storedNumber;
+        }
+    }, []);
    /*  const announceNumber = (number) => {
         if ('speechSynthesis' in window) {
             window.speechSynthesis.cancel();
@@ -967,150 +962,7 @@ useEffect(() => {
         });
     };
     
-   /*  const startRandomNumberGenerator = async () => {
-       
-        
-      //  shouldGenerate.current = true;
-      console.log("Starting number generator. isGenerating:", isGeneratingRef.current);
-
-    // Start the number generation loop
-    isGeneratingRef.current = true;
-     
-        //setIsGenerating(true);
-        while (calledNumbersRef.current.length < 75 &&  isGeneratingRef.current ) {
-          
-            if (!isGeneratingRef.current) {
-                console.log("Number generation stopped.");
-                return; // Exit the loop
-            }
-            let rand;
-            do {
-                rand = Math.floor(Math.random() * 75) + 1;
-            } while (calledNumbersRef.current.includes(rand)); // This should work as `current` is an array
-           
-            await  announceNumber(rand);
-            calledNumbersRef.current.push(rand); // Adds the new number to the ref array
-           
-            lastCalledNumberRef.current=rand;
-            console.log("last clled number is",lastCalledNumberRef.current);
-            let letter1 = " ";
-            if (rand <= 15) {
-                letter1 = "B-";
-                setleter("B-");
-              } else if (rand <= 30) {
-                letter1 = "I-";
-                setleter("I-");
-              } else if (rand <= 45) {
-                letter1 = "N-";
-                setleter("N-");
-              } else if (rand <= 60) {
-                letter1 = "G-";
-                setleter("G-");
-              } else if (rand <= 75) {
-                letter1 = "O-";
-                setleter("O-");
-              } else {
-                setleter("-");
-              }
-          
-              let rand2 = letter1 + `${rand}`;
-          
-
-
-            setdisplayarray((prevDisplayArray) => {
-                const updatedArray = [...prevDisplayArray];
-          
-                // Add the new number only if it's not already in the array
-                if (!updatedArray.includes(rand2)) {
-                  updatedArray.push(rand2); // Add the new number
-                }
-          
-                // Ensure the array doesn't exceed 5 items
-                if (updatedArray.length > 5) {
-                  updatedArray.shift(); // Remove the first item if the array exceeds 5 items
-                }
-          
-                return updatedArray; // Return the updated array
-              });
-           
-            // Update the state so the component re-renders with the new called numbers
-            
-            
-            // Store the updated numbers in localStorage
-            localStorage.setItem('calledNumbers', JSON.stringify(calledNumbersRef.current));
-            setCalledNumber([...calledNumbersRef.current]);
-         
-            updateCurrentNumber(rand);
-    
-            await new Promise(resolve => setTimeout(resolve, interval));
-        
-    }
-    
-        setIsGenerating(false);
-    };  */
-   /*  const startRandomNumberGenerator = async () => {
-        console.log("Starting number generator. isGenerating:", isGeneratingRef.current);
-        isGeneratingRef.current = true;
-    
-        while (calledNumbersRef.current.length < 75 && isGeneratingRef.current) {
-            if (!isGeneratingRef.current) {
-                console.log("Number generation stopped.");
-                return; // Exit the loop
-            }
-    
-            let rand;
-            do {
-                rand = Math.floor(Math.random() * 75) + 1;
-            } while (calledNumbersRef.current.includes(rand));
-    
-            // **Start Countdown FIRST**
-            let timeLeft = selectedOption / 1000; // Convert ms to seconds
-            setCountdown(timeLeft);
-    
-            while (timeLeft > 0) {
-                await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second
-                timeLeft--;
-                setCountdown(timeLeft);
-            }
-    
-            // **Now Announce the Number AFTER Countdown Reaches 0**
-            await announceNumber(rand);
-    
-            // **Update State AFTER Announcement**
-            calledNumbersRef.current.push(rand);
-            lastCalledNumberRef.current = rand;
-            console.log("Last called number is", lastCalledNumberRef.current);
-            localStorage.setItem('calledNumbers', JSON.stringify(calledNumbersRef.current));
-            setCalledNumber([...calledNumbersRef.current]);
-            updateCurrentNumber(rand);
-    
-            let letter1 = " ";
-            if (rand <= 15) letter1 = "B-";
-            else if (rand <= 30) letter1 = "I-";
-            else if (rand <= 45) letter1 = "N-";
-            else if (rand <= 60) letter1 = "G-";
-            else letter1 = "O-";
-    
-            setleter(letter1);
-            let rand2 = letter1 + `${rand}`;
-    
-            setdisplayarray((prevDisplayArray) => {
-                const updatedArray = [...prevDisplayArray];
-                if (!updatedArray.includes(rand2)) {
-                    updatedArray.push(rand2);
-                }
-                if (updatedArray.length > 5) {
-                    updatedArray.shift();
-                }
-                return updatedArray;
-            });
-    
-            // **Wait for Additional Time Before Next Number**
-            await new Promise(resolve => setTimeout(resolve, selectedOption));
-        }
-    
-        setIsGenerating(false);
-    }; */
+  
     const startRandomNumberGenerator = async () => {
         console.log("Starting number generator. isGenerating:", isGeneratingRef.current);
         isGeneratingRef.current = true;
@@ -1146,7 +998,6 @@ useEffect(() => {
     
             setleter(letter1);
             let rand2 = letter1 + `${rand}`;
-    
             setdisplayarray((prevDisplayArray) => {
                 const updatedArray = [...prevDisplayArray];
                 if (!updatedArray.includes(rand2)) {
@@ -1155,8 +1006,14 @@ useEffect(() => {
                 if (updatedArray.length > 5) {
                     updatedArray.shift();
                 }
+    
+                // ✅ Update ref and localStorage
+                displayArrayRef.current = updatedArray;
+                localStorage.setItem("displayarray", JSON.stringify(updatedArray));
+    
                 return updatedArray;
             });
+    
     
             // **✅ Countdown AFTER the number is announced**
             
