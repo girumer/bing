@@ -49,7 +49,11 @@ useEffect(() => {
       });
     }
   }, []);  // Empty dependency array ensures this runs once on component mount
- 
+  useEffect(() => {
+    if (username) {
+      checkpoint();
+    }
+  }, [username]);
 
 const handlelogin=()=>{
   history('/logins');
@@ -71,6 +75,28 @@ const handlelogin=()=>{
  }
  
  
+ async function checkpoint() {
+  try {
+    await axios.post(`${BACKEND_URL}/api/depositcheckB`, { username })
+      .then(res => {
+        
+
+        // Automatically logout if balance is less than 50
+        if (res.data.balance < 50) {
+          alert("Your balance is below 50. You have been logged out.");
+          handlelogout();
+        }
+      })
+      .catch(e => {
+        alert("Wrong details");
+        console.log(e);
+      });
+
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 
  // Optional: Clear any other sensitive data
  console.log('User logged out successfully.');

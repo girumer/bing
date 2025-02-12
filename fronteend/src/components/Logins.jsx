@@ -120,7 +120,11 @@ function Logins() {
           setMessage("Invalid password. Please try again.");
         } else if (resData.message === "User does not exist") {
           setMessage("User does not exist. Please check your username.");
-        } else {
+        } 
+        else if (resData.message === "Insufficient balance") {
+          setMessage("Insufficient balance");
+        } 
+        else {
           // Handle successful login and save the token
           if (resData.token) {
             localStorage.setItem('accesstoken', resData.token); // Store token in localStorage
@@ -152,8 +156,12 @@ function Logins() {
     
   return (
     <div className="container">
+      <div className='loginadd'>
+   
+      </div>
     <div className="login-container">
-    <h2>logins</h2>
+      
+   
     <form className="login-form" onSubmit={handleSubmit}>
         <div className="form-group">
             <label for="username">Username</label>

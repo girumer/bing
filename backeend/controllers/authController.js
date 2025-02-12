@@ -24,6 +24,10 @@ console.log('JWT_PRIVATE:', process.env.JwT_PRIVATE);  // Should print your priv
        
       return res.json({ message: "Invalid password" });
     }
+    if (existingUser.Wallet < 50) {
+      return res.json({ message: "Insufficient balance" });
+    }
+
      const role=existingUser.role;
     const accessToken = jwt.sign({ username,role:existingUser.role }, secretkey, { expiresIn: '1d' });
     const refreshToken = jwt.sign({ username }, refreshKey, { expiresIn: '30d' });

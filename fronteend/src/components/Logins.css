@@ -8,18 +8,26 @@
 }
 
 .App{
-    background-color: #aeb9e2;
+    background-color: rgba(4, 17, 58, 0.974);
     font-family: Arial, Helvetica, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;  
+    height: 100%;
     
     }
 
+.loginadd{
+    background-image: url('/public/images/bingo5.png');
+    margin-top: 50px;
+    margin-bottom: 20px;
+    height: 30vh;
+    background-size: cover;
+}
 
 .login-container {
-    background-color: #fff;
+    background-color:  rgba(4, 17, 58, 0.974);
     width: 350px;
     padding: 2rem;
     border-radius: 10px;
