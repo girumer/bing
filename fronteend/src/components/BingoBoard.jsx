@@ -396,36 +396,39 @@ useEffect(() => {
             setIsGenerating(false);
         }
     };
-    const newgamet=()=>{
-        if(language=="am"){
-       const gamestart=getGameStartedAudi();
-       gamestart.preload="auto";
-       gamestart.play();
-       //setIsGenerating(true);
-       
-    }
-    else if(language=="amf"){
-        const gamestart=getGameStartedAudif();
-        gamestart.preload="auto";
-        gamestart.play();
-       // setIsGenerating(true);
-     }
-       else{
-        let message="Game started";
-        const utterance = new SpeechSynthesisUtterance(message);
-
-            window.speechSynthesis.speak(utterance);
-          //  setIsGenerating(true);
-       }
+    async function newgamet (){
        
        
-        setTimeout(() => {
-            updateplayer();
+        //setTimeout(() => {
+         await   updateplayer();
            
           
            
-        }, 2000);
- 
+       // }, 2000);
+        if(language=="am"){
+            //const gamestart=getGameStartedAudi();
+            //gamestart.preload="auto";
+            //gamestart.play();
+            setNavbar(false);
+            setIsGenerating(true);
+            
+         }
+         else if(language=="amf"){
+             //const gamestart=getGameStartedAudif();
+             //gamestart.preload="auto";
+             //gamestart.play();
+             setNavbar(false);
+             setIsGenerating(true);
+          }
+            else{
+             //let message="Game started";
+             //const utterance = new SpeechSynthesisUtterance(message);
+     
+               //  window.speechSynthesis.speak(utterance);
+               setNavbar(false);
+                 setIsGenerating(true);
+            }
+            
     }
     const gameisnot=()=>{
         const aler=getcartelanot();
