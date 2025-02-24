@@ -396,40 +396,28 @@ useEffect(() => {
             setIsGenerating(false);
         }
     };
-    async function newgamet (){
-       
-       
-        //setTimeout(() => {
-         await   updateplayer();
-           
-          
-           
-       // }, 2000);
-        if(language=="am"){
-            //const gamestart=getGameStartedAudi();
-            //gamestart.preload="auto";
-            //gamestart.play();
+    async function newgamet() {
+        const updateSuccess = await updateplayer();
+        
+        // Only proceed if updateplayer succeeded
+        if (!updateSuccess) {
+            // Optionally, you can perform any additional error handling here.
+            return;
+        }
+        
+        // Only if updateplayer was successful, proceed with starting the game.
+        if (language === "am") {
             setNavbar(false);
             setIsGenerating(true);
-            
-         }
-         else if(language=="amf"){
-             //const gamestart=getGameStartedAudif();
-             //gamestart.preload="auto";
-             //gamestart.play();
-             setNavbar(false);
-             setIsGenerating(true);
-          }
-            else{
-             //let message="Game started";
-             //const utterance = new SpeechSynthesisUtterance(message);
-     
-               //  window.speechSynthesis.speak(utterance);
-               setNavbar(false);
-                 setIsGenerating(true);
-            }
-            
+        } else if (language === "amf") {
+            setNavbar(false);
+            setIsGenerating(true);
+        } else {
+            setNavbar(false);
+            setIsGenerating(true);
+        }
     }
+    
     const gameisnot=()=>{
         const aler=getcartelanot();
         aler.play();
@@ -639,54 +627,27 @@ useEffect(() => {
         return audio;
     };
     async function updateplayer() {
-        
-        try{
-
-            await axios.post(`${BACKEND_URL}/updateplayer`,{
-                username,stake,numberofplayer,profit,awardforagent,totalcash,venderaward,winerAward,percent
-            })
-            .then(res=>{
-                console.log(res.data);
-                if(res.data=="exist"){
-                    alert("User already exists")
-                }
-                else if(res.data=="updated"){
-                   //alert("apdated");
-                   setNavbar(false);
-                   setIsGenerating(true);
-
-                   // console.log("updated sucessfully");
-                   /*  localStorage.removeItem('calledNumbers');
-
-                    // Reset the state to an empty array
-                    setCalledNumber([]);
-                
-                    // Update the ref to reflect the cleared state
-                    calledNumbersRef.current = [];
-                    setWinerAward(0);
-                    setgamewinnerboard(false);
-                    setCurrentNumber(0); */
-                }
-            })
-            .catch(e => {
-                console.log("Catch block executed:", e);
-                alert("Please check connection");
-            
-                setIsGenerating(prev => {
-                    console.log("Previous isGenerating value:", prev);
-                    return false;
-                });
-            
-                console.log("setIsGenerating set to false");
+        try {
+            const response = await axios.post(`${BACKEND_URL}/updateplayer`, {
+                username, stake, numberofplayer, profit, awardforagent, totalcash, venderaward, winerAward, percent
             });
-
+            console.log(response.data);
+            if (response.data === "exist") {
+                alert("User already exists");
+                return false;
+            } else if (response.data === "updated") {
+                setNavbar(false);
+                setIsGenerating(true);
+                return true;
+            }
+        } catch (e) {
+            console.log("Catch block executed:", e);
+            alert("Please check connection");
+            setIsGenerating(false);
+            return false;
         }
-        catch(e){
-            console.log(e);
-
-        }
-
     }
+    
     const updateCurrentNumber = (rand) => {
         let newNumber = '';
     
