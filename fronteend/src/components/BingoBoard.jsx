@@ -669,7 +669,9 @@ useEffect(() => {
                 }
             })
             .catch(e=>{
-                alert("wrong details")
+                alert("pleas cheak connection");
+                setIsGenerating(false);
+
                 console.log(e);
             })
 
