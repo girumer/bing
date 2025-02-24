@@ -384,14 +384,14 @@ useEffect(() => {
       if(gametype===1){
        
         cheakwin(intialstate,num);
-        console.log(intialstate);
+       // console.log(intialstate);
         setwinnerboard(false);
         setIsGenerating(false);
       }
         else{
             
             cheakwin1(intialstate,num);
-            console.log(intialstate);
+           // console.log(intialstate);
             setwinnerboard(false);
             setIsGenerating(false);
         }
@@ -1888,7 +1888,7 @@ useEffect(() => {
 
        <h3> win by  cartela number {winernumber}</h3>
          
-       <h3> win by  cartela number {lastCalledNumberRef.current}</h3>
+       <h3> the last called number is {lastCalledNumberRef.current}</h3>
        
        <div className="bingoboard2w">
  
