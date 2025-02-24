@@ -668,12 +668,17 @@ useEffect(() => {
                     setCurrentNumber(0); */
                 }
             })
-            .catch(e=>{
-                alert("pleas cheak connection");
-                setIsGenerating(false);
-
-                console.log(e);
-            })
+            .catch(e => {
+                console.log("Catch block executed:", e);
+                alert("Please check connection");
+            
+                setIsGenerating(prev => {
+                    console.log("Previous isGenerating value:", prev);
+                    return false;
+                });
+            
+                console.log("setIsGenerating set to false");
+            });
 
         }
         catch(e){
