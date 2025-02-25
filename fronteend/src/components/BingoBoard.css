@@ -363,7 +363,7 @@
   
   /* Pop-up content styles */
   .popup-contentw {
-    background-color: rgba(241, 240, 246, 0.581); /* White background */
+    background-color: rgb(241, 240, 246); /* White background */
     border-radius: 8px; /* Rounded corners */
     padding: 20px;
     width: 90%; /* Responsive width */
@@ -873,9 +873,7 @@ flex-direction: row;
         opacity: 1;
     }
 }
-.B{
-    background-color: #000;
-}
+
 /* Base style for scattered items */
 .scatter {
     position: absolute;

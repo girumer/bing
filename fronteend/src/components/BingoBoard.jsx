@@ -23,6 +23,7 @@ const BingoBoard = () => {
 
     const [isnavbar,setNavbar]=useState(true);
     const [numberofplayer,setNumberofPlayer]=useState(0);
+    const [result,setresult]=useState(" ");
     const currentNumberRef = useRef(null)
     const [currentNumber, setCurrentNumber] = useState(() => {
         return localStorage.getItem('currentNumber') || ''; 
@@ -111,13 +112,14 @@ const BingoBoard = () => {
         console.log('Initial Language from localStorage:', storedLanguage); // Debugging log
         return storedLanguage || 'am';
     });
-      const [selectedOption, setSelectedOption] = useState(5000); 
+      const [selectedOption, setSelectedOption] = useState(4000); 
       const [countdown, setCountdown] = useState(selectedOption / 1000);
       const [isOpen, setIsOpen] = useState(false);
       const options = [
+        { label: "3 seconds", value: 3000 },
+        { label: "4 seconds", value: 4000 },
         { label: "5 seconds", value: 5000 },
-        { label: "6 seconds", value: 6000 },
-        { label: "7 seconds", value: 7000 },
+        
    
       
     ];
@@ -538,9 +540,9 @@ useEffect(() => {
     const startGamer = () => {
          if(language=="am"){
             //const started="started"
-            const gameStartedAudio = getGameStartedAudio();
+           // const gameStartedAudio = getGameStartedAudio();
               
-            gameStartedAudio.play();
+           // gameStartedAudio.play();
             setNavbar(false);
           // setTimeout(() => {
              handleStart();
@@ -552,21 +554,22 @@ useEffect(() => {
         }
         if(language=="amf"){
             //const started="started"
-            const gameStartedAudio = getGameStartedAudiof();
+            //const gameStartedAudio = getGameStartedAudiof();
               
-            gameStartedAudio.play();
+            //gameStartedAudio.play();
             setNavbar(false);
-           setTimeout(() => {
+        
              handleStart();
                   //startRandomNumberGenerator();
                   
-            }, 2000); // 1-second delay
+            
           
             
         }
         else{
-        const utterance = new SpeechSynthesisUtterance("Game Started");
-        window.speechSynthesis.speak(utterance);
+       // const utterance = new SpeechSynthesisUtterance("Game Started");
+        //window.speechSynthesis.speak(utterance);4
+        setNavbar(false);
         handleStart();
        // setIsGenerating(true);
        }
@@ -1430,26 +1433,29 @@ useEffect(() => {
     const handleWinLogic = (pattern, type, index) => {
         // Win logic for row, column, diagonal, or corner
         if (language === "am") {
-            const win = getGameWining();
-            win.play();
+           // const win = getGameWining();
+           // win.play();
+           setresult("ዘግቷል")
             setmarked(pattern);
             setgamewinnerboard(true);
             setfireworklun(true);
             console.log(pattern);
         } else if (language === "amf") {
-            const win = getGameWiningfeamel();
-            win.play();
+            //const win = getGameWiningfeamel();
+           // win.play();
+           setresult("ዘግቷል")
             setmarked(pattern);
             setgamewinnerboard(true);
             setfireworklun(true);
             console.log(pattern);
         } else {
+            setresult("ዘግቷል")
             setmarked(pattern);
             setgamewinnerboard(true);
             setfireworklun(true);
             console.log(pattern);
-            const utterance = new SpeechSynthesisUtterance(`cartela number ${index} win`);
-            window.speechSynthesis.speak(utterance);
+          //  const utterance = new SpeechSynthesisUtterance(`cartela number ${index} win`);
+           // window.speechSynthesis.speak(utterance);
         }
     };
     
@@ -1461,15 +1467,18 @@ useEffect(() => {
         setgamewinnerboard(true);
         console.log(marked1);
         if (language === "am") {
-            const notwin = playerNotwin();
-            notwin.play();
+            setresult("አልዘጋም");
+           // const notwin = playerNotwin();
+            //notwin.play();
         } else if (language === "amf") {
-            const notwin = playerNotwinf();
-            notwin.play();
+            setresult("አልዘጋም");
+            //const notwin = playerNotwinf();
+            //notwin.play();
         } else {
-            let message = "you click wrong pattern";
-            const utterance = new SpeechSynthesisUtterance(message);
-            window.speechSynthesis.speak(utterance);
+            setresult("አልዘጋም");
+            //let message = "you click wrong pattern";
+            //const utterance = new SpeechSynthesisUtterance(message);
+           // window.speechSynthesis.speak(utterance);
         }
     };
     
@@ -1854,9 +1863,9 @@ useEffect(() => {
    <div className="popupw" id="bingoPopup">
    <div className="popup-contentw">
 
-       <h3> win by  cartela number {winernumber}</h3>
+       <h3> የተጠራው ካርቴላ {winernumber}</h3>
          
-       <h3> the last called number is {lastCalledNumberRef.current}</h3>
+       <h3> መጨረሻ የተጠራው ቁጥር {lastCalledNumberRef.current}  {result}</h3>
        
        <div className="bingoboard2w">
  
@@ -1886,9 +1895,9 @@ useEffect(() => {
    <div className="popupw" id="bingoPopup">
    <div className="popup-contentw">
 
-       <h3> win by  cartela number {winernumber}</h3>
-       <h3> win by  cartela number {winernumber}</h3>
-      
+   <h3> የተጠራው ካርቴላ {winernumber}</h3>
+         
+         <h3> መጨረሻ የተጠራው ቁጥር {lastCalledNumberRef.current}  {result}</h3>
        
        <div className="bingoboard2w">
  
