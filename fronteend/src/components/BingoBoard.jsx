@@ -264,8 +264,21 @@ const BingoBoard = () => {
     
 // Stop function
 const handleStop = async () => {
-    isGeneratingRef.current = false;
-    setIsGenerating(false);  // This doesn't return a Promise, but you could use a timeout if needed
+    if (language === "am") {
+        getGamePusedAudio();
+        isGeneratingRef.current = false;
+    setIsGenerating(false);
+    } else if (language === "amf") {
+        getGamePusedAudio();
+        isGeneratingRef.current = false;
+        setIsGenerating(false);
+    } else {
+        const message2="Gamepused";
+        window.speechSynthesis.speak(message2);
+        isGeneratingRef.current = false;
+        setIsGenerating(false);
+    } 
+     // This doesn't return a Promise, but you could use a timeout if needed
 };
 
 useEffect(() => {
@@ -409,12 +422,18 @@ useEffect(() => {
         
         // Only if updateplayer was successful, proceed with starting the game.
         if (language === "am") {
+           const start= getGameStartedAudi();
+           start.play();
             setNavbar(false);
             setIsGenerating(true);
         } else if (language === "amf") {
+            const startf=getGameStartedAudif();
+            startf.play();
             setNavbar(false);
             setIsGenerating(true);
         } else {
+            const utterance = new SpeechSynthesisUtterance("Game started");
+            window.speechSynthesis.speak(utterance);
             setNavbar(false);
             setIsGenerating(true);
         }
