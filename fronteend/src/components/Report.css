@@ -16,11 +16,18 @@
     text-align: center;
     border: 1px solid #ddd;
   }
-  
+  .report-container h2{
+    background-color: #e66060;
+  }
+  .report-table h3{
+    background-color: #f4f4f4;
+  }
   .report-table th {
     background-color: #f4f4f4;
   }
-  
+  .report-table td {
+    color: #f4f4f4;
+  }
   .report-table tr:nth-child(even) {
     background-color: #f9f9f9;
   }

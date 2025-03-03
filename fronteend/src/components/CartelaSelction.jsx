@@ -26,12 +26,20 @@ function CartelaSelction() {
     const [selectegametype, setSelectgametype] = useState(1);
     localStorage.setItem('language',location.state.language);
     let  language= localStorage.getItem('language');
-    const [selectedStake, setSelectedStake] = useState(20); // Default stake is 10
+    const [selectedStake, setSelectedStake] =useState(() => {
+            const selectedStake = localStorage.getItem('stake');
+            return selectedStake ? parseInt(selectedStake) : 20;
+            
+        });
    
         console.log(language);
     const handleStakeChange = (event) => {
-        setSelectedStake(parseInt(event.target.value));
+        let stake=parseInt(event.target.value);
+        setSelectedStake(parseInt(stake));
+        localStorage.setItem('stake', stake);
+        
     };
+     
     const [numbers, setNumbers] = useState(() => {
         const storedNumbers = localStorage.getItem("selectedNumbers");
         // Check if storedNumbers exists and is a valid JSON array

@@ -539,10 +539,10 @@ useEffect(() => {
    
     const startGamer = () => {
          if(language=="am"){
-            //const started="started"
-           // const gameStartedAudio = getGameStartedAudio();
+            const started="started"
+           const gameStartedAudio = getGameStartedAudio();
               
-           // gameStartedAudio.play();
+            gameStartedAudio.play();
             setNavbar(false);
           // setTimeout(() => {
              handleStart();
@@ -553,10 +553,10 @@ useEffect(() => {
             
         }
         if(language=="amf"){
-            //const started="started"
-            //const gameStartedAudio = getGameStartedAudiof();
+            const started="started"
+            const gameStartedAudio = getGameStartedAudiof();
               
-            //gameStartedAudio.play();
+            gameStartedAudio.play();
             setNavbar(false);
         
              handleStart();
@@ -567,8 +567,8 @@ useEffect(() => {
             
         }
         else{
-       // const utterance = new SpeechSynthesisUtterance("Game Started");
-        //window.speechSynthesis.speak(utterance);4
+        const utterance = new SpeechSynthesisUtterance("Game Started");
+        window.speechSynthesis.speak(utterance);
         setNavbar(false);
         handleStart();
        // setIsGenerating(true);
@@ -672,193 +672,7 @@ useEffect(() => {
             currentNumberRef.current = storedNumber;
         }
     }, []);
-   /*  const announceNumber = (number) => {
-        if ('speechSynthesis' in window) {
-            window.speechSynthesis.cancel();
-            let prefix;
-                           if(number<=15){
-                            if(language==="am"){
-                                playAmharicAudioForNumber(number);
-                            }
-                            else if(language==="amf"){
-                                playAmharicAudioForNumberfemale(number)  
-                            }
-                            else{
-                                if (number >= 10) {
-                                    // First announcement: "B {number}"
-                                    const utterance1 = new SpeechSynthesisUtterance(`B ${number}`);
-                                    window.speechSynthesis.speak(utterance1);
-                                
-                                    // Second announcement: Split and announce digits
-                                    const digits = String(number).split(''); // Split the number into individual digits
-                                    const utterance2 = new SpeechSynthesisUtterance(`B ${digits.join(' ')}`);
-                                    window.speechSynthesis.speak(utterance2);
-                                } else {
-                                    // For numbers less than 10
-                                    const utterance = new SpeechSynthesisUtterance(`B ${number}`);
-                                    window.speechSynthesis.speak(utterance);
-                                }
-                           }}
-                          else if(number<=30){
-                            
-                            if(language==="am"){
-                                playAmharicAudioForNumber(number);
-                            }
-                            else if(language==="amf"){
-                                playAmharicAudioForNumberfemale(number)  
-                            }
-                            else{
-                            const utterance = new SpeechSynthesisUtterance(`I ${number}`);
-                            utterance.lang = language === "en" ? "en-US" : "am-ET";
-                            window.speechSynthesis.speak(utterance);
-                            const digits = String(number).split(''); // Split the number into individual digits
-                            const utterance2 = new SpeechSynthesisUtterance(`I ${digits.join(' ')}`);
-                            utterance2.lang = utterance.lang; 
-                            window.speechSynthesis.speak(utterance2);
-                        }
-                           }
-                           else if(number<=45){
-                            if(language==="am"){
-                                playAmharicAudioForNumber(number);
-                            }
-                            else if(language==="amf"){
-                                playAmharicAudioForNumberfemale(number)  
-                            }
-                            else{
-                            const utterance = new SpeechSynthesisUtterance(`N ${number}`);
-                            window.speechSynthesis.speak(utterance);
-                            const digits = String(number).split(''); // Split the number into individual digits
-                            const utterance2 = new SpeechSynthesisUtterance(`N ${digits.join(' ')}`);
-                            window.speechSynthesis.speak(utterance2);
-                        }
-                           }
-                         else if(number<=60){
-                          
-                            if(language==="am"){
-                                playAmharicAudioForNumber(number);
-                            }
-                            else if(language==="amf"){
-                                playAmharicAudioForNumberfemale(number)  
-                            }
-                            else{
-                            const utterance = new SpeechSynthesisUtterance(`G ${number}`);
-                            window.speechSynthesis.speak(utterance);
-                            const digits = String(number).split(''); // Split the number into individual digits
-                            const utterance2 = new SpeechSynthesisUtterance(`G ${digits.join(' ')}`);
-                            window.speechSynthesis.speak(utterance2);
-                            }
-                                                }
-                          else{
-                          
-                            if(language==="am"){
-                                playAmharicAudioForNumber(number);
-                            }
-                            else if(language==="amf"){
-                                playAmharicAudioForNumberfemale(number)  
-                            }
-                            else{
-                            const utterance = new SpeechSynthesisUtterance(`O ${number}`);
-                            window.speechSynthesis.speak(utterance);                          
-                            const digits = String(number).split(''); // Split the number into individual digits
-                            const utterance2 = new SpeechSynthesisUtterance(`O ${digits.join(' ')}`);
-                            window.speechSynthesis.speak(utterance2);} }
-                      
-         
-            
-        }
-    }; */
-
-   /*  const announceNumber = (number) => {
-        return new Promise((resolve) => {
-        if ('speechSynthesis' in window) {
-            window.speechSynthesis.cancel(); // Cancel any ongoing speech
-    
-            const announceWithDelay = (text, delay = 0) => {
-                return new Promise((resolve) => {
-                    setTimeout(() => {
-                        const utterance = new SpeechSynthesisUtterance(text);
-                        utterance.lang = language === "en" ? "en-US" : "am-ET";
-                        utterance.onend = resolve; // Resolve the promise when the utterance ends
-                        window.speechSynthesis.speak(utterance);
-                    }, delay);
-                });
-            };
-    
-            const announceDigits = async (prefix, number) => {
-                const digits = String(number).split(''); // Split the number into individual digits
-                const fullNumberText = `${prefix} ${number}`;
-                const digitsText = `${prefix} ${digits.join(' ')}`;
-    
-                // Announce the full number first
-                await announceWithDelay(fullNumberText);
-    
-                // Announce the digits after a delay (e.g., 1000ms or 1 second)
-                await announceWithDelay(digitsText, 1000);
-            };
-            
-            if (number <= 15) {
-                if (language === "am") {
-                    playAmharicAudioForNumber(number);
-                    resolve();
-                } else if (language === "amf") {
-                    playAmharicAudioForNumberfemale(number);
-                    resolve();
-                } else {
-                    if (number >= 10) {
-                        announceDigits("B", number);
-                        resolve();
-                    } else {
-                        announceWithDelay(`B ${number}`);
-                        resolve();
-                    }
-                }
-            } else if (number <= 30) {
-                if (language === "am") {
-                    playAmharicAudioForNumber(number);
-                } else if (language === "amf") {
-                    playAmharicAudioForNumberfemale(number);
-                } else {
-                    announceDigits("I", number);
-                }
-            } else if (number <= 45) {
-                if (language === "am") {
-                    playAmharicAudioForNumber(number);
-                    resolve();
-                } else if (language === "amf") {
-                    playAmharicAudioForNumberfemale(number);
-                    resolve();
-                } else {
-                    announceDigits("N", number);
-                    resolve();
-                }
-            } else if (number <= 60) {
-                if (language === "am") {
-                    playAmharicAudioForNumber(number);
-                    resolve();
-                } else if (language === "amf") {
-                    playAmharicAudioForNumberfemale(number);
-                    resolve();
-                } else {
-                    announceDigits("G", number);
-                    resolve();
-                }
-            } else {
-                if (language === "am") {
-                    playAmharicAudioForNumber(number);
-                } else if (language === "amf") {
-                    playAmharicAudioForNumberfemale(number);
-                    resolve();
-                } else {
-                    announceDigits("O", number);
-                    resolve();
-                }
-            }
-            
-        }
-    });
-    };  */
-    
-    const announceNumber = (number) => {
+  const announceNumber = (number) => {
         return new Promise((resolve) => {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel(); // Cancel any ongoing speech
@@ -1120,239 +934,6 @@ useEffect(() => {
             console.error('Number out of range');
         }
     };
-   /*  const cheakwin = async (initialState, num) => {
-        const calledNumbers = calledNumbersRef.current;
-        //const lastCalledNumber = lastCalledNumberRef.current;
-    
-        if (!cartelas.includes(num)) {
-            if (language == "am") {
-                gameisnot();
-            }
-           else if (language == "amf") {
-                gameisnotf();
-            }
-            else {
-                const utterance = new SpeechSynthesisUtterance("the number is not in the list");
-                window.speechSynthesis.speak(utterance);
-            }
-        } else {
-            // Check rows
-           for (let i = 0; i < 5; i++) {
-                if (initialState[i].every((num) => calledNumbers.includes(num) || num === '*')) {
-                    // Check if the last called number is in this row
-                    if (initialState[i].includes(lastCalledNumber)) {
-                        if (language == "am") {
-                            const win = getGameWining();
-                            win.play();
-                            const marked1 = initialState[i];
-                            setmarked(marked1);
-                            setgamewinnerboard(true);
-                            setfireworklun(true);
-                            console.log(marked1);
-                        } 
-                        else if (language == "amf") {
-                            const win = getGameWiningfeamel();
-                            win.play();
-                            const marked1 = initialState[i];
-                            setmarked(marked1);
-                            setgamewinnerboard(true);
-                            setfireworklun(true);
-                            console.log(marked1);
-                        }
-                        else {
-                            const marked1 = initialState[i];
-                            setmarked(marked1);
-                            setgamewinnerboard(true);
-                            setfireworklun(true);
-                            console.log(marked1);
-                            const utterance = new SpeechSynthesisUtterance(`cartela number ${num} win`);
-                            window.speechSynthesis.speak(utterance);
-                        }
-                        return;
-                    }
-                }
-            } 
-    
-            // Check columns
-            for (let i = 0; i < 5; i++) {
-                const isColumnComplete = intialstate.every((row) => {
-                  return row[i] === "*" || calledNumbers.includes(row[i]);
-                }); {
-                    if(isColumnComplete){
-                    // Check if the last called number is in this column
-                    if (initialState.some((row) => row[i] === lastCalledNumber)) {
-                        if (language == "am") {
-                            const win = getGameWining();
-                            console.log()
-                            win.play();
-                            const marked1 = initialState.map((row) =>
-                                calledNumbers.includes(row[i]) || row[i] === '*' ? row[i] : null
-                            );
-                            setmarked(marked1);
-                            setfireworklun(true);
-                            setgamewinnerboard(true);
-                            console.log(marked1);
-                        } 
-                        else if (language == "amf") {
-                            const win = getGameWiningfeamel();
-                            win.play();
-                            const marked1 = initialState[i];
-                            setmarked(marked1);
-                            setgamewinnerboard(true);
-                            setfireworklun(true);
-                            console.log(marked1);
-                        }
-                        else {
-                            const marked1 = initialState.map((row) =>
-                                calledNumbers.includes(row[i]) || row[i] === '*' ? row[i] : null
-                            );
-                            setmarked(marked1);
-                            setgamewinnerboard(true);
-                            setfireworklun(true);
-                           
-                            console.log(marked1);
-                            const utterance = new SpeechSynthesisUtterance(`cartela number ${num} win`);
-                            window.speechSynthesis.speak(utterance);
-                        }
-                        return;
-                    }
-                }
-                }
-            } 
-    
-            // Check diagonals
-             const diagonals = [
-                [initialState[0][0], initialState[1][1], initialState[2][2], initialState[3][3], initialState[4][4]],
-                [initialState[0][4], initialState[1][3], initialState[2][2], initialState[3][1], initialState[4][0]],
-            ];
-    
-            for (let diagonal of diagonals) {
-                if (diagonal.every((num) => calledNumbers.includes(num) || num === '*')) {
-                    // Check if the last called number is in the diagonal
-                    if (diagonal.includes(lastCalledNumber)) {
-                        if (language == "am") {
-                            const win = getGameWining();
-                            win.play();
-                            setmarked(diagonal);
-                            setgamewinnerboard(true);
-                            setfireworklun(true);
-                            console.log(diagonal);
-                        }
-                        else if (language == "amf") {
-                            const win = getGameWiningfeamel();
-                           
-                            win.play();
-                            setmarked(diagonal);
-                            setgamewinnerboard(true);
-                            setfireworklun(true);
-                            console.log(diagonal);
-                        }
-                         else {
-                            setmarked(diagonal);
-                            setgamewinnerboard(true);
-                            setfireworklun(true);
-                            console.log(diagonal);
-                            const utterance = new SpeechSynthesisUtterance(`cartela number ${num} win`);
-                            window.speechSynthesis.speak(utterance);
-                        }
-                        return;
-                    }
-                }
-            }
-     
-            // Check corners (if applicable)
-            const corners = [
-                [initialState[0][0], initialState[0][4], initialState[4][0], initialState[4][4]],
-            ];
-    
-            for (let corner of corners) {
-                if (corner.every((num) => calledNumbers.includes(num) || num === '*')) {
-                    // Check if the last called number is in the corner
-                    if (corner.includes(lastCalledNumber)) {
-                        if (language == "am") {
-                            const win = getGameWining();
-                            win.play();
-                            setmarked(corner);
-                            setgamewinnerboard(true);
-                            setfireworklun(true);
-                            console.log(corner);
-                        } 
-                        else if (language == "amf") {
-                            const win = getGameWiningfeamel();
-                            win.play();
-                            setmarked(corner);
-                            setgamewinnerboard(true);
-                            setfireworklun(true);
-                            console.log(corner);
-                        }
-                        else {
-                            setmarked(corner);
-                            setgamewinnerboard(true);
-                            setfireworklun(true);
-                            console.log(corner);
-                            const utterance = new SpeechSynthesisUtterance(`cartela number ${num} win`);
-                            window.speechSynthesis.speak(utterance);
-                        }
-                        return;
-                    }
-                }
-            } 
-                const center=[
-            [initialState[1][2], initialState[2][1], initialState[2][3], initialState[3][2]],
-        ];
-           for (let centerPattern  of center) {
-            if (centerPattern.every((num) => calledNumbers.includes(num) || num === '*')) {
-                // Check if the last called number is in the corner
-                if (centerPattern.includes(lastCalledNumber)) {
-                    if (language == "am") {
-                        const win = getGameWining();
-                        win.play();
-                        setmarked(centerPattern );
-                        setgamewinnerboard(true);
-                        setfireworklun(true);
-                        console.log(centerPattern);
-                    } 
-                    else if (language == "amf") {
-                        const win = getGameWiningfeamel();
-                        win.play();
-                        setmarked(centerPattern );
-                        setgamewinnerboard(true);
-                        setfireworklun(true);
-                        console.log(centerPattern);
-                    }
-                    else {
-                        setmarked(centerPattern);
-                        setgamewinnerboard(true);
-                        setfireworklun(true);
-                        console.log(centerPattern);
-                        const utterance = new SpeechSynthesisUtterance(`cartela number ${num} win`);
-                        window.speechSynthesis.speak(utterance);
-                    }
-                    return;
-                }
-            }
-        }
-            // If no win condition is met, notify player
-            const marked1 = initialState
-                .flatMap((row) => row.filter((num) => calledNumbers.includes(num) || num === '*'));
-            setmarked(marked1);
-            setgamewinnerboard(true);
-            console.log(marked1);
-            if (language === "am") {
-                const notwin = playerNotwin();
-                notwin.play();
-            } 
-          else  if (language ==="amf") {
-                const notwin = playerNotwinf();
-                notwin.play();
-            } 
-            else {
-                let message = "you click wrong pattern";
-                const utterance = new SpeechSynthesisUtterance(message);
-                window.speechSynthesis.speak(utterance);
-            }
-        }
-    }; */
     const cheakwin = async (initialState, num) => {
         const calledNumbers = calledNumbersRef.current;
         const lastCalledNumber = lastCalledNumberRef.current;
@@ -1433,29 +1014,30 @@ useEffect(() => {
     const handleWinLogic = (pattern, type, index) => {
         // Win logic for row, column, diagonal, or corner
         if (language === "am") {
-           // const win = getGameWining();
-           // win.play();
+           const win = getGameWining();
+            win.play();
            setresult("ዘግቷል")
             setmarked(pattern);
             setgamewinnerboard(true);
             setfireworklun(true);
             console.log(pattern);
         } else if (language === "amf") {
-            //const win = getGameWiningfeamel();
-           // win.play();
+            const win = getGameWiningfeamel();
+            win.play();
            setresult("ዘግቷል")
             setmarked(pattern);
             setgamewinnerboard(true);
             setfireworklun(true);
             console.log(pattern);
         } else {
+            const utterance = new SpeechSynthesisUtterance(`cartela number ${index} win`);
+            window.speechSynthesis.speak(utterance);
             setresult("ዘግቷል")
             setmarked(pattern);
             setgamewinnerboard(true);
             setfireworklun(true);
             console.log(pattern);
-          //  const utterance = new SpeechSynthesisUtterance(`cartela number ${index} win`);
-           // window.speechSynthesis.speak(utterance);
+           
         }
     };
     
@@ -1467,18 +1049,21 @@ useEffect(() => {
         setgamewinnerboard(true);
         console.log(marked1);
         if (language === "am") {
+            const notwin = playerNotwin();
+            notwin.play();
             setresult("አልዘጋም");
-           // const notwin = playerNotwin();
-            //notwin.play();
+            
         } else if (language === "amf") {
+            const notwin = playerNotwinf();
+            notwin.play();
             setresult("አልዘጋም");
-            //const notwin = playerNotwinf();
-            //notwin.play();
+           
         } else {
+            let message = "you click wrong pattern";
+            const utterance = new SpeechSynthesisUtterance(message);
+           window.speechSynthesis.speak(utterance);
             setresult("አልዘጋም");
-            //let message = "you click wrong pattern";
-            //const utterance = new SpeechSynthesisUtterance(message);
-           // window.speechSynthesis.speak(utterance);
+            
         }
     };
     
