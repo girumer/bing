@@ -265,11 +265,13 @@ const BingoBoard = () => {
 // Stop function
 const handleStop = async () => {
     if (language === "am") {
-        getGamePusedAudio();
+       const puse=getGamePusedAudio();
+       puse.play();
         isGeneratingRef.current = false;
     setIsGenerating(false);
     } else if (language === "amf") {
-        getGamePusedAudio();
+        const pusef=getGamePusedAudiof();
+        pusef.play();
         isGeneratingRef.current = false;
         setIsGenerating(false);
     } else {
@@ -424,18 +426,24 @@ useEffect(() => {
         if (language === "am") {
            const start= getGameStartedAudi();
            start.play();
+           setTimeout(() => {
             setNavbar(false);
             setIsGenerating(true);
+        }, 1000); 
         } else if (language === "amf") {
             const startf=getGameStartedAudif();
             startf.play();
+             setTimeout(() => {
             setNavbar(false);
             setIsGenerating(true);
+        }, 1000); 
         } else {
             const utterance = new SpeechSynthesisUtterance("Game started");
             window.speechSynthesis.speak(utterance);
-            setNavbar(false);
-            setIsGenerating(true);
+            setTimeout(() => {
+                setNavbar(false);
+                setIsGenerating(true);
+            }, 1000); 
         }
     }
     
@@ -562,9 +570,12 @@ useEffect(() => {
            const gameStartedAudio = getGameStartedAudio();
               
             gameStartedAudio.play();
-            setNavbar(false);
-          // setTimeout(() => {
-             handleStart();
+            setTimeout(() => {
+                setNavbar(false);
+                // setTimeout(() => {
+                   handleStart();
+            }, 1000); 
+          
                  // startRandomNumberGenerator();
                   
          //   }, 2000); // 1-second delay
@@ -576,9 +587,11 @@ useEffect(() => {
             const gameStartedAudio = getGameStartedAudiof();
               
             gameStartedAudio.play();
-            setNavbar(false);
-        
-             handleStart();
+            setTimeout(() => {
+                setNavbar(false);
+                // setTimeout(() => {
+                   handleStart();
+            }, 1000); 
                   //startRandomNumberGenerator();
                   
             
@@ -588,8 +601,11 @@ useEffect(() => {
         else{
         const utterance = new SpeechSynthesisUtterance("Game Started");
         window.speechSynthesis.speak(utterance);
-        setNavbar(false);
-        handleStart();
+        setTimeout(() => {
+            setNavbar(false);
+            // setTimeout(() => {
+               handleStart();
+        }, 1000); 
        // setIsGenerating(true);
        }
     };
