@@ -786,7 +786,7 @@ useEffect(() => {
     };
     
   
-    const startRandomNumberGenerator = async () => {
+  /*   const startRandomNumberGenerator = async () => {
         console.log("Starting number generator. isGenerating:", isGeneratingRef.current);
         isGeneratingRef.current = true;
     
@@ -846,92 +846,77 @@ useEffect(() => {
         }
     
         setIsGenerating(false);
-    };
-    
-    
-    
-    /* const announceNumber = (number) => {
-        return new Promise((resolve) => {
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel(); // Cancel any ongoing speech
-    
-                const announceWithDelay = (text, delay = 0) => {
-                    return new Promise((resolve) => {
-                        setTimeout(() => {
-                            const utterance = new SpeechSynthesisUtterance(text);
-                            utterance.lang = language === "en" ? "en-US" : "am-ET";
-                            utterance.onend = resolve; // Resolve the promise when speech ends
-                            window.speechSynthesis.speak(utterance);
-                        }, delay);
-                    });
-                };
-    
-                const announceDigits = async (prefix, number) => {
-                    const digits = String(number).split('');
-                    const fullNumberText = `${prefix} ${number}`;
-                    const digitsText = `${prefix} ${digits.join(' ')}`;
-    
-                    // Wait for the full number announcement
-                    await announceWithDelay(fullNumberText);
-    
-                    // Wait for the digits announcement
-                    await announceWithDelay(digitsText, 1000);
-                };
-    
-                // Handle Amharic audio (must return a promise)
-                const playAmharicAudio = (number) => {
-                    return new Promise((resolve) => {
-                        if (language === "am") {
-                            playAmharicAudioForNumber(number);
-                        } else if (language === "amf") {
-                            playAmharicAudioForNumberfemale(number);
-                        }
-                        setTimeout(resolve, 2000); // Assume Amharic audio takes 2 seconds
-                    });
-                };
-    
-                const processAnnouncement = async () => {
-                    if (number <= 15) {
-                        if (language === "am" || language === "amf") {
-                            await playAmharicAudio(number);
-                        } else {
-                            if (number >= 10) {
-                                await announceDigits("B", number);
-                            } else {
-                                await announceWithDelay(`B ${number}`);
-                            }
-                        }
-                    } else if (number <= 30) {
-                        if (language === "am" || language === "amf") {
-                            await playAmharicAudio(number);
-                        } else {
-                            await announceDigits("I", number);
-                        }
-                    } else if (number <= 45) {
-                        if (language === "am" || language === "amf") {
-                            await playAmharicAudio(number);
-                        } else {
-                            await announceDigits("N", number);
-                        }
-                    } else if (number <= 60) {
-                        if (language === "am" || language === "amf") {
-                            await playAmharicAudio(number);
-                        } else {
-                            await announceDigits("G", number);
-                        }
-                    } else {
-                        if (language === "am" || language === "amf") {
-                            await playAmharicAudio(number);
-                        } else {
-                            await announceDigits("O", number);
-                        }
-                    }
-                };
-    
-                processAnnouncement().then(resolve);
-            }
-        });
     }; */
+    
+    const startRandomNumberGenerator = async () => {
+  console.log("Starting number generator. isGenerating:", isGeneratingRef.current);
+  isGeneratingRef.current = true;
+
+  // **Step 1: Create and shuffle an array of numbers from 1 to 75**
+  const numbers = Array.from({ length: 75 }, (_, i) => i + 1); // [1, 2, 3, ..., 75]
+  const shuffledNumbers = shuffleArray(numbers); // Shuffle the array
+
+  // **Step 2: Iterate through the shuffled numbers**
+  for (let i = 0; i < shuffledNumbers.length && isGeneratingRef.current; i++) {
+    if (!isGeneratingRef.current) {
+      console.log("Number generation stopped.");
+      return; // Exit the loop
+    }
+
+    const rand = shuffledNumbers[i]; // Get the next number from the shuffled array
+
+    // **✅ Announce FIRST**
+    await announceNumber(rand);
+
+    // **✅ Update everything AFTER announcement**
+    calledNumbersRef.current.push(rand);
+    lastCalledNumberRef.current = rand;
+    console.log("Last called number is", lastCalledNumberRef.current);
+    localStorage.setItem('calledNumbers', JSON.stringify(calledNumbersRef.current));
+    setCalledNumber([...calledNumbersRef.current]);
+    updateCurrentNumber(rand);
+
+    let letter1 = " ";
+    if (rand <= 15) letter1 = "B-";
+    else if (rand <= 30) letter1 = "I-";
+    else if (rand <= 45) letter1 = "N-";
+    else if (rand <= 60) letter1 = "G-";
+    else letter1 = "O-";
+
+    setleter(letter1);
+    let rand2 = letter1 + `${rand}`;
+    setdisplayarray((prevDisplayArray) => {
+      const updatedArray = [...prevDisplayArray];
+      if (!updatedArray.includes(rand2)) {
+        updatedArray.push(rand2);
+      }
+      if (updatedArray.length > 5) {
+        updatedArray.shift();
+      }
+
+      // ✅ Update ref and localStorage
+      displayArrayRef.current = updatedArray;
+      localStorage.setItem("displayarray", JSON.stringify(updatedArray));
+
+      return updatedArray;
+    });
+
+    // **✅ Wait before the next number**
+    await new Promise(resolve => setTimeout(resolve, selectedOption));
+  }
+
+  setIsGenerating(false);
+};
+
+// **Helper Function: Shuffle an Array**
+const shuffleArray = (array) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1)); // Random index from 0 to i
+    [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+  }
+  return array;
+};
+    
     
     const handleOptionClick = (option) => {
         setSelectedOption(option);
@@ -984,7 +969,7 @@ useEffect(() => {
             }
         } else {
             // Check rows
-            for (let i = 0; i < 5; i++) {
+             for (let i = 0; i < 5; i++) {
                 if (initialState[i].every((num) => calledNumbers.includes(num) || num === '*')) {
                     // Ensure the last called number is part of this row
                     if (initialState[i].includes(lastCalledNumber)) {
@@ -993,10 +978,10 @@ useEffect(() => {
                         return;
                     }
                 }
-            }
+            } 
     
             // Check columns
-            for (let i = 0; i < 5; i++) {
+           for (let i = 0; i < 5; i++) {
                 const isColumnComplete = initialState.every((row) => row[i] === "*" || calledNumbers.includes(row[i]));
                 if (isColumnComplete) {
                     // Ensure the last called number is part of this column
@@ -1006,7 +991,7 @@ useEffect(() => {
                         return;
                     }
                 }
-            }
+            } 
     
             // Check diagonals
             const diagonals = [
@@ -1024,10 +1009,10 @@ useEffect(() => {
                     }
                 }
             }
-    
+     
             // Check corners (if applicable)
             const corners = [
-                [initialState[0][0], initialState[0][4], initialState[4][0], initialState[4][4]],
+                [initialState[0][0], initialState[0][4], initialState[4][0], initialState[3][3]],
             ];
     
             for (let corner of corners) {
@@ -1039,8 +1024,21 @@ useEffect(() => {
                         return;
                     }
                 }
-            }
+            } 
+         const inercorners = [
+                [initialState[1][1], initialState[1][3], initialState[3][1], initialState[3][3]],
+            ];
     
+            for (let corner of inercorners) {
+                if (corner.every((num) => calledNumbers.includes(num) || num === '*')) {
+                    // Ensure the last called number is part of this corner
+                    if (corner.includes(lastCalledNumber)) {
+                        // Handle win logic for corners
+                        handleWinLogic(corner, "corner");
+                        return;
+                    }
+                }
+            }
             // Handle no win scenario
             handleNoWin(initialState, num);
         }
