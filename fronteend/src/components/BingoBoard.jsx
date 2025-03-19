@@ -1012,7 +1012,7 @@ const shuffleArray = (array) => {
      
             // Check corners (if applicable)
             const corners = [
-                [initialState[0][0], initialState[0][4], initialState[4][0], initialState[3][3]],
+                [initialState[0][0], initialState[0][4], initialState[4][0], initialState[4][4]],
             ];
     
             for (let corner of corners) {
