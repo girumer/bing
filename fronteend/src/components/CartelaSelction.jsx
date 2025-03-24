@@ -11,9 +11,11 @@ function CartelaSelction() {
    const [opengame,setopengame]=useState(false);
     const options = [2,  4,  7,  10];
     const percentoptions = [
-        { label: "10%", value: 0.1 },
+      
         { label: "15%", value: 0.15},
         { label: "20%", value: 0.2 },
+        { label: "25%", value: 0.25 },
+        { label: "30%", value: 0.30 }
        
     ];
     const [selectedpercent, setSelectedpercent] = useState(0.2);
