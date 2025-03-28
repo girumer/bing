@@ -265,21 +265,22 @@ const BingoBoard = () => {
 // Stop function
 const handleStop = async () => {
     if (language === "am") {
-       const puse=getGamePusedAudio();
-       puse.play();
-        isGeneratingRef.current = false;
-    setIsGenerating(false);
-    } else if (language === "amf") {
+        const puse = getGamePusedAudio();
+        puse.play();
+      }
+       
+       
+     else if (language === "amf") {
         const pusef=getGamePusedAudiof();
-        pusef.play();
-        isGeneratingRef.current = false;
-        setIsGenerating(false);
-    } else {
+        pusef.play();}
+        
+     else {
         const message2="Gamepused";
         window.speechSynthesis.speak(message2);
-        isGeneratingRef.current = false;
-        setIsGenerating(false);
+      
     } 
+    isGeneratingRef.current = false; // Just stops the loop
+    setIsGenerating(false);
      // This doesn't return a Promise, but you could use a timeout if needed
 };
 
@@ -565,22 +566,18 @@ useEffect(() => {
     }, [cartelas, stake]);
    
     const startGamer = () => {
-         if(language=="am"){
-            const started="started"
-           const gameStartedAudio = getGameStartedAudio();
-              
+        
+        if (language === "am") {
+            const gameStartedAudio = getGameStartedAudio();
             gameStartedAudio.play();
-            setTimeout(() => {
-                setNavbar(false);
-                // setTimeout(() => {
-                   handleStart();
-            }, 1000); 
           
-                 // startRandomNumberGenerator();
-                  
-         //   }, 2000); // 1-second delay
-          
-            
+        
+          setTimeout(() => {
+            setNavbar(false);
+            if (!isGeneratingRef.current) {
+              startRandomNumberGenerator(); // ✅ Resumes from last index
+            }
+          }, 1000);
         }
         if(language=="amf"){
             const started="started"
@@ -589,9 +586,10 @@ useEffect(() => {
             gameStartedAudio.play();
             setTimeout(() => {
                 setNavbar(false);
-                // setTimeout(() => {
-                   handleStart();
-            }, 1000); 
+                if (!isGeneratingRef.current) {
+                  startRandomNumberGenerator(); // ✅ Resumes from last index
+                }
+              }, 1000); 
                   //startRandomNumberGenerator();
                   
             
@@ -603,9 +601,10 @@ useEffect(() => {
         window.speechSynthesis.speak(utterance);
         setTimeout(() => {
             setNavbar(false);
-            // setTimeout(() => {
-               handleStart();
-        }, 1000); 
+            if (!isGeneratingRef.current) {
+              startRandomNumberGenerator(); // ✅ Resumes from last index
+            }
+          }, 1000);
        // setIsGenerating(true);
        }
     };
@@ -848,7 +847,7 @@ useEffect(() => {
         setIsGenerating(false);
     }; */
     
-    const startRandomNumberGenerator = async () => {
+  /*   const startRandomNumberGenerator = async () => {
   console.log("Starting number generator. isGenerating:", isGeneratingRef.current);
   isGeneratingRef.current = true;
 
@@ -906,9 +905,72 @@ useEffect(() => {
   }
 
   setIsGenerating(false);
-};
+}; */
 
 // **Helper Function: Shuffle an Array**
+// Store the shuffled numbers and the current index
+let shuffledNumbers = [];
+let currentIndex = 0;
+
+// Add this ref at the top of your component (with your other refs)
+const shuffledNumbersRef = useRef([]);
+
+const startRandomNumberGenerator = async () => {
+  console.log("Starting number generator. isGenerating:", isGeneratingRef.current);
+  isGeneratingRef.current = true;
+
+  // Only shuffle if we're starting fresh (no numbers called yet)
+  if (calledNumbersRef.current.length === 0) {
+    const numbers = Array.from({ length: 75 }, (_, i) => i + 1);
+    shuffledNumbersRef.current = shuffleArray(numbers); // Store shuffled array
+  }
+
+  // Find where to resume by checking calledNumbers length
+  const startIndex = calledNumbersRef.current.length;
+  
+  // Continue from where we left off
+  for (let i = startIndex; i < shuffledNumbersRef.current.length && isGeneratingRef.current; i++) {
+    const rand = shuffledNumbersRef.current[i];
+
+    // Your existing announcement and state update logic...
+    await announceNumber(rand);
+    calledNumbersRef.current.push(rand);
+    lastCalledNumberRef.current = rand;
+    console.log("Last called number is", lastCalledNumberRef.current);
+    localStorage.setItem('calledNumbers', JSON.stringify(calledNumbersRef.current));
+    setCalledNumber([...calledNumbersRef.current]);
+    updateCurrentNumber(rand);
+
+    let letter1 = " ";
+    if (rand <= 15) letter1 = "B-";
+    else if (rand <= 30) letter1 = "I-";
+    else if (rand <= 45) letter1 = "N-";
+    else if (rand <= 60) letter1 = "G-";
+    else letter1 = "O-";
+
+    setleter(letter1);
+    let rand2 = letter1 + rand;
+    setdisplayarray((prevDisplayArray) => {
+      const updatedArray = [...prevDisplayArray];
+      if (!updatedArray.includes(rand2)) {
+        updatedArray.push(rand2);
+      }
+      if (updatedArray.length > 5) {
+        updatedArray.shift();
+      }
+      displayArrayRef.current = updatedArray;
+      localStorage.setItem("displayarray", JSON.stringify(updatedArray));
+      return updatedArray;
+    });
+
+    await new Promise(resolve => setTimeout(resolve, selectedOption));
+  }
+
+  setIsGenerating(false);
+};
+
+
+
 const shuffleArray = (array) => {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1)); // Random index from 0 to i
