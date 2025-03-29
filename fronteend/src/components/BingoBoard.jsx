@@ -112,7 +112,10 @@ const BingoBoard = () => {
         console.log('Initial Language from localStorage:', storedLanguage); // Debugging log
         return storedLanguage || 'am';
     });
-      const [selectedOption, setSelectedOption] = useState(4000); 
+    const [selectedOption, setSelectedOption] = useState(() => {
+        const savedTime = typeof window !== 'undefined' ? localStorage.getItem('selectedTime') : null;
+        return savedTime ? parseInt(savedTime) : 4000;
+      });
       const [countdown, setCountdown] = useState(selectedOption / 1000);
       const [isOpen, setIsOpen] = useState(false);
       const options = [
@@ -148,7 +151,13 @@ const BingoBoard = () => {
         localStorage.setItem('calledNumbers', JSON.stringify(calledNumbersRef.current));
     
     }, [calledNumbersRef.current]);
-    
+    const handleOptionSelect = (value) => {
+        setSelectedOption(value);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('selectedTime', value.toString());
+        }
+        setIsOpen(false);
+      };
     useEffect(() => {
         console.log('Language has changed:', language); // Debugging log
         localStorage.setItem('language', language);
@@ -1322,39 +1331,33 @@ const shuffleArray = (array) => {
                     
                     </div>
                     {isnavbar && (
- <div className="dropdown-container">
-     {/* Display the selected time */}
-     <p className="selected-time">
-         Selected time: {selectedOption / 1000} seconds
-     </p>
+   <div className="dropdown-container">
+   <p className="selected-time">
+     Selected time: {selectedOption / 1000} seconds
+   </p>
 
-     {/* Dropdown toggle button */}
-     <button
-         className="dropdown-toggle"
-         onClick={() => setIsOpen(!isOpen)}
-     >
-         {/* Display selected option or default text */}
-         {options.find((option) => option.value === selectedOption)?.label || "Select Time"}
-         <span className={`arrow ${isOpen ? "open" : ""}`}>▼</span>
-     </button>
+   <button
+     className="dropdown-toggle"
+     onClick={() => setIsOpen(!isOpen)}
+   >
+     {options.find((option) => option.value === selectedOption)?.label || "Select Time"}
+     <span className={`arrow ${isOpen ? "open" : ""}`}>▼</span>
+   </button>
 
-     {/* Dropdown menu */}
-     {isOpen && (
-         <ul className="dropdown-menu">
-             {options.map((option) => (
-                 <li key={option.value}>
-                     <button
-                         className="dropdown-item"
-                         onClick={() => {
-                             setSelectedOption(option.value); // Update selected option
-                             setIsOpen(false); // Close dropdown
-                         }}
-                     >
-                         {option.label}
-                     </button>
-                 </li>
-             ))}
-         </ul>
+   {isOpen && (
+     <ul className="dropdown-menu">
+       {options.map((option) => (
+         <li key={option.value}>
+           <button
+             className="dropdown-item"
+             onClick={() => handleOptionSelect(option.value)}
+           >
+             {option.label}
+           </button>
+         </li>
+       ))}
+     </ul>
+
      )}
 
      {/* Next Shuffle button */}

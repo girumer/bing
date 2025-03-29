@@ -10,15 +10,27 @@ function CartelaSelction() {
    const [isOpen, setIsOpen] = useState(false);
    const [opengame,setopengame]=useState(false);
     const options = [2,  4,  7,  10];
-    const percentoptions = [
-      
-        { label: "15%", value: 0.15},
+    const [selectedpercent, setSelectedpercent] = useState(() => {
+        // Get saved value from localStorage or use default (0.2)
+        if (typeof window !== 'undefined') {
+          const savedPercent = localStorage.getItem('selectedPercent');
+          return savedPercent ? parseFloat(savedPercent) : 0.2;
+        }
+        return 0.2;
+      });
+      const percentoptions = [
+        { label: "15%", value: 0.15 },
         { label: "20%", value: 0.2 },
         { label: "25%", value: 0.25 },
         { label: "30%", value: 0.30 }
-       
-    ];
-    const [selectedpercent, setSelectedpercent] = useState(0.2);
+      ];
+      const handlePercentSelect = (value) => {
+        setSelectedpercent(value);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('selectedPercent', value.toString());
+        }
+        setIsOpen(false);
+      };
     const gametype = [
         { label: "one cheak", value: 1},
         { label: "two cheak", value: 2},
@@ -138,34 +150,31 @@ function CartelaSelction() {
         </ul>
     )}
 </div>
+<div className="percentoption">
+  <button 
+    className="dropdown-toggle" 
+    onClick={() => setIsOpen(!isOpen)}
+  >
+    {percentoptions.find(option => option.value === selectedpercent)?.label || "Select percent"}
+    <span className={`arrow ${isOpen ? "open" : ""}`}>▼</span>
+  </button>
 
-                <div className="percentoption">
-    {/* Dropdown toggle button */}
-    <button className="dropdown-toggle" onClick={() => setIsOpen(!isOpen)}>
-        {/* Display selected percent label or default text */}
-        {percentoptions.find((option) => option.value === selectedpercent)?.label || "Select percent"}
-        <span className={`arrow ${isOpen ? "open" : ""}`}>▼</span>
-    </button>
-
-    {/* Dropdown menu */}
-    {isOpen && (
-        <ul className="dropdown-menu">
-            {percentoptions.map((option) => (
-                <li key={option.value}>
-                    <button
-                        className="dropdown-item"
-                        onClick={() => {
-                            setSelectedpercent(option.value); // Update selected percent
-                            setIsOpen(false); // Close dropdown
-                        }}
-                    >
-                        {option.label}
-                    </button>
-                </li>
-            ))}
-        </ul>
-    )}
+  {isOpen && (
+    <ul className="dropdown-menu">
+      {percentoptions.map((option) => (
+        <li key={option.value}>
+          <button
+            className="dropdown-item"
+            onClick={() => handlePercentSelect(option.value)}
+          >
+            {option.label}
+          </button>
+        </li>
+      ))}
+    </ul>
+  )}
 </div>
+    
 
                 <div className='Stakeplace'>
             <h2>Select a Stake</h2>
