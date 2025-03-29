@@ -49,12 +49,12 @@
     color: #01140f;
 }
 .current-number3{
-    margin-left: 120px;
+    margin-left: 12px;
     margin-right: 0px;
-    border-radius: 50%;
+    border-radius: 10%;
      font-size: large;
-     width: 16vw; /* Outer circle size */
-     height: 16vw; /* Outer circle size */
+     width: 8vw; /* Outer circle size */
+     height: 8vw; /* Outer circle size */
      background: rgb(241, 247, 242);
   /*  background-color: linear-gradient(90deg, rgb(234, 20, 95) 0%, rgba(28, 121, 9, 0.502) 43%, rgba(0,212,255,1) 100%);
   background-color:
@@ -70,7 +70,7 @@
 }
 .current-number3 p{
     color: #080808;
-    font-size: 72px;
+    font-size: 36px;
 }
 
 .current-number2{
@@ -257,14 +257,15 @@
     letter-spacing: 1px;
 }
 .numbers-container {
-    width: 75%;
+    width: 120%;
     display: grid;
     grid-template-columns: repeat(15,1fr);   
     
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 5px;
     margin-left: 25px;
     margin-bottom: 1px;
+    font-size: large;
     justify-content: space-between;
 }
 .bingoboard2 p{
@@ -436,7 +437,7 @@
   
   
 .Colum{
-    width: 5%;
+    width: 10%;
     display: grid;
     grid-template-columns: repeat(1,1fr);   
     
@@ -492,12 +493,13 @@
 }
 
 .number-button:hover {
-    background-color: #090c09;
+    background-color:rgb(66, 168, 66);
+    font-size: 2rem;
 }
 .current-number {
     width: 13vw; /* Outer circle size */
     height: 13vw; /* Outer circle size */
-    background: rgb(2, 1, 33);
+    background: rgb(19, 19, 27);
     background-color: linear-gradient(90deg, rgb(162, 158, 226) 0%, rgba(9,9,121,0.5019257703081232) 43%, rgba(0,212,255,1) 100%);
     border-radius: 50%; /* Make the div circular */
     display: flex;

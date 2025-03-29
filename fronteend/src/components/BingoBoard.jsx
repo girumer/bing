@@ -366,20 +366,13 @@ useEffect(() => {
         }
     };
     
-    
+   
     const amharicAudioFiles = Array.from({ length: 75 }, (_, i) => {
-       const audio=new Audio(`/amharicnumbers/${i + 1}.mp3`);
-       audio.preload= "auto";
-        return audio;
-         // Adjust the path if necessary
+        return `/amharicnumbers/${i + 1}.mp3`; // Just store the paths
     });
-    const amharicAudioFilesfemale= Array.from({ length: 75 }, (_, i) => {
-        const audio=new Audio(`/amharicfemale/${i + 1}.mp3`);
-      //  audio.play().catch(error => console.error("Audio play error:", error));
-      audio.preload= "auto";
-         return audio;
-          // Adjust the path if necessary
-     });
+    const amharicAudioFilesfemale = Array.from({ length: 75 }, (_, i) => {
+        return `/amharicfemale/${i + 1}.mp3`; // Just store the paths
+    });
      
    
     const handleLanguageChange = (event) => {
@@ -463,20 +456,25 @@ useEffect(() => {
 
     }
     const getshuffle=()=>{
-        const audio =new Audio('/gamestatus/shuffile.mp3');
-        audio.preload = "auto"; // Preload to reduce delay
+        const audio = new Audio();
+        audio.src = `/gamestatus/shuffile.mp3`;
+        audio.load(); // Ensures the browser loads it properly
         return audio;
+        
     }
     const getGameStartedAudi = () => {
-        const audio= new Audio('/gamestatus/gamestarted.mp3');
-        audio.preload = "auto"; // Preload to reduce delay
-        return audio;
+        const audio=new Audio();
+        audio.src=`/gamestatus/gamestarted.mp3`;
+        audio.load();
+       return audio;
 
     };
     const getGameStartedAudif = () => {
-        const audio= new Audio('/gamestatusfemale/gamestarted.mp3');
-        audio.preload = "auto"; // Preload to reduce delay
+        const audio = new Audio();
+        audio.src = `/gamestatusfemale/gamestarted.mp3`;
+        audio.load(); // Ensures the browser loads it properly
         return audio;
+        
 
     };
     const carts2=winstate1.map((row,index)=>(
@@ -624,43 +622,60 @@ useEffect(() => {
        return audio;
     }
     const getGameWining=()=>{
-        const audio= new Audio('/gamestatus/the_player_win.mp3');
-        audio.preload = "auto"; // Preload to reduce delay
+        const audio=new Audio();
+        audio.src=`gamestatus/the_player_win.mp3`;
+        
+        audio.load(); // Preload to reduce delay
        return audio;
     }
     const  getGameWiningfeamel=()=>{
-        const audio= new Audio('/gamestatusfemale/the_player_win.mp3');
-        audio.preload = "auto"; // Preload to reduce delay
+        const audio=new Audio()
+        audio.src=`/gamestatusfemale/the_player_win.mp3`;
+        audio.load();
+       // Preload to reduce delay
        return audio;
     }
     const playerNotwin=()=>{
-        const audio= new Audio('/gamestatus/notwin.mp3');
-        audio.preload = "auto"; // Preload to reduce delay
+        const audio=new Audio();
+        audio.src=`/gamestatus/notwin.mp3`;
+        
+        audio.load(); // Preload to reduce delay
        return audio;
     }
     const playerNotwinf=()=>{
-        const audio= new Audio('/gamestatusfemale/notwinf.mp3');
-        audio.preload = "auto"; // Preload to reduce delay
+        const audio=new Audio();
+        audio.src=`/gamestatusfemale/notwinf.mp3`;
+        
+        audio.load();
+         // Preload to reduce delay
        return audio;
     }
     const getGamePusedAudio=()=>{
-        const audio=new Audio('/gamestatus/gamepused.mp3');
-        audio.preload = "auto"; // Preload to reduce delay
+        const audio=new Audio();
+        audio.src=`/gamestatus/gamepused.mp3`;
+       audio.load();
+       
         return audio;
     }
     const getGamePusedAudiof=()=>{
-        const audio=new Audio('/gamestatusfemale/gamepused.mp3');
-        audio.preload = "auto"; // Preload to reduce delay
+        const audio=new Audio();
+         audio.src=`/gamestatusfemale/gamepused.mp3`;
+       
+        audio.load();
         return audio;
     }
     const getGameStartedAudio = () => {
-        const audio= new Audio('/gamestatus/gameresume.mp3');
-        audio.preload = "auto"; // Preload to reduce delay
+        const audio=new Audio();
+        audio.src=`/gamestatus/gameresume.mp3`
+       
+        audio.load(); // Preload to reduce delay
         return audio;
     };
     const getGameStartedAudiof = () => {
-        const audio= new Audio('/gamestatusfemale/gameresume.mp3');
-        audio.preload = "auto"; // Preload to reduce delay
+        const audio=new Audio();
+        audio.src=`/gamestatusfemale/gameresume.mp3`;
+     
+        audio.load(); // Preload to reduce delay
         return audio;
     };
     async function updateplayer() {
@@ -785,130 +800,7 @@ useEffect(() => {
     };
     
   
-  /*   const startRandomNumberGenerator = async () => {
-        console.log("Starting number generator. isGenerating:", isGeneratingRef.current);
-        isGeneratingRef.current = true;
-    
-        while (calledNumbersRef.current.length < 75 && isGeneratingRef.current) {
-            if (!isGeneratingRef.current) {
-                console.log("Number generation stopped.");
-                return; // Exit the loop
-            }
-    
-            let rand;
-            do {
-                rand = Math.floor(Math.random() * 75) + 1;
-            } while (calledNumbersRef.current.includes(rand));
-    
-            // **✅ Announce FIRST**
-            await announceNumber(rand);
-    
-            // **✅ Update everything AFTER announcement**
-            calledNumbersRef.current.push(rand);
-            lastCalledNumberRef.current = rand;
-            console.log("Last called number is", lastCalledNumberRef.current);
-            localStorage.setItem('calledNumbers', JSON.stringify(calledNumbersRef.current));
-            setCalledNumber([...calledNumbersRef.current]);
-            updateCurrentNumber(rand);
-    
-            let letter1 = " ";
-            if (rand <= 15) letter1 = "B-";
-            else if (rand <= 30) letter1 = "I-";
-            else if (rand <= 45) letter1 = "N-";
-            else if (rand <= 60) letter1 = "G-";
-            else letter1 = "O-";
-    
-            setleter(letter1);
-            let rand2 = letter1 + `${rand}`;
-            setdisplayarray((prevDisplayArray) => {
-                const updatedArray = [...prevDisplayArray];
-                if (!updatedArray.includes(rand2)) {
-                    updatedArray.push(rand2);
-                }
-                if (updatedArray.length > 5) {
-                    updatedArray.shift();
-                }
-    
-                // ✅ Update ref and localStorage
-                displayArrayRef.current = updatedArray;
-                localStorage.setItem("displayarray", JSON.stringify(updatedArray));
-    
-                return updatedArray;
-            });
-    
-    
-            // **✅ Countdown AFTER the number is announced**
-            
-    
-            // **✅ Wait before the next number**
-            await new Promise(resolve => setTimeout(resolve, selectedOption));
-        }
-    
-        setIsGenerating(false);
-    }; */
-    
-  /*   const startRandomNumberGenerator = async () => {
-  console.log("Starting number generator. isGenerating:", isGeneratingRef.current);
-  isGeneratingRef.current = true;
-
-  // **Step 1: Create and shuffle an array of numbers from 1 to 75**
-  const numbers = Array.from({ length: 75 }, (_, i) => i + 1); // [1, 2, 3, ..., 75]
-  const shuffledNumbers = shuffleArray(numbers); // Shuffle the array
-
-  // **Step 2: Iterate through the shuffled numbers**
-  for (let i = 0; i < shuffledNumbers.length && isGeneratingRef.current; i++) {
-    if (!isGeneratingRef.current) {
-      console.log("Number generation stopped.");
-      return; // Exit the loop
-    }
-
-    const rand = shuffledNumbers[i]; // Get the next number from the shuffled array
-
-    // **✅ Announce FIRST**
-    await announceNumber(rand);
-
-    // **✅ Update everything AFTER announcement**
-    calledNumbersRef.current.push(rand);
-    lastCalledNumberRef.current = rand;
-    console.log("Last called number is", lastCalledNumberRef.current);
-    localStorage.setItem('calledNumbers', JSON.stringify(calledNumbersRef.current));
-    setCalledNumber([...calledNumbersRef.current]);
-    updateCurrentNumber(rand);
-
-    let letter1 = " ";
-    if (rand <= 15) letter1 = "B-";
-    else if (rand <= 30) letter1 = "I-";
-    else if (rand <= 45) letter1 = "N-";
-    else if (rand <= 60) letter1 = "G-";
-    else letter1 = "O-";
-
-    setleter(letter1);
-    let rand2 = letter1 + `${rand}`;
-    setdisplayarray((prevDisplayArray) => {
-      const updatedArray = [...prevDisplayArray];
-      if (!updatedArray.includes(rand2)) {
-        updatedArray.push(rand2);
-      }
-      if (updatedArray.length > 5) {
-        updatedArray.shift();
-      }
-
-      // ✅ Update ref and localStorage
-      displayArrayRef.current = updatedArray;
-      localStorage.setItem("displayarray", JSON.stringify(updatedArray));
-
-      return updatedArray;
-    });
-
-    // **✅ Wait before the next number**
-    await new Promise(resolve => setTimeout(resolve, selectedOption));
-  }
-
-  setIsGenerating(false);
-}; */
-
-// **Helper Function: Shuffle an Array**
-// Store the shuffled numbers and the current index
+  
 let shuffledNumbers = [];
 let currentIndex = 0;
 
@@ -990,32 +882,44 @@ const shuffleArray = (array) => {
     
     const playAmharicAudioForNumber = (number) => {
         if (number >= 1 && number <= 75) {
-           try { const audio=amharicAudioFiles[number - 1].play();
-            audio.preload = "auto"; // Preload each number audio
-            return audio; // Play audio for the specific number}
+            try {
+                const audio = new Audio(`/amharicnumbers/${number}.mp3`);
+                // For older browsers, we'll use a simpler approach without preloading
+                return new Promise((resolve, reject) => {
+                    audio.oncanplaythrough = () => {
+                        audio.play().then(resolve).catch(reject);
+                    };
+                    audio.onerror = reject;
+                });
+            } catch (err) {
+                console.error('Error playing audio:', err);
+                return Promise.reject(err);
             }
-            catch (err) {
-            console.error('Error playing audio:', err);
-        }
-        } 
-        else {
+        } else {
             console.error('Number out of range');
+            return Promise.reject(new Error('Number out of range'));
         }
     };
-    const playAmharicAudioForNumberfemale = (number) => {
-        if (number >= 1 && number <= 75) {
-           try { const audio=amharicAudioFilesfemale[number - 1].play();
-            audio.preload = "auto"; // Preload each number audio
-            return audio; // Play audio for the specific number}
-            }
-            catch (err) {
-            console.error('Error playing audio:', err);
+   const playAmharicAudioForNumberfemale = (number) => {
+    if (number >= 1 && number <= 75) {
+        try {
+            const audio = new Audio(`/amharicfemale/${number}.mp3`);
+            // For older browsers, using simpler event-based approach
+            return new Promise((resolve, reject) => {
+                audio.oncanplaythrough = () => {
+                    audio.play().then(resolve).catch(reject);
+                };
+                audio.onerror = reject;
+            });
+        } catch (err) {
+            console.error('Error playing female audio:', err);
+            return Promise.reject(err);
         }
-        } 
-        else {
-            console.error('Number out of range');
-        }
-    };
+    } else {
+        console.error('Number out of range');
+        return Promise.reject(new Error('Number out of range'));
+    }
+};
     const cheakwin = async (initialState, num) => {
         const calledNumbers = calledNumbersRef.current;
         const lastCalledNumber = lastCalledNumberRef.current;
@@ -1385,11 +1289,11 @@ const shuffleArray = (array) => {
                 
                      </div>
                  <div className='Colum'>
-                     <button  style={{ backgroundColor: "red",fontWeight: "bold" ,fontSize: "36px"}}>B</button>
-                     <button style={{ backgroundColor: "blue" ,fontWeight: "bold",fontSize: "36px"}}>I</button>
-                     <button style={{ backgroundColor: "green",fontWeight: "bold" ,fontSize: "36px"}}>N</button>
-                     <button style={{ backgroundColor: "yellow",fontWeight: "bold",fontSize: "36px" }}>G</button>
-                     <button style={{ backgroundColor: "purple",fontWeight: "bold" ,fontSize: "36px"}}>O</button>
+                     <button  style={{ backgroundColor: "red",fontWeight: "bold" ,fontSize: "48px"}}>B</button>
+                     <button style={{ backgroundColor: "blue" ,fontWeight: "bold",fontSize: "48px"}}>I</button>
+                     <button style={{ backgroundColor: "green",fontWeight: "bold" ,fontSize: "48px"}}>N</button>
+                     <button style={{ backgroundColor: "yellow",fontWeight: "bold",fontSize: "48px" }}>G</button>
+                     <button style={{ backgroundColor: "purple",fontWeight: "bold" ,fontSize: "48px"}}>O</button>
                  </div>
                  <div className="numbers-container">
                      {[...Array(75)].map((_, index) => {
@@ -1398,7 +1302,7 @@ const shuffleArray = (array) => {
                              <button 
                                  key={number} 
                                  className="number-button" 
-                                 style={{ background: numberCall.includes(number) ? '#eeeeee' : '#040b01f1' ,color:numberCall.includes(number)?'black':'white'}}>
+                                 style={{ fontSize:"48px", background: numberCall.includes(number) ? '#eeeeee' : '#040b01ff' ,color:numberCall.includes(number)?'black':'white'}}>
                                  {number}
                              </button>
                          );
