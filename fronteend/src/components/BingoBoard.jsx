@@ -428,25 +428,37 @@ useEffect(() => {
         // Only if updateplayer was successful, proceed with starting the game.
         if (language === "am") {
            const start= getGameStartedAudi();
-           start.play();
-           setTimeout(() => {
-            setNavbar(false);
-            setIsGenerating(true);
-        }, 1000); 
+           start.play().then(() => {
+            // Wait until the audio finishes playing
+            start.onended = () => {
+                setTimeout(() => {
+                    setNavbar(false);
+                    setIsGenerating(true);
+                }, 2000); // Timeout starts after audio ends
+            };
+        }).catch((error) => {
+            console.error("Audio play error:", error);
+        });
         } else if (language === "amf") {
             const startf=getGameStartedAudif();
-            startf.play();
-             setTimeout(() => {
-            setNavbar(false);
-            setIsGenerating(true);
-        }, 1000); 
+            startf.play().then(() => {
+                // Wait until the audio finishes playing
+                startf.onended = () => {
+                    setTimeout(() => {
+                        setNavbar(false);
+                        setIsGenerating(true);
+                    }, 2000); // Timeout starts after audio ends
+                };
+            }).catch((error) => {
+                console.error("Audio play error:", error);
+            });
         } else {
             const utterance = new SpeechSynthesisUtterance("Game started");
             window.speechSynthesis.speak(utterance);
             setTimeout(() => {
                 setNavbar(false);
                 setIsGenerating(true);
-            }, 1000); 
+            }, 3000); 
         }
     }
     
