@@ -416,7 +416,7 @@ useEffect(() => {
             setIsGenerating(false);
         }
     };
-    async function newgamet() {
+   /*  async function newgamet() {
         const updateSuccess = await updateplayer();
         
         // Only proceed if updateplayer succeeded
@@ -458,10 +458,36 @@ useEffect(() => {
             setTimeout(() => {
                 setNavbar(false);
                 setIsGenerating(true);
-            }, 3000); 
+            }, 2000); 
         }
-    }
-    
+    } */
+        async function newgamet() {
+            const updateSuccess = await updateplayer();
+            if (!updateSuccess) return;
+        
+            if (language === "am") {
+                const start = getGameStartedAudi();
+                await start.play();
+                await new Promise(resolve => { start.onended = resolve; });
+                await new Promise(resolve => setTimeout(resolve, 2000)); // Extra delay if needed
+            } 
+            else if (language === "amf") {
+                const startf = getGameStartedAudif();
+                await startf.play();
+                await new Promise(resolve => { startf.onended = resolve; });
+                await new Promise(resolve => setTimeout(resolve, 2000));
+            } 
+            else {
+                const utterance = new SpeechSynthesisUtterance("Game started");
+                window.speechSynthesis.speak(utterance);
+                await new Promise(resolve => setTimeout(resolve, 2000));
+            }
+        
+            setNavbar(false);
+            if (!isGeneratingRef.current) {
+                startRandomNumberGenerator(); // ✅ Use this instead of setIsGenerating(true)
+            }
+        }
     const gameisnot=()=>{
         const aler=getcartelanot();
         aler.play();
