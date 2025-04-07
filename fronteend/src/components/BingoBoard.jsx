@@ -24,7 +24,8 @@ const BingoBoard = () => {
     const [isnavbar,setNavbar]=useState(true);
     const [numberofplayer,setNumberofPlayer]=useState(0);
     const [result,setresult]=useState(" ");
-    const currentNumberRef = useRef(null)
+    const currentNumberRef = useRef(null);
+    const [flag,setflag]=useState(0);
     const [currentNumber, setCurrentNumber] = useState(() => {
         return localStorage.getItem('currentNumber') || ''; 
     });
@@ -464,7 +465,7 @@ useEffect(() => {
         async function newgamet() {
             const updateSuccess = await updateplayer();
             if (!updateSuccess) return;
-        
+            setflag(1);
             if (language === "am") {
                 const start = getGameStartedAudi();
                 await start.play();
@@ -488,6 +489,7 @@ useEffect(() => {
                 startRandomNumberGenerator(); // ✅ Use this instead of setIsGenerating(true)
             }
         }
+        console.log("the value of flag is ",flag);
     const gameisnot=()=>{
         const aler=getcartelanot();
         aler.play();
@@ -1360,8 +1362,8 @@ const shuffleArray = (array) => {
                  <div className="comandboards">
                  <input type="number" id="numberInput" onChange={handleChange} disabled={cartelas.length === 0||isGenerating} className='chekinput' name="numberInput" min="0" step="1"/> 
                  <button className="claim_button" disabled={cartelas.length === 0} onClick={claimNumber}>cheak</button>
-                 <button className="Leav_button"  disabled={cartelas.length === 0||isGenerating} onClick={newgamet}>Start Game</button>
-                     <button className="start_button" disabled={cartelas.length === 0||isGenerating} onClick={startGamer}>Resume</button>
+                 <button className="Leav_button"  disabled={cartelas.length === 0||isGenerating} onClick={newgamet} >Start Game</button>
+                     <button className="start_button" disabled={cartelas.length === 0||isGenerating||flag===0} onClick={startGamer}>Resume</button>
                     
                      <button className="puse_button" disabled={cartelas.length === 0} onClick={handleStop}>puse</button>
                      <button className="Next_button"disabled={isGenerating}onClick={newgame}>New Game</button>
