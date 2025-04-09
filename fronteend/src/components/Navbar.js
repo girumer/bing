@@ -107,7 +107,7 @@ const handlelogin=()=>{
     history("/NewGame") 
   }
   const gotohelp=()=>{
-    history("/Helpdesk") 
+    history("/CartelaSelction") 
   }
   const gotoreport=()=>{
     history("/Report") 
@@ -156,7 +156,7 @@ const handlelogin=()=>{
 
         <button className="help" aria-label="Help" onClick={gotohelp}>
        <i className="fa-solid fa-question-circle" onClick={gotohelp}></i> {/* Question Circle Icon */}
-                              Help
+                        cartelas
                    </button>
         <button className="nav-btn1 nav-close-btn" onClick={showNavBar}>
           <FaTimes />

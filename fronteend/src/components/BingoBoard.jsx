@@ -108,6 +108,7 @@ const BingoBoard = () => {
       const [marked,setmarked]=useState([]);
       const [marked1,setmarked1]=useState([]);
      // const [language, setLanguage] = useState('am'); // default to English
+     const flagp=1;
      const [language, setLanguage] = useState(() => {
         const storedLanguage = localStorage.getItem('language');
         console.log('Initial Language from localStorage:', storedLanguage); // Debugging log
@@ -345,7 +346,12 @@ useEffect(() => {
       
       
     }
-   
+   const cartelacheck=()=>{
+    setTimeout(() => {
+        navigate("/CartelaSelction");
+    }, 100); // Small delay to ensure cleanup is fully applied before navigating
+
+   }
     const newgame = async () => {
         try {
             // ✅ Clear localStorage items
@@ -368,7 +374,7 @@ useEffect(() => {
     
             // ✅ Ensure the state updates are complete before navigating
             setTimeout(() => {
-                navigate("/CartelaSelction", { state: { language: language } });
+                navigate("/CartelaSelction", { state: { flagp: flagp } });
             }, 100); // Small delay to ensure cleanup is fully applied before navigating
     
         } catch (error) {
@@ -1333,7 +1339,7 @@ const shuffleArray = (array) => {
      <small>call length</small>
                          <p >{numberCallLength}</p>
                      </div>
-                    
+                   
                  </div>
                 
                      </div>
@@ -1368,7 +1374,7 @@ const shuffleArray = (array) => {
                      <button className="puse_button" disabled={cartelas.length === 0} onClick={handleStop}>puse</button>
                      <button className="Next_button"disabled={isGenerating}onClick={newgame}>New Game</button>
                   
-                    
+            
                     </div>
                     {isnavbar && (
    <div className="dropdown-container">

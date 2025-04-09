@@ -45,11 +45,11 @@ function App() {
           <Route path="/mainmenu" element={<Mainmenu/>}/>
            <Route path="/GameHistory" element={<GameHistory/>}/>
           
-          <Route path="/Helpdesk" element={<Helpdesk />} />
+           <Route path="/CartelaSelction" element={<CartelaSelction/>}/>
           
           <Route path="/BingoBoard" element={<BingoBoard/>}/>
           
-          <Route path="/CartelaSelction" element={<CartelaSelction/>}/>
+         
           </Route>
         </Routes>
       </Router>

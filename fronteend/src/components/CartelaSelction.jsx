@@ -38,15 +38,17 @@ function CartelaSelction() {
        
     ];
     const [selectegametype, setSelectgametype] = useState(1);
-    localStorage.setItem('language',location.state.language);
-    let  language= localStorage.getItem('language');
+    //let flagp = parseInt(localStorage.getItem('flagp')) || 0;
+  //console.log("flagp now is ",flagp); 
+    //localStorage.setItem('language',location.state.language);
+   // let  language= localStorage.getItem('language');
     const [selectedStake, setSelectedStake] =useState(() => {
             const selectedStake = localStorage.getItem('stake');
             return selectedStake ? parseInt(selectedStake) : 20;
             
         });
    
-        console.log(language);
+       // console.log(language);
     const handleStakeChange = (event) => {
         let stake=parseInt(event.target.value);
         setSelectedStake(parseInt(stake));
@@ -65,7 +67,17 @@ function CartelaSelction() {
             return []; // Default to empty array on parse error
         }
     });
-
+  //  console.log("the value of flagp is ",flagp);
+    useEffect(() => {
+        const flagpFromState = location.state?.flagp ?? 0;
+        localStorage.setItem('flagp', flagpFromState);
+    
+        if (flagpFromState === 1) {
+          localStorage.removeItem("selectedNumbers");
+          setNumbers([]);
+          console.log("selectedNumbers removed now", numbers);
+        }
+      }, [location.state]); 
     useEffect(() => {
         localStorage.setItem("selectedNumbers", JSON.stringify(numbers));
     }, [numbers]);
@@ -75,7 +87,7 @@ function CartelaSelction() {
         // Delay navigation slightly to allow "game started" to finish
         setTimeout(() => {
             history("/BingoBoard", { state: { cartelas: numbers,selectegametype:selectegametype,stake: selectedStake, selectedpercent:selectedpercent} });
-            localStorage.removeItem("selectedNumbers");
+          //  localStorage.removeItem("selectedNumbers");
         }, 1000); // 1-second delay
     };
     const getGameStartedAudio = () => {
