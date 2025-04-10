@@ -18,7 +18,7 @@ const BingoBoard = () => {
     
   
    const isGeneratingRef = useRef(false);
-    
+    const isPusedRef=useRef(false);
     
 
     const [isnavbar,setNavbar]=useState(true);
@@ -102,6 +102,7 @@ const BingoBoard = () => {
         return storedValue ? JSON.parse(storedValue) : false; 
     }); */
     const [isGenerating, setIsGenerating] = useState(false);
+    const [isPaused,setisPused]=useState(false);
     const [venderaward,setvenderaward]=useState(0);
     const [gamewinnerboard,setgamewinnerboard]=useState(false);
     const [gamewinnerboard1,setgamewinnerboard1]=useState(false);
@@ -292,6 +293,7 @@ const handleStop = async () => {
     } 
     isGeneratingRef.current = false; // Just stops the loop
     setIsGenerating(false);
+    setisPused(true);
      // This doesn't return a Promise, but you could use a timeout if needed
 };
 
@@ -623,7 +625,6 @@ useEffect(() => {
         if (language === "am") {
             const gameStartedAudio = getGameStartedAudio();
             gameStartedAudio.play();
-          
         
           setTimeout(() => {
             setNavbar(false);
@@ -1368,7 +1369,7 @@ const shuffleArray = (array) => {
                  <div className="comandboards">
                  <input type="number" id="numberInput" onChange={handleChange} disabled={cartelas.length === 0||isGenerating} className='chekinput' name="numberInput" min="0" step="1"/> 
                  <button className="claim_button" disabled={cartelas.length === 0} onClick={claimNumber}>cheak</button>
-                 <button className="Leav_button"  disabled={cartelas.length === 0||isGenerating} onClick={newgamet} >Start Game</button>
+                 <button className="Leav_button"  disabled={cartelas.length === 0||isGenerating||isPaused} onClick={newgamet} >Start Game</button>
                      <button className="start_button" disabled={cartelas.length === 0||isGenerating||flag===0} onClick={startGamer}>Resume</button>
                     
                      <button className="puse_button" disabled={cartelas.length === 0} onClick={handleStop}>puse</button>
