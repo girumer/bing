@@ -46,6 +46,7 @@ const BingoBoard = () => {
         return storedNumbers ? JSON.parse(storedNumbers) : [];
     });
     const calledNumbersRef = useRef(numberCall);
+    const [gamestart,setgamestart]=useState(false);
     const [numberCallLength, setNumberCallLength] = useState(() => {
         return JSON.parse(localStorage.getItem('numberCallLength')) || 0;
     });
@@ -473,6 +474,7 @@ useEffect(() => {
         async function newgamet() {
             const updateSuccess = await updateplayer();
             if (!updateSuccess) return;
+            setgamestart(true);
             setflag(1);
             if (language === "am") {
                 const start = getGameStartedAudi();
@@ -512,6 +514,7 @@ useEffect(() => {
        
 
     }
+    console.log("the value of game start is ",gamestart)
     const getshuffle=()=>{
         const audio = new Audio();
         audio.src = `/gamestatus/shuffile.mp3`;
@@ -1369,7 +1372,7 @@ const shuffleArray = (array) => {
                  <div className="comandboards">
                  <input type="number" id="numberInput" onChange={handleChange} disabled={cartelas.length === 0||isGenerating} className='chekinput' name="numberInput" min="0" step="1"/> 
                  <button className="claim_button" disabled={cartelas.length === 0} onClick={claimNumber}>cheak</button>
-                 <button className="Leav_button"  disabled={cartelas.length === 0||isGenerating||isPaused} onClick={newgamet} >Start Game</button>
+                 <button className="Leav_button"  disabled={cartelas.length === 0||isGenerating||isPaused||gamestart} onClick={newgamet} >Start Game</button>
                      <button className="start_button" disabled={cartelas.length === 0||isGenerating||flag===0} onClick={startGamer}>Resume</button>
                     
                      <button className="puse_button" disabled={cartelas.length === 0} onClick={handleStop}>puse</button>
