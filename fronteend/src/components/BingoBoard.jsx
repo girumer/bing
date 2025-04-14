@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useCallback,useRef } from 'react';
 import axios from "axios";
 import './BingoBoard.css';
 import Navbar from '../components/Navbar';
@@ -29,6 +29,8 @@ const BingoBoard = () => {
     const [currentNumber, setCurrentNumber] = useState(() => {
         return localStorage.getItem('currentNumber') || ''; 
     });
+   // const [gamestart,setgamestart]=useState(false);
+    const [isUpdating, setIsUpdating] = useState(false);
     const [letter,setleter]=useState("-")
     const [username, setUser] = useState(null);
     const [winerAward, setWinerAward] = useState(0);
@@ -113,7 +115,7 @@ const BingoBoard = () => {
      const flagp=1;
      const [language, setLanguage] = useState(() => {
         const storedLanguage = localStorage.getItem('language');
-        console.log('Initial Language from localStorage:', storedLanguage); // Debugging log
+       // console.log('Initial Language from localStorage:', storedLanguage); // Debugging log
         return storedLanguage || 'am';
     });
     const [selectedOption, setSelectedOption] = useState(() => {
@@ -143,13 +145,13 @@ const BingoBoard = () => {
          //gameshuffile.play();
         // Trigger animation
         setIsShuffling(true);
-          console.log("shffule status",isShuffling);
+          //console.log("shffule status",isShuffling);
         // Reset animation after 1.5 seconds
         setTimeout(() => {
             setIsShuffling(false);
         }, 15000);
     };
-    console.log("calling speed is",interval);
+ //   console.log("calling speed is",interval);
    
       useEffect(() => {
         localStorage.setItem('calledNumbers', JSON.stringify(calledNumbersRef.current));
@@ -163,7 +165,7 @@ const BingoBoard = () => {
         setIsOpen(false);
       };
     useEffect(() => {
-        console.log('Language has changed:', language); // Debugging log
+     //   console.log('Language has changed:', language); // Debugging log
         localStorage.setItem('language', language);
     }, [language]);
     useEffect(() => {
@@ -176,7 +178,7 @@ const BingoBoard = () => {
           } else {
             try {
               // Make API call to verify user
-              console.log("Backend URL:", "https://adeybingo-10.onrender.com");
+             // console.log("Backend URL:", "https://adeybingo-10.onrender.com");
               const res = await axios.post(`${BACKEND_URL}/useracess`, {}, {
                 headers: {
                   Authorization: `Bearer ${token}`,
@@ -219,8 +221,8 @@ const BingoBoard = () => {
     const stake = location.state?.stake || 0;
     const gametype=location.state?.selectegametype||1;
     const percent=location.state?.selectedpercent||0.2;
-    console.log("percent is",percent);
-    console.log("game type is",gametype);
+  //  console.log("percent is",percent);
+   // console.log("game type is",gametype);
     let intialstate=cartela[cartes].cart;
     const launchFireworks = () => {
         const duration = 5 * 1000; // 5 seconds
@@ -250,8 +252,8 @@ const BingoBoard = () => {
           launchFireworks();
         }
       }, [fireworklun]);
-   console.log("winstate",winstate2);
-   console.log("Marked1 State:", marked1);
+  // console.log("winstate",winstate2);
+   //console.log("Marked1 State:", marked1);
     const handleStart = () => {
         if (!isGenerating) {
             isGeneratingRef.current = true;  // Stop the number generation
@@ -317,8 +319,8 @@ useEffect(() => {
 
 
 
-    console.log("is genrating is ",isGenerating);
-    console.log("user is" ,username);
+    //console.log("is genrating is ",isGenerating);
+   // console.log("user is" ,username);
    
    
     useEffect(() => {
@@ -373,7 +375,7 @@ useEffect(() => {
             setCurrentNumber("");  
             currentNumberRef.current = "";  
     
-            console.log("Game reset successfully!");
+           // console.log("Game reset successfully!");
     
             // ✅ Ensure the state updates are complete before navigating
             setTimeout(() => {
@@ -426,52 +428,8 @@ useEffect(() => {
             setIsGenerating(false);
         }
     };
-   /*  async function newgamet() {
-        const updateSuccess = await updateplayer();
-        
-        // Only proceed if updateplayer succeeded
-        if (!updateSuccess) {
-            // Optionally, you can perform any additional error handling here.
-            return;
-        }
-        
-        // Only if updateplayer was successful, proceed with starting the game.
-        if (language === "am") {
-           const start= getGameStartedAudi();
-           start.play().then(() => {
-            // Wait until the audio finishes playing
-            start.onended = () => {
-                setTimeout(() => {
-                    setNavbar(false);
-                    setIsGenerating(true);
-                }, 2000); // Timeout starts after audio ends
-            };
-        }).catch((error) => {
-            console.error("Audio play error:", error);
-        });
-        } else if (language === "amf") {
-            const startf=getGameStartedAudif();
-            startf.play().then(() => {
-                // Wait until the audio finishes playing
-                startf.onended = () => {
-                    setTimeout(() => {
-                        setNavbar(false);
-                        setIsGenerating(true);
-                    }, 2000); // Timeout starts after audio ends
-                };
-            }).catch((error) => {
-                console.error("Audio play error:", error);
-            });
-        } else {
-            const utterance = new SpeechSynthesisUtterance("Game started");
-            window.speechSynthesis.speak(utterance);
-            setTimeout(() => {
-                setNavbar(false);
-                setIsGenerating(true);
-            }, 2000); 
-        }
-    } */
-        async function newgamet() {
+ 
+       /*  async function newgamet() {
             const updateSuccess = await updateplayer();
             if (!updateSuccess) return;
             setgamestart(true);
@@ -498,8 +456,55 @@ useEffect(() => {
             if (!isGeneratingRef.current) {
                 startRandomNumberGenerator(); // ✅ Use this instead of setIsGenerating(true)
             }
-        }
-        console.log("the value of flag is ",flag);
+        } */
+       // console.log("the value of flag is ",flag);
+       
+       const newgamet = useCallback(async () => {
+           // Prevent clicks when already updating or game has started
+           if (isUpdating || gamestart) return;
+           
+           setIsUpdating(true);
+           setgamestart(true); // Move this up to prevent immediate re-clicks
+           
+           try {
+               const updateSuccess = await updateplayer();
+               if (!updateSuccess) {
+                   setgamestart(false); // Reset if update failed
+                   return;
+               }
+               
+               setflag(1);
+               
+               // Audio handling
+               if (language === "am") {
+                   const start = getGameStartedAudi();
+                   await start.play();
+                   await new Promise(resolve => { start.onended = resolve; });
+               } 
+               else if (language === "amf") {
+                   const startf = getGameStartedAudif();
+                   await startf.play();
+                   await new Promise(resolve => { startf.onended = resolve; });
+               } 
+               else {
+                   const utterance = new SpeechSynthesisUtterance("Game started");
+                   window.speechSynthesis.speak(utterance);
+               }
+               
+               // Short delay for UX (reduced from 2000ms)
+               await new Promise(resolve => setTimeout(resolve, 500));
+               
+               setNavbar(false);
+               if (!isGeneratingRef.current) {
+                   startRandomNumberGenerator();
+               }
+           } catch (error) {
+               console.error("Game start error:", error);
+               setgamestart(false); // Reset on error
+           } finally {
+               setIsUpdating(false);
+           }
+       }, [language, isUpdating, gamestart]);  // Add dependencies  
     const gameisnot=()=>{
         const aler=getcartelanot();
         aler.play();
@@ -514,7 +519,7 @@ useEffect(() => {
        
 
     }
-    console.log("the value of game start is ",gamestart)
+  //  console.log("the value of game start is ",gamestart)
     const getshuffle=()=>{
         const audio = new Audio();
         audio.src = `/gamestatus/shuffile.mp3`;
@@ -742,7 +747,7 @@ useEffect(() => {
             const response = await axios.post(`${BACKEND_URL}/updateplayer`, {
                 username, stake, numberofplayer, profit, awardforagent, totalcash, venderaward, winerAward, percent
             });
-            console.log(response.data);
+          //  console.log(response.data);
             if (response.data === "exist") {
                 alert("User already exists");
                 return false;
@@ -752,7 +757,7 @@ useEffect(() => {
                 return true;
             }
         } catch (e) {
-            console.log("Catch block executed:", e);
+          //  console.log("Catch block executed:", e);
             alert("Please check connection");
             setIsGenerating(false);
             return false;
@@ -867,7 +872,7 @@ let currentIndex = 0;
 const shuffledNumbersRef = useRef([]);
 
 const startRandomNumberGenerator = async () => {
-  console.log("Starting number generator. isGenerating:", isGeneratingRef.current);
+ // console.log("Starting number generator. isGenerating:", isGeneratingRef.current);
   isGeneratingRef.current = true;
 
   // Only shuffle if we're starting fresh (no numbers called yet)
@@ -887,7 +892,7 @@ const startRandomNumberGenerator = async () => {
     await announceNumber(rand);
     calledNumbersRef.current.push(rand);
     lastCalledNumberRef.current = rand;
-    console.log("Last called number is", lastCalledNumberRef.current);
+    //console.log("Last called number is", lastCalledNumberRef.current);
     localStorage.setItem('calledNumbers', JSON.stringify(calledNumbersRef.current));
     setCalledNumber([...calledNumbersRef.current]);
     updateCurrentNumber(rand);
@@ -1317,7 +1322,7 @@ const shuffleArray = (array) => {
     };
     
      
-    console.log("the token is  apend",token);
+    //console.log("the token is  apend",token);
     return (
         <React.Fragment>
            
@@ -1372,7 +1377,9 @@ const shuffleArray = (array) => {
                  <div className="comandboards">
                  <input type="number" id="numberInput" onChange={handleChange} disabled={cartelas.length === 0||isGenerating} className='chekinput' name="numberInput" min="0" step="1"/> 
                  <button className="claim_button" disabled={cartelas.length === 0} onClick={claimNumber}>cheak</button>
-                 <button className="Leav_button"  disabled={cartelas.length === 0||isGenerating||isPaused||gamestart} onClick={newgamet} >Start Game</button>
+                 <button className="Leav_button"  disabled={cartelas.length === 0 || isGenerating || isPaused || gamestart || isUpdating}onClick={newgamet}>
+    {isUpdating ? "Starting..." : "Start Game"}
+</button>
                      <button className="start_button" disabled={cartelas.length === 0||isGenerating||flag===0} onClick={startGamer}>Resume</button>
                     
                      <button className="puse_button" disabled={cartelas.length === 0} onClick={handleStop}>puse</button>

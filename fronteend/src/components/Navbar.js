@@ -14,7 +14,7 @@ import { useEffect } from 'react';
 
 function Navbar() {
   const token=localStorage.getItem('accesstoken');
-console.log("thetokenal",token);
+//console.log("thetokenal",token);
 const [username,setUser]=useState('');
   const navRef = useRef();
 const location=useLocation();
@@ -23,7 +23,7 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
   
 useEffect(() => {
   const token = localStorage.getItem('accesstoken');
-  console.log("thetokenal",token);
+ // console.log("thetokenal",token);
   if (!token) {
     //alert("User not found");
     history("/");}
@@ -99,7 +99,7 @@ const handlelogin=()=>{
 
 
  // Optional: Clear any other sensitive data
- console.log('User logged out successfully.');
+ //console.log('User logged out successfully.');
   const showNavBar = () => {
     navRef.current.classList.toggle('responsive_nav');
   };
