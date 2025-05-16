@@ -218,15 +218,7 @@ function CartelaSelction() {
                     />
                     30
                 </label>
-                <label>
-                    <input
-                        type="radio"
-                        value="40"
-                        checked={selectedStake === 40}
-                        onChange={handleStakeChange}
-                    />
-                    40
-                </label>
+               
                 <label>
                     <input
                         type="radio"
@@ -253,6 +245,24 @@ function CartelaSelction() {
                         onChange={handleStakeChange}
                     />
                     200
+                </label>
+                <label>
+                    <input
+                        type="radio"
+                        value="500"
+                        checked={selectedStake === 500}
+                        onChange={handleStakeChange}
+                    />
+                    500
+                </label>
+                <label>
+                    <input
+                        type="radio"
+                        value="1000"
+                        checked={selectedStake === 1000}
+                        onChange={handleStakeChange}
+                    />
+                    1000
                 </label>
             </div>
            
