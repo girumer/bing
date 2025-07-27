@@ -39,19 +39,29 @@ const server=http.createServer(app);
 
 
 app.use(bodyParser.json());
+
+
 const allowedOrigins = [
-  'http://localhost:5000',
-  //          // Development URL
-  'https://localhost:3000', 
   'http://localhost:3000',
-  'http://192.168.39.52:3000',      // Development URL with HTTPS
-  'http://167.235.140.218',        // IP address (if needed)
-  'http://adeyebingo.com',         // Production domain with HTTP
-  'https://adeyebingo.com',        // Production domain with HTTPS
-  'http://www.adeyebingo.com',     // www version with HTTP
-  'https://www.adeyebingo.com',//      // www version with HTTPS
+  'http://167.235.140.218',
+  'http://adeyebingo.com',
+  'https://adeyebingo.com',
+  'http://www.adeyebingo.com',
+  'https://www.adeyebingo.com',
   'https://api.adeyebingo.com',
 ];
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+}));
+
+
 console.log("json update");
 
 
