@@ -8,6 +8,7 @@ const crypto = require('crypto');
 const secretkey = process.env.JWT_SECRET;
 
 const refreshKey=process.env.JWT_PRIVATE;
+console.log('All env vars:', process.env);
 console.log('secretkey:', secretkey);  // Should print the value of JWT_SECRET
 console.log('refreshKey:', refreshKey);  // Should print the value of JWT_PRIVATE
 
