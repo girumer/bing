@@ -74,7 +74,8 @@ app.use(cors({
 
 
 console.log("json update");
-
+console.log('Loaded JWT_PRIVATE:', process.env.JWT_PRIVATE);
+console.log('Full ENV:', process.env);
 
 app.use(cors({
   origin: function (origin, callback) {
