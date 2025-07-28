@@ -1,4 +1,4 @@
-require('dotenv').config();
+
 const crypto = require('crypto');
 
 // Use the JWT_SECRET from the environment, or fallback to a randomly generated key if not set
