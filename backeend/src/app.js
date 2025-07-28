@@ -58,6 +58,8 @@ const allowedOrigins = [
   'https://www.adeyebingo.com',
 
   'https://api.adeyebingo.com',
+  
+
 ];
 app.use(cors({
   origin: function (origin, callback) {
