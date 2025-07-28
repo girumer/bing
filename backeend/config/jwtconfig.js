@@ -1,4 +1,7 @@
+const path = require('path');
+const dotenv = require('dotenv');
 
+dotenv.config({ path: path.resolve(__dirname, '/backeend/src/.env') });
 const crypto = require('crypto');
 
 // Use the JWT_SECRET from the environment, or fallback to a randomly generated key if not set
