@@ -1,4 +1,6 @@
-require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
+require('dotenv').config({ path: require('path').resolve(__dirname, '.env') });
+console.log('ENV Path:', require('path').resolve(__dirname, '.env'));
+console.log('All ENV:', process.env);
 const express = require("express")
 const async = require('async');
 
